@@ -98,45 +98,36 @@ dl,dd{margin:0}
 
 /* ---------- shell ---------- */
 .shell{min-height:100%;display:flex}
-.sidebar{position:sticky;top:env(safe-area-inset-top,0px);height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));width:var(--sb-w);flex:none;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:30}
-.sidebar.collapsed{width:var(--sb-w-c)}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:min(272px,calc(100vw - 56px));background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:80;visibility:hidden;transform:translateX(-100%);padding-top:env(safe-area-inset-top,0px)}
+.nav-open .sidebar{visibility:visible;transform:none;box-shadow:var(--shadow-pop)}
+.sidebar.anim{animation:navin .2s ease-out}
+@keyframes navin{from{transform:translateX(-100%)}to{transform:none}}
+.nav-scrim{position:fixed;inset:0;background:var(--overlay);z-index:79;animation:fade .15s ease-out}
+@media (min-width:1280px){.nav-open .sidebar{position:sticky;height:100vh;height:100dvh;box-shadow:none;z-index:30}.nav-scrim{display:none}.nav-open .tb-logo{display:none}.nav-open .sb-toggle{display:none}.sidebar.anim{animation:none}}
 .sb-head{height:var(--top-h);display:flex;align-items:center;gap:8px;padding:0 12px 0 18px;border-bottom:1px solid var(--border);flex:none}
-.sidebar.collapsed .sb-head{padding:0;justify-content:center}
 .sb-logo{display:flex;align-items:center;gap:10px;min-width:0}
 .sb-logo img{height:30px;width:auto;filter:var(--logo-filter)}
 .sb-word{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.06em}
-.sidebar.collapsed .sb-logo{display:none}
 .sb-toggle{margin-left:auto}
-.sidebar.collapsed .sb-toggle{margin:0}
 .sb-nav{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
 .sb-sec{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--subtle);padding:14px 12px 6px}
-.sidebar.collapsed .sb-sec{display:none}
-.sb-sep{height:1px;background:var(--border);margin:8px 12px}
-.sidebar:not(.collapsed) .sb-sep{display:none}
 .sb-link{display:flex;align-items:center;gap:12px;min-height:42px;padding:8px 12px;border-radius:var(--r-sm);color:var(--muted);font-weight:500;font-size:14.5px;position:relative}
 .sb-link:hover{background:var(--surface-2);color:var(--text)}
 .sb-link[aria-current="page"]{background:var(--primary-soft);color:var(--primary-ink);font-weight:600}
 .sb-link .count{margin-left:auto}
-.sidebar.collapsed .sb-link{flex-direction:column;gap:3px;min-height:58px;padding:8px 4px;justify-content:center;font-size:11px;text-align:center;line-height:1.25}
-.sidebar.collapsed .sb-link span.sb-label{max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sidebar.collapsed .sb-link .count{position:absolute;top:5px;right:12px;margin:0}
 .sb-foot{padding:10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
 .sb-cta{margin:8px 2px 4px;padding:14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2);display:flex;flex-direction:column;gap:8px}
 .sb-cta p{font-size:13px;color:var(--muted);line-height:1.5}
 .sb-cta p b{color:var(--text)}
-.sidebar.collapsed .sb-cta{display:none}
-.sb-cta-mini{display:none}
-.sidebar.collapsed .sb-cta-mini{display:flex}
 .demo-btn{display:flex;align-items:center;gap:10px;width:100%;border:1px dashed var(--border-strong);background:transparent;border-radius:var(--r-sm);padding:8px 10px;cursor:pointer;color:var(--muted);font-size:13px;text-align:left}
 .demo-btn:hover{color:var(--text);border-color:var(--muted)}
 .demo-btn b{color:var(--text);font-weight:600}
-.sidebar.collapsed .demo-btn{justify-content:center;padding:10px 0}
-.sidebar.collapsed .demo-btn .demo-txt{display:none}
 
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column}
 .topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;height:var(--top-h);background:var(--surface);border-bottom:1px solid var(--border)}
 .topbar-in{height:var(--top-h);display:flex;align-items:center;gap:12px;padding:0 24px;max-width:1360px;margin:0 auto}
-.tb-logo{display:none;align-items:center;gap:8px;flex:none}
+.nav-btn{margin-left:-8px}
+.tb-logo{display:flex;align-items:center;gap:8px;flex:none}
 .tb-logo img{height:26px;width:auto;filter:var(--logo-filter)}
 .search{flex:1;max-width:620px;margin:0 auto;position:relative;transition:opacity .15s}
 .search .i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--subtle);pointer-events:none}
@@ -171,6 +162,7 @@ dl,dd{margin:0}
 
 .bottomnav{display:none}
 .chat-fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;width:52px;height:52px;border-radius:50%;border:0;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 16px rgba(0,50,110,.24)}
+.icon-btn.mob-chat{display:none}
 .chat-fab:hover{background:var(--primary-hover)}
 .chat-fab .count{position:absolute;top:-2px;right:-2px;border:2px solid var(--bg)}
 
@@ -453,10 +445,11 @@ dl,dd{margin:0}
 
 /* ---------- listing detail ---------- */
 .pd{display:grid;grid-template-columns:minmax(0,1fr);gap:24px}
-@container content (min-width:900px){.pd{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}.pd-left{position:sticky;top:calc(var(--top-h) + 20px)}}
+@container content (min-width:1000px){.pd{gap:40px}}
+@container content (min-width:700px){.pd{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}.pd-left{position:sticky;top:calc(var(--top-h) + 20px)}}
 .gallery{display:flex;flex-direction:column;gap:10px}
 .g-main{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--photo-bg);aspect-ratio:4/5;max-height:calc(100vh - var(--top-h) - 150px);margin:0 auto;width:100%}
-@container content (min-width:900px){.g-main{width:auto;max-width:100%}}
+@container content (min-width:700px){.g-main{width:auto;max-width:100%}}
 .g-frame{width:100%;height:100%}
 .g-frame img,.g-frame .art-svg{width:100%;height:100%;object-fit:cover}
 .g-kind{position:absolute;left:12px;top:12px;background:var(--surface);color:var(--text);font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:var(--r-pill);box-shadow:var(--shadow-soft)}
@@ -557,7 +550,7 @@ dl,dd{margin:0}
 
 /* ---------- cart / checkout ---------- */
 .two-col{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
-@container content (min-width:900px){.two-col{grid-template-columns:minmax(0,1fr) 340px}.sticky-side{position:sticky;top:calc(var(--top-h) + 20px)}}
+@container content (min-width:760px){.two-col{grid-template-columns:minmax(0,1fr) 320px}.sticky-side{position:sticky;top:calc(var(--top-h) + 20px)}}
 .shop-group .sg-h{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600}
 .shop-group .sg-h .i{color:var(--muted)}
 .shop-group .sg-h a:hover{text-decoration:underline}
@@ -758,7 +751,7 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 .pr-t{flex:1;font-weight:600;font-size:14.5px}
 .pr-v{font-size:13.5px;color:var(--muted)}
 .set-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
-@container content (min-width:900px){.set-grid{grid-template-columns:220px minmax(0,1fr)}.set-nav{position:sticky;top:calc(var(--top-h) + 20px)}}
+@container content (min-width:720px){.set-grid{grid-template-columns:200px minmax(0,1fr)}.set-nav{position:sticky;top:calc(var(--top-h) + 20px)}}
 .set-nav{display:flex;flex-direction:column;gap:2px}
 .set-nav a{padding:9px 12px;border-radius:var(--r-sm);font-weight:500;color:var(--muted);font-size:14.5px}
 .set-nav a:hover{background:var(--surface-2);color:var(--text)}
@@ -850,18 +843,6 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 
 /* ---------- responsive ---------- */
 @media (max-width:1023px){
-  .sidebar{width:var(--sb-w-c)}
-  .sidebar .sb-toggle,.sidebar .sb-logo{display:none}
-  .sidebar .sb-head{padding:0;justify-content:center}
-  .sidebar .sb-head::after{content:"";width:34px;height:34px;border-radius:9px;background:var(--primary-soft)}
-  .sidebar .sb-sec,.sidebar .sb-cta{display:none}
-  .sidebar .sb-sep{display:block}
-  .sidebar .sb-cta-mini{display:flex}
-  .sidebar .sb-link{flex-direction:column;gap:3px;min-height:58px;padding:8px 4px;justify-content:center;font-size:11px;text-align:center;line-height:1.25}
-  .sidebar .sb-link span.sb-label{max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .sidebar .sb-link .count{position:absolute;top:5px;right:12px;margin:0}
-  .sidebar .demo-btn{justify-content:center;padding:10px 0}
-  .sidebar .demo-btn .demo-txt{display:none}
   .me-btn .me-name{display:none}
   .hero{grid-template-columns:minmax(0,1fr) 250px;padding:24px}
   .hero-pics{grid-template-columns:1fr 1fr}
@@ -869,7 +850,7 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 }
 @media (max-width:767px){
   :root{--top-h:56px}
-  .sidebar{display:none}
+  .sidebar,.nav-btn,.nav-scrim{display:none}
   .topbar-in{padding:0 12px;gap:8px}
   .tb-logo{display:flex}
   .search input{height:40px;font-size:15px;padding-right:12px}
@@ -882,7 +863,9 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
   .bn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted);border:0;background:none;cursor:pointer;position:relative;min-height:44px}
   .bn[aria-current="page"]{color:var(--primary-ink)}
   .bn .count{position:absolute;top:6px;left:calc(50% + 6px)}
-  .chat-fab{bottom:calc(var(--bn-h) + 14px + env(safe-area-inset-bottom,0px));right:14px;width:50px;height:50px}
+  .chat-fab{display:none}
+  .icon-btn.mob-chat{display:inline-grid}
+  .slot-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .chat{inset:0;width:auto;height:auto;border-radius:0;border:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);z-index:95}
   #toasts{bottom:calc(var(--bn-h) + 16px + env(safe-area-inset-bottom,0px))}
   .hero{display:block;min-height:0;padding:20px 18px 18px;border-radius:var(--r-md);margin-bottom:14px}
@@ -1580,8 +1563,8 @@ const DICT = {
     startSelling: ['เริ่มขายเสื้อผ้า','Start selling'],
     startSellingD: ['มีเสื้อผ้าที่ไม่ได้ใส่แล้ว? ขายให้เพื่อนในมหาวิทยาลัย นัดรับในแคมปัส','Clothes you don’t wear anymore? Sell them to fellow students and meet on campus.'],
     requestPending: ['คำขอขายรอพิจารณา','Seller request in review'],
-    collapse: ['ย่อแถบเมนู','Collapse sidebar'],
-    expand: ['ขยายแถบเมนู','Expand sidebar'],
+    openNav: ['เปิดเมนู','Open menu'],
+    closeNav: ['ปิดเมนู','Close menu'],
     notifications: ['การแจ้งเตือน','Notifications'], // ◆
     notifN: ['การแจ้งเตือน ยังไม่อ่าน {n} รายการ','Notifications, {n} unread'],
     menu: ['เมนู','Menu'],
@@ -2617,7 +2600,7 @@ function freshData(){
   };
 }
 const S = Object.assign({
-  lang: LS.get('lang', 'th'), themePref: LS.get('theme', 'system'), role: LS.get('role', 'buyer'), sb: LS.get('sb', false), units: LS.get('units', 'in'),
+  lang: LS.get('lang', 'th'), themePref: LS.get('theme', 'system'), role: LS.get('role', 'buyer'), nav: false, navAnim: false, units: LS.get('units', 'in'),
   route: { name:'home', arg:'' }, f: defaultFilters(),
   ui: { menu:null, dialog:null, sheet:null, focus:null, clearKeep:false },
   chat: { open:false, room:null },
@@ -2629,6 +2612,7 @@ const S = Object.assign({
 const isGuest = () => S.role === 'guest';
 const isSeller = () => S.role === 'seller';
 const isMobile = () => matchMedia('(max-width: 767px)').matches;
+const isWide = () => matchMedia('(min-width: 1280px)').matches;
 const findL = id => S.listings.find(p => p.id === id);
 const sellerOf = id => S.sellers[id];
 const firstName = id => L(S.sellers[id] && S.sellers[id].name);
@@ -2713,7 +2697,7 @@ const tok = r => r.arg ? r.name + '.' + r.arg : r.name;
 function go(token, opts){
   opts = opts || {};
   const r = parse(token); const same = tok(r) === tok(S.route);
-  S.route = r; closeOverlays(true); enter(r);
+  S.route = r; closeOverlays(true); if (!isWide()) S.nav = false; enter(r);
   if (!same) { try { history.pushState(null, '', '#' + tok(r)); } catch(e){} }
   render();
   const secEl = r.name === 'settings' && r.arg && document.getElementById('set-' + r.arg);
@@ -2735,7 +2719,7 @@ function enter(r){
   if (r.name === 'sell' && !S.sellForm) S.sellForm = freshSellForm();
   if (r.name === 'closet') S.clCat = '';
 }
-window.addEventListener('popstate', () => { S.route = parse(location.hash); closeOverlays(true); enter(S.route); render(); window.scrollTo(0, 0); });
+window.addEventListener('popstate', () => { S.route = parse(location.hash); closeOverlays(true); if (!isWide()) S.nav = false; enter(S.route); render(); window.scrollTo(0, 0); });
 function focusMain(){ requestAnimationFrame(() => { const h = document.getElementById('page-title') || document.getElementById('main'); if (h) h.focus({ preventScroll:true }); }); }
 
 /* ============================== render ============================== */
@@ -2797,7 +2781,7 @@ function vApp(){
   const locked = PROTECTED.has(r.name) && isGuest();
   const view = locked ? vLogin(true) : (VIEWS[r.name] || vNotFound)(r.arg);
   return '<a class="skip" href="#main" data-act="skip">' + t('common.skip') + '</a>' +
-    '<div class="shell">' + vSidebar() +
+    '<div class="shell' + (S.nav ? ' nav-open' : '') + '">' + vSidebar() + (S.nav ? '<div class="nav-scrim" data-act="sb" aria-hidden="true"></div>' : '') +
       '<div class="main-col">' + vTopbar() +
         '<main id="main" class="content" tabindex="-1">' + view + '</main>' + vFooter() +
       '</div>' +
@@ -2825,16 +2809,17 @@ function curOf(key){
 }
 function sbLink(key, icon, label, count, countLabel, isGlyph){
   const cur = curOf(key);
-  return '<a class="sb-link" href="#' + key + '" data-go="' + key + '"' + (cur ? ' aria-current="page"' : '') + (S.sb ? ' title="' + esc(label) + '"' : '') + '>' +
+  return '<a class="sb-link" href="#' + key + '" data-go="' + key + '"' + (cur ? ' aria-current="page"' : '') + '>' +
     (isGlyph ? glyph(icon) : ic(icon)) + '<span class="sb-label">' + esc(label) + '</span>' +
     (count ? '<span class="count" aria-label="' + esc(countLabel) + '">' + count + '</span>' : '') + '</a>';
 }
-const sbSec = label => '<div class="sb-sec">' + label + '</div><div class="sb-sep"></div>';
+const sbSec = label => '<div class="sb-sec">' + label + '</div>';
 function vSidebar(){
   const g = isGuest(), sel = isSeller();
-  let h = '<aside class="sidebar' + (S.sb ? ' collapsed' : '') + '" aria-label="' + t('nav.main') + '">' +
+  const anim = S.navAnim; S.navAnim = false;
+  let h = '<aside id="sidebar" class="sidebar' + (anim ? ' anim' : '') + '" aria-label="' + t('nav.main') + '"' + (S.nav ? '' : ' inert') + '>' +
     '<div class="sb-head"><a class="sb-logo" href="#home" data-go="home" aria-label="UNIXA"><img src="a/logo.png" alt="" width="57" height="30"><span class="sb-word">UNIXA</span></a>' +
-    '<button class="icon-btn sm sb-toggle" data-act="sb" aria-expanded="' + !S.sb + '" aria-label="' + t(S.sb ? 'nav.expand' : 'nav.collapse') + '">' + ic('panel-left') + '</button></div>' +
+    '<button class="icon-btn sm sb-toggle" data-act="sb" aria-label="' + t('nav.closeNav') + '">' + ic('x') + '</button></div>' +
     '<nav class="sb-nav">' + sbLink('home', 'house', t('nav.home')) + sbLink('browse', 'tee', t('nav.browse'), 0, '', true);
   if (g) {
     h += '<div class="sb-cta"><p>' + t('nav.signInPrompt') + '</p><a class="btn btn-primary btn-sm" href="#login" data-go="login">' + t('common.signIn') + '</a></div>';
@@ -2844,8 +2829,7 @@ function vSidebar(){
     h += sbSec(t('nav.sell'));
     if (sel) { const nn = sellerNew(); h += sbLink('mycloset', 'hanger', t('nav.myCloset'), 0, '', true) + sbLink('sell', 'circle-plus', t('nav.sellClothes')) + sbLink('mycloset.orders', 'clipboard-list', t('nav.sellerOrders'), nn, t('nav.newOrders', { n:nn })); }
     else if (S.sellerReq) h += sbLink('apply', 'hourglass', t('nav.requestPending'));
-    else h += '<div class="sb-cta"><p><b>' + t('nav.startSelling') + '</b><br>' + t('nav.startSellingD') + '</p><a class="btn btn-secondary btn-sm" href="#apply" data-go="apply">' + t('nav.startSelling') + '</a></div>' +
-      '<a class="sb-link sb-cta-mini" href="#apply" data-go="apply" title="' + esc(t('nav.startSelling')) + '">' + glyph('hanger') + '<span class="sb-label">' + t('nav.startSelling') + '</span></a>';
+    else h += '<div class="sb-cta"><p><b>' + t('nav.startSelling') + '</b><br>' + t('nav.startSellingD') + '</p><a class="btn btn-secondary btn-sm" href="#apply" data-go="apply">' + t('nav.startSelling') + '</a></div>';
   }
   h += '</nav><div class="sb-foot">' + sbLink('help', 'life-buoy', t('nav.help')) +
     '<div class="fb-wrap" data-menu-root="demo"><button class="demo-btn" data-act="menu" data-menu="demo" aria-haspopup="true" aria-expanded="' + (S.ui.menu === 'demo') + '" title="' + esc(t('demo.title')) + '">' + ic('flask-conical', 'i-sm') +
@@ -2865,6 +2849,7 @@ function vDemoMenu(pos){
 function vTopbar(){
   const g = isGuest(), cc = cartCount(), un = unreadN(), dark = isDark();
   let h = '<header class="topbar' + (S.route.name === 'home' ? ' on-home' : '') + '"><div class="topbar-in">' +
+    '<button class="icon-btn nav-btn" data-act="sb" aria-controls="sidebar" aria-expanded="' + S.nav + '" aria-label="' + t(S.nav ? 'nav.closeNav' : 'nav.openNav') + '">' + ic('menu') + '</button>' +
     '<a class="tb-logo" href="#home" data-go="home" aria-label="UNIXA"><img src="a/logo.png" alt="" width="49" height="26"></a>' +
     '<form class="search" role="search" data-form="search"><label for="q" class="sr-only">' + t('common.searchLabel') + '</label>' + ic('search', 'i-sm') +
     '<input id="q" name="q" type="search" data-keep="focus" enterkeyhint="search" autocomplete="off" placeholder="' + esc(t('common.searchPh')) + '" value="' + esc(S.f.q) + '">' +
@@ -2873,6 +2858,8 @@ function vTopbar(){
     '<button class="icon-btn lang-btn desk" data-act="lang" aria-label="' + t('nav.lang') + '">' + ic('globe', 'i-sm') + '<span style="margin-left:4px">' + S.lang.toUpperCase() + '</span></button>' +
     '<button class="icon-btn desk" data-act="theme" aria-label="' + t(dark ? 'nav.toLight' : 'nav.toDark') + '">' + ic(dark ? 'sun' : 'moon') + '</button>';
   if (!g) {
+    const cu = chatUnread();
+    h += '<button class="icon-btn mob-chat" data-act="chatOpen" aria-label="' + esc(cu ? t('chat.openN', { n:cu }) : t('chat.open')) + '">' + ic('message-circle') + (cu ? '<span class="count attn" aria-hidden="true">' + cu + '</span>' : '') + '</button>';
     h += '<div class="fb-wrap" data-menu-root="notif"><button class="icon-btn" data-act="notif" aria-haspopup="true" aria-expanded="' + (S.ui.menu === 'notif') + '" aria-label="' + esc(un ? t('nav.notifN', { n:un }) : t('nav.notifications')) + '">' + ic('bell') + (un ? '<span class="count attn" aria-hidden="true">' + un + '</span>' : '') + '</button>' +
       (S.ui.menu === 'notif' ? '<div class="menu right top notif">' + vNotifPanel() + '</div>' : '') + '</div>';
   }
@@ -3990,7 +3977,7 @@ const readNum = id => { const el = document.getElementById(id); return el ? el.v
 
 const A = {
   skip(){ const m = document.getElementById('main'); if (m) m.focus(); },
-  sb(){ S.sb = !S.sb; LS.set('sb', S.sb); render(); },
+  sb(){ S.nav = !S.nav; S.navAnim = S.nav; if (isWide()) LS.set('navDock', S.nav); S.ui.menu = null; S.ui.focus = S.nav ? '#sidebar .sb-link' : '.nav-btn'; render(); },
   lang(){ S.lang = S.lang === 'th' ? 'en' : 'th'; LS.set('lang', S.lang); render(); },
   setLang(el){ S.lang = el.dataset.v; LS.set('lang', S.lang); render(); refocusEl(el); },
   theme(){ S.themePref = isDark() ? 'light' : 'dark'; LS.set('theme', S.themePref); applyTheme(); render(); },
@@ -4054,7 +4041,7 @@ const A = {
   chatBuyer(el){ const id = el.dataset.v; let r = S.rooms.find(x => x.with === id); if (!r) S.rooms.unshift({ id:'r-' + id, with:id, kind:'buyer', seller:true, unread:0, msgs:[] }); openChatWith(id, null, 'buyer'); },
   chatAdmin(){ openChatWith('admin', null, 'admin'); },
   chatOpen(){ S.chat.open = true; S.ui.menu = null; render(); const b = document.querySelector('#chat .room, #chat-input'); if (b) b.focus(); },
-  chatClose(){ S.chat = { open:false, room:null }; render(); const f = document.querySelector('.chat-fab'); if (f) f.focus(); },
+  chatClose(){ S.chat = { open:false, room:null }; render(); const f = document.querySelector(isMobile() ? '.mob-chat' : '.chat-fab'); if (f) f.focus(); },
   chatBack(){ S.chat.room = null; render(); const b = document.querySelector('#chat .room'); if (b) b.focus(); },
   chatRoom(el){ const r = S.rooms.find(x => x.id === el.dataset.v); r.unread = 0; S.chat.room = r.id; render(); const i = document.getElementById('chat-input'); if (i) i.focus(); },
   // cart & checkout
@@ -4268,9 +4255,10 @@ document.addEventListener('keydown', e => {
     if (S.ui.dialog || S.ui.sheet) { e.preventDefault(); closeDialog(); return; }
     if (S.ui.menu) { A.closeMenu(); return; }
     if (S.chat.open) { A.chatClose(); return; }
+    if (S.nav && !isWide()) { A.sb(); return; }
   }
   if (e.key === 'Tab') {
-    const box = document.getElementById('dlg') || document.getElementById('sheet');
+    const box = document.getElementById('dlg') || document.getElementById('sheet') || (S.nav && !isWide() && !isMobile() ? document.getElementById('sidebar') : null);
     if (box) { const f = [...box.querySelectorAll('button:not([disabled]),a[href],input:not([type=hidden]):not(.sr-only),select,textarea,[tabindex]:not([tabindex="-1"])')].filter(x => x.offsetParent !== null); if (!f.length) return; const first = f[0], last = f[f.length - 1]; if (!box.contains(document.activeElement)) { e.preventDefault(); first.focus(); } else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
   }
   if (['ArrowRight','ArrowLeft','ArrowDown','ArrowUp'].includes(e.key)) {
@@ -4293,6 +4281,8 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => rend
 
 /* ============================== boot ============================== */
 applyTheme();
+S.nav = isWide() && !isMobile() && LS.get('navDock', false);
+matchMedia('(min-width: 1280px)').addEventListener('change', e => { S.nav = e.matches && LS.get('navDock', false); render(); });
 S.route = parse(location.hash);
 enter(S.route);
 render();
