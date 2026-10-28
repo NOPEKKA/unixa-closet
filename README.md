@@ -10,13 +10,15 @@
   redesign, not production code. Port the ideas into the real Next.js app; do not copy this file in.
 
 ## HOW TO LOOK AROUND
-  - Bottom of the left sidebar: "Prototype - <role>" menu. Switch Guest / Buyer / Seller, reset the demo data,
-    and open "Redesign notes". (On phone: Menu button in the bottom bar.)
+  - Round flask button, bottom-left: the prototype menu. Switch Guest / Buyer / Seller, reset the demo data,
+    switch the menu layout (top bar = new, side drawer = previous) and open "Redesign notes".
+    (On phone: Menu button in the bottom bar.)
   - "Redesign notes" page (also linked in the footer) = the part for you:
       * old UI term -> new term -> backend name table
       * which clothing fields already exist in the backend vs which need adding
       * every removed global UI element, with real file:line references in the current repo
-      * real bugs found while reading the code (e.g. CartPage.jsx:1190 compares the coin balance object to a number;
+      * how payment works now: no coins - buyers pay the seller directly (PromptPay) at pickup, and which backend parts can go
+      * real bugs found while reading the code (e.g.
         profileCard.jsx shows the public student ID; formPostItem.jsx defaults condition to "new";
         privacy policy still says "SPU BUS Marketplace")
   - Language / theme toggles are in the top bar.

@@ -841,6 +841,42 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 .chat-in input:focus{outline:none;border-color:var(--primary);background:var(--surface)}
 .icon-btn.send{background:var(--primary);color:var(--on-primary);border-radius:50%}
 
+/* ---------- top navigation ---------- */
+.navrow{display:none}
+.nav-top .navrow{display:block;background:var(--surface);border-bottom:1px solid var(--border)}
+.navrow-in{max-width:1360px;margin:0 auto;padding:0 24px;display:flex;align-items:stretch;gap:12px;height:46px}
+.nr-main{display:flex;align-items:stretch;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1;padding-right:28px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+.nr-main::-webkit-scrollbar{display:none}
+.nr-link{display:inline-flex;align-items:center;gap:6px;padding:0 10px;font-size:14px;font-weight:500;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent;flex:none}
+.nr-link:hover{color:var(--text)}
+.nr-link[aria-current="page"]{color:var(--primary-ink);border-bottom-color:var(--primary);font-weight:600}
+.nr-link .count{margin-left:2px}
+.nr-sep{width:1px;background:var(--border);margin:13px 6px;flex:none}
+.nr-me{display:flex;align-items:stretch;gap:2px;flex:none;position:relative;padding-left:12px}
+.nr-me::before{content:"";position:absolute;left:0;top:13px;bottom:13px;width:1px;background:var(--border)}
+@media (min-width:1280px){.nr-main{-webkit-mask-image:none;mask-image:none;padding-right:0}}
+.tb-sell{margin:0 6px 0 2px}
+.nav-top .icon-btn.mob-chat{display:inline-grid}
+.nav-top .chat-fab{display:none}
+@media (min-width:768px){.nav-top .chat{bottom:20px}}
+.me-menu{width:300px;max-height:calc(100vh - 84px);overflow:auto}
+.menu-me-h{display:flex;gap:10px;align-items:center;padding:8px 10px 10px;border-radius:var(--r-sm)}
+.menu-me-h:hover,.menu-me-h:focus-visible{background:var(--surface-2)}
+.menu-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;font-size:14px}
+.demo-fab{position:fixed;left:16px;bottom:16px;z-index:40}
+.demo-fab .demo-btn{width:40px;height:40px;padding:0;justify-content:center;border-radius:50%;background:var(--surface);box-shadow:var(--shadow-soft)}
+
+/* ---------- paying the seller ---------- */
+.payee{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:14px;border-radius:var(--r-md);background:var(--surface-2)}
+.payee .fake-qr{width:132px;height:132px;padding:8px;flex:none}
+.pe-info{flex:1;min-width:180px;display:flex;flex-direction:column;gap:2px}
+.pe-amt{font-size:24px;font-weight:700;font-family:var(--font-display)}
+.pe-name{font-weight:600}
+.pay-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;counter-reset:ps}
+.pay-steps li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
+.pay-steps li::before{counter-increment:ps;content:counter(ps);display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--primary-soft);color:var(--primary-ink);font-size:12px;font-weight:700;flex:none;margin-top:1px}
+@container content (min-width:700px){.stats.three{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 /* ---------- responsive ---------- */
 @media (max-width:1023px){
   .me-btn .me-name{display:none}
@@ -850,7 +886,7 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 }
 @media (max-width:767px){
   :root{--top-h:56px}
-  .sidebar,.nav-btn,.nav-scrim{display:none}
+  .sidebar,.nav-btn,.nav-scrim,.demo-fab,.nav-top .navrow{display:none}
   .topbar-in{padding:0 12px;gap:8px}
   .tb-logo{display:flex}
   .search input{height:40px;font-size:15px;padding-right:12px}
@@ -1092,12 +1128,13 @@ const LISTINGS = [
     { art:{t:'cardigan',c:'#7D9468'}, ph:AP('front','back','tag'), listed:dayAt(-40), stock:0 }),
 ];
 
-/* Paid promotions (Featured listings). Sellers pay coins per day. */
+/* Boosts (Featured listings): free, BOOST_DAYS each, at most BOOST_MAX live per closet. */
+const BOOST_DAYS = 3, BOOST_MAX = 2;
 const ADS = [
-  { id:'r09', days:7, left:5, cost:70 }, { id:'r04', days:3, left:2, cost:30 }, { id:'r17', days:7, left:4, cost:70 },
-  { id:'d07', days:7, left:6, cost:70 }, { id:'r08', days:3, left:1, cost:30 }, { id:'d09', days:14, left:9, cost:140 },
+  { id:'r09', days:3, left:2 }, { id:'r04', days:3, left:2 }, { id:'r17', days:3, left:1 },
+  { id:'d07', days:3, left:3 }, { id:'r08', days:3, left:1 }, { id:'d09', days:3, left:2 },
 ];
-const PAST_ADS = [ { id:'d26', days:3, endedDaysAgo:12, cost:30 } ];
+const PAST_ADS = [ { id:'d26', days:3, endedDaysAgo:12 } ];
 
 const SELLER_REVIEWS = [
   { by:{th:'มุก',en:'Mook'}, stars:5, item:'d20', text:{th:'ของตรงรูป วัดขนาดให้ละเอียดมาก ใส่พอดีเลย',en:'Exactly like the photos, and the measurements were spot on — fits perfectly.'}, ago:8 },
@@ -1105,14 +1142,7 @@ const SELLER_REVIEWS = [
   { by:{th:'แพรว',en:'Praew'}, stars:4, item:null, text:{th:'สภาพตามที่บอก มีตำหนิเล็กน้อยตามที่แจ้งไว้',en:'Condition as described; the small flaw was disclosed up front.'}, ago:21 },
 ];
 
-const COUPONS_START = [ { id:'cp1', code:'NEWUSER2024', name:{th:'ส่วนลดผู้ใช้ใหม่',en:'New member discount'}, type:'percentage', value:10, exp:dayAt(60) } ];
-const REDEEMABLE = {
-  CLOSET20: { name:{th:'ลด ฿20 ทุกตู้เสื้อผ้า',en:'฿20 off in any closet'}, type:'fixed', value:20, exp:dayAt(30) },
-  SWAPWEEK: { name:{th:'สัปดาห์แลกเปลี่ยนเสื้อผ้า ลด 15%',en:'Swap week 15% off'}, type:'percentage', value:15, exp:dayAt(14) },
-};
-
 const BUYERS = { tee:{th:'ธีร์',en:'Tee'}, mook:{th:'มุก',en:'Mook'}, bank:{th:'แบงก์',en:'Bank'}, praew:{th:'แพรว',en:'Praew'} };
-const COMMISSION = 0.05;
 
 function O(id, lid, status, dayOff, time, loc, extra){
   const p = LISTINGS.find(x => x.id === lid);
@@ -1129,49 +1159,25 @@ const ORDERS_START = [
   O('1040','d13','accept',-2,'08:30','front7Eleven'),
   O('1038','d01','done',-6,'12:00','building11',{ doneAt:dayAt(-6,'12:09') }),
   O('1033','d10','done',-12,'15:00','underBuilding11',{ doneAt:dayAt(-12,'15:06'), reviewed:true }),
-  O('1031','d08','canceled',-4,'17:00','cafeAmazon',{ refunded:true }),
+  O('1031','d08','canceled',-4,'17:00','cafeAmazon'),
 ];
 const SELLER_ORDERS_START = [
   O('2051','d03','pending',0,'16:30','underBuilding11',{ buyer:'tee' }),
   O('2050','d15','pending',1,'11:30','frontBuilding9',{ buyer:'praew' }),
   O('2049','d17','accept',0,'11:30','underBuilding11',{ buyer:'mook' }),
   O('2045','d19','done',-3,'16:30','frontBuilding9',{ buyer:'bank', doneAt:dayAt(-3,'16:41') }),
-  O('2044','d20','done',-8,'11:30','underBuilding11',{ buyer:'mook', coupon:20, doneAt:dayAt(-8,'11:38') }),
+  O('2044','d20','done',-8,'11:30','underBuilding11',{ buyer:'mook', doneAt:dayAt(-8,'11:38') }),
   O('2040','d07','canceled',-10,'16:30','frontBuilding9',{ buyer:'tee' }),
 ];
 
 /* Seller money. Past months are totals from /api/orders/seller-revenue-summary; the current month
    (and any month an order above falls in) is computed from the orders, so the numbers always agree. */
-const REV_BASE = { '-5':[6,1480,20], '-4':[9,2310,40], '-3':[4,960,0], '-2':[8,1720,20], '-1':[11,2640,60] };
-const PAYOUTS_START = [
-  { id:'W-41', kind:'withdraw', amount:2500, status:'completed', at:dayAt(-44,'13:00') },
-  { id:'W-47', kind:'withdraw', amount:3000, status:'completed', at:dayAt(-18,'13:00') },
-  { id:'X-12', kind:'exchange', amount:300, status:'completed', at:dayAt(-6,'15:05') },
-  { id:'W-52', kind:'withdraw', amount:500, status:'pending', at:dayAt(-2,'09:10') },
-];
-
-/* coin ledger (buyer wallet) — notes use the backend's English note formats, translated on display */
-const TX_START = [
-  { id:'TX-88231', type:'transfer', note:'Purchase of Plaid pleated mini skirt', amount:-220, status:'completed', at:dayAt(-1,'20:14') },
-  { id:'TX-88209', type:'transfer', note:'Purchase of Striped oversized shirt', amount:-180, status:'completed', at:dayAt(-2,'09:40') },
-  { id:'TX-88150', type:'deposit', note:'Top Up with SlipVerify. Transaction ID: 016268114401', amount:500, status:'completed', at:dayAt(-2,'09:31') },
-  { id:'TX-88002', type:'transfer', note:'Purchase of Orange freshers’ activity tee', amount:-99, status:'completed', at:dayAt(-4,'21:10') },
-  { id:'TX-87911', type:'refund', note:'Refund for canceled Order ID 1031', amount:350, status:'completed', at:dayAt(-4,'18:40') },
-  { id:'TX-87870', type:'transfer', note:'Purchase of Black satin slip dress', amount:-350, status:'completed', at:dayAt(-6,'12:20') },
-  { id:'TX-87803', type:'withdraw', note:'Exchanged 300 to coins', amount:300, status:'completed', at:dayAt(-6,'15:05'), seller:true },
-  { id:'TX-87766', type:'transfer', note:'Advertisement fee for product ID: d07 for 7 days', amount:-70, status:'completed', at:dayAt(-1,'10:15'), seller:true },
-  { id:'TX-87700', type:'transfer', note:'Purchase of Faculty sports-day jersey, no. 7', amount:-190, status:'completed', at:dayAt(-11,'19:02') },
-  { id:'TX-87610', type:'transfer', note:'Purchase of White crew-neck tee', amount:-120, status:'completed', at:dayAt(-14,'21:30') },
-  { id:'TX-87544', type:'deposit', note:'Top Up with SlipVerify. Transaction ID: 016255901772', amount:1000, status:'completed', at:dayAt(-15,'11:47') },
-];
-
+const REV_BASE = { '-5':[6,1480], '-4':[9,2310], '-3':[4,960], '-2':[8,1720], '-1':[11,2640] };
 const NOTIFS_START = [
   { id:'n1', kind:'accepted', order:'1045', at:new Date(NOW.getTime() - 18*60000), read:false },
   { id:'n2', kind:'newOrder', order:'2051', lid:'d03', at:new Date(NOW.getTime() - 6*60000), read:false, seller:true },
   { id:'n3', kind:'newOrder', order:'2050', lid:'d15', at:new Date(NOW.getTime() - 70*60000), read:false, seller:true },
-  { id:'n4', kind:'topup', amount:500, at:dayAt(-2,'09:32'), read:true },
   { id:'n5', kind:'completed', order:'1038', at:dayAt(-6,'12:10'), read:true },
-  { id:'n6', kind:'refund', order:'1031', amount:350, at:dayAt(-4,'18:41'), read:true },
 ];
 
 const ROOMS_START = [
@@ -1189,7 +1195,6 @@ const ROOMS_START = [
 ];
 
 const UIDS = { '1045':'4F9K27', '1044':'7Q2M58', '1040':'2H8D31', '2049':'9KD4XA' };
-const TOPUP_INFO = { bank:'KBANK', holder:'บจก. ยูนิกซ่า มาร์เก็ตเพลส', number:'123-4-56789-0' };
 const SAVED_START = ['r09','r15','d08','d23','r13'];
 
 /* Drawn stand-ins for listings that have no photo yet: flat-lay garments on a studio backdrop,
@@ -2440,6 +2445,97 @@ const DICT = {
 };
 
 /* Redesign notes — bilingual. File references point at the real repo (React-app-Test-main/src). */
+/* Buyers pay sellers directly at pickup (no coins), and navigation lives in the top bar. These keys replace the coin-era copy above. */
+const COPY_DIRECT = {
+  nav: { viewProfile:['ดูโปรไฟล์','View profile'] },
+  demo: { navStyle:['รูปแบบเมนู','Menu layout'], navTop:['แถบด้านบน (ใหม่)','Top bar (new)'], navDrawer:['ลิ้นชักด้านข้าง (เดิม)','Side drawer (previous)'], navSet:['เปลี่ยนรูปแบบเมนูแล้ว','Menu layout changed'] },
+  pay: {
+    title:['การชำระเงิน','Payment'],
+    direct:['โอนให้ผู้ขายโดยตรง','Pay the seller directly'],
+    directSub:['ตอนนัดรับ หลังตรวจเสื้อผ้าแล้ว · PromptPay หรือบัญชีธนาคารของผู้ขาย','At pickup, after you check the clothes · PromptPay or the seller’s bank account'],
+    s1:['ผู้ขายยืนยันคำสั่งซื้อ แล้วบัญชีรับโอนของผู้ขายจะแสดงในคำสั่งซื้อ','The seller confirms, then their payment details appear in your order'],
+    s2:['เจอกันตามนัด ตรวจเสื้อผ้า ลองเทียบขนาด และดูตำหนิ','Meet up, check the clothes, compare the size and look at any flaws'],
+    s3:['โอนให้ผู้ขาย แล้วสแกน QR ของผู้ขายเพื่อยืนยันรับของ','Pay the seller, then scan their QR to confirm you got it'],
+    notNow:['ยังไม่ต้องจ่ายตอนนี้ แต่ละตู้เสื้อผ้าโอนแยกกัน','Nothing to pay now. Each closet is paid separately.'],
+    afterAccept:['บัญชีรับโอนของผู้ขายจะแสดงที่นี่หลังผู้ขายยืนยันคำสั่งซื้อ คุณโอนตอนนัดรับ หลังตรวจเสื้อผ้าแล้ว','The seller’s payment details show here once they confirm. You pay at pickup, after checking the clothes.'],
+    atPickup:['จ่ายตอนนัดรับ','Pay at pickup'],
+    amount:['ยอดที่ต้องโอน','Amount to pay'],
+    to:['โอนให้','Pay to'],
+    scanApp:['สแกนด้วยแอปธนาคาร หรือคัดลอกเบอร์ PromptPay','Scan with your bank app or copy the PromptPay number'],
+    tip:['โอนหลังตรวจเสื้อผ้าแล้วเท่านั้น และให้ผู้ขายเห็นว่าเงินเข้าก่อนสแกน QR รับของ','Only pay after checking the clothes, and let the seller see the money arrive before you scan.'],
+    paidDirect:['โอนให้ผู้ขายแล้ว','Paid to the seller'],
+    unpaid:['ยังไม่ได้โอน · จ่ายตอนนัดรับ','Not paid yet · pay at pickup'],
+    none:['ไม่มีการจ่ายเงิน','No payment made'],
+    sellerSees:['ผู้ซื้อเห็นบัญชีนี้หลังคุณยืนยันออเดอร์ และโอนให้คุณตอนนัดรับ ไม่แสดงบนตู้เสื้อผ้าสาธารณะ','Buyers see this only after you confirm their order, and pay you at pickup. It never shows on your public closet.'],
+    checkFirst:['ก่อนให้ผู้ซื้อสแกน เปิดแอปธนาคารดูว่าเงิน {amt} เข้าแล้ว','Before the buyer scans, check your bank app that {amt} has arrived.'],
+  },
+  checkout: { title:['ยืนยันคำสั่งซื้อ','Place order'], method:['วิธีชำระเงิน','Payment'], place:['ยืนยันคำสั่งซื้อ · {amt}','Place order · {amt}'] },
+  cart: { note:['ยังไม่ต้องจ่าย แต่ละตู้เสื้อผ้ายืนยันคำสั่งซื้อของตัวเอง แล้วคุณโอนให้ผู้ขายตอนนัดรับ','No payment yet. Each closet confirms its own order, and you pay the seller at pickup.'], total:['ยอดรวม','Total'], checkout:['ไปยืนยันคำสั่งซื้อ','Continue'], signInToCheckout:['เข้าสู่ระบบเพื่อสั่งซื้อ','Sign in to order'] },
+  order: {
+    acScanD:['ตรวจเสื้อผ้า ลองเทียบขนาดและดูตำหนิ แล้วโอนให้ผู้ขายและสแกน QR จากเครื่องผู้ขาย','Check the clothes, compare the size and flaws, then pay the seller and scan their QR.'],
+    acOverD:['ถ้าผู้ขายไม่มา แจ้งไว้แล้วระบบจะยกเลิกคำสั่งซื้อให้ คุณยังไม่ได้จ่ายเงิน','If the seller didn’t show, report it and we’ll cancel the order. You haven’t paid anything.'],
+    paidWith:['การชำระเงิน','Payment'],
+  },
+  pickup: { reminder:['เตรียมแอปธนาคารไว้ ตรวจเสื้อผ้าก่อน แล้วค่อยโอนให้ผู้ขาย จากนั้นสแกน QR ของผู้ขายเพื่อยืนยันรับของ','Have your bank app ready. Check the clothes first, pay the seller, then scan their QR to confirm.'] },
+  scan: { s1:['ก่อนสแกนรับของ','Before you scan'], payT:['โอนเงินให้ผู้ขาย','Pay the seller'], checked:['ตรวจเสื้อผ้าแล้ว และโอน {amt} ให้ผู้ขายแล้ว','I’ve checked the clothes and paid the seller {amt}'], doneD:['คำสั่งซื้อ #{id} เสร็จสมบูรณ์','Order #{id} is complete.'] },
+  orders: {
+    cancelNote:['คุณยังไม่ได้จ่ายเงิน ยกเลิกแล้วไม่มีเงินค้าง','You haven’t paid anything, so there’s nothing to refund.'],
+    nrTitle:['แจ้งผู้ขายไม่มาตามนัด','Report a no-show'],
+    nrMsg:['เลยเวลานัดรับมาเกิน 12 ชั่วโมงแล้ว แจ้งว่าไม่ได้รับเสื้อผ้าใช่ไหม? ระบบจะยกเลิกคำสั่งซื้อให้','The pickup time passed more than 12 hours ago. Report that you didn’t get the clothes? We’ll cancel the order.'],
+    nrBtn:['ยืนยันแจ้ง','Report'],
+    nrDone:['แจ้งแล้ว ยกเลิกคำสั่งซื้อให้แล้ว ทีมงานจะตรวจสอบผู้ขาย','Reported — the order is cancelled and the team will follow up with the seller'],
+    overdueHint:['ผู้ขายไม่มาตามนัดเกิน 12 ชม.? แจ้งไว้ ระบบจะยกเลิกคำสั่งซื้อให้ คุณยังไม่ได้จ่ายเงิน','Seller didn’t show within 12 hours? Report it and we’ll cancel the order — you haven’t paid anything.'],
+  },
+  closet: {
+    stSales:['ยอดขายเดือนนี้','Sales this month'], stSalesF:['จากออเดอร์ที่ส่งมอบแล้ว','From completed handoffs'],
+    stCollect:['รอรับโอน','To collect'], stCollectF:['{n} ออเดอร์ที่นัดไว้ ผู้ซื้อโอนตอนนัดรับ','{n} booked orders, paid at pickup'],
+    rejectMsg:['ผู้ซื้อจะได้รับแจ้ง และรายการจะกลับมาเปิดขาย ยังไม่มีการจ่ายเงิน','The buyer is told and the listing goes back on sale. No money has changed hands.'],
+    netOf:['ได้รับ {amt}','Received {amt}'],
+    tPromos:['ดันรายการ','Boosts'], promote:['ดัน','Boost'], promoted:['ดันอยู่ · เหลือ {n} วัน','Boosted · {n} days left'],
+    prActive:['กำลังดัน','Boosting now'], prCta:['ดันรายการ','Boost a listing'], prEmpty:['ยังไม่ได้ดันรายการ','Nothing boosted yet'],
+    prNote:['ดันได้ฟรี ครั้งละ {max} ชิ้น ชิ้นละ {d} วัน รายการที่ดันจะขึ้นใน “เสื้อผ้าแนะนำ” บนหน้าแรก','Boosting is free: up to {max} listings at a time, {d} days each. Boosted listings show in “Featured clothes” on Home.'],
+    prSlots:['ใช้ไป {n}/{max}','{n} of {max} in use'],
+    pmTitle:['ดันรายการขึ้นหน้าแรก','Boost a listing'], pmInfo:['ขึ้นใน “เสื้อผ้าแนะนำ” {d} วัน ฟรี','Shown in “Featured clothes” for {d} days, free'], pmBtn:['เริ่มดัน','Boost'],
+    pmFull:['ดันครบ {max} ชิ้นแล้ว รอให้ชิ้นเดิมหมดเวลาก่อน','You’re already boosting {max} listings — wait for one to end.'],
+    pmOk:['ดัน “{title}” ขึ้นหน้าแรกแล้ว','“{title}” is now boosted'],
+  },
+  sales: {
+    title:['ยอดขาย','Sales'],
+    sub:['บันทึกยอดจากออเดอร์ที่ส่งมอบแล้ว ผู้ซื้อโอนให้คุณโดยตรง UNIXA ไม่ได้ถือเงิน','A record of completed orders. Buyers pay you directly; UNIXA never holds the money.'],
+    month:['ขายได้เดือนนี้','Sold this month'], monthD:['{n} ออเดอร์','{n} orders'],
+    pending:['รอรับโอน','To collect'], pendingD:['{n} ออเดอร์ที่ยืนยันแล้ว ผู้ซื้อจะโอนตอนนัดรับ','{n} confirmed orders — buyers pay at pickup'],
+    total:['ขายได้ 6 เดือน','Sold in 6 months'], totalD:['{n} ออเดอร์ที่ส่งมอบแล้ว','{n} completed orders'],
+    noFee:['ไม่มีค่าคอมมิชชัน ราคาที่ตั้งคือเงินที่ได้','No commission — your price is what you get.'],
+    history:['ออเดอร์ที่ส่งมอบแล้ว','Completed orders'], hIncome:['ออเดอร์ #{id}','Order #{id}'],
+  },
+  rev: { chart:['ยอดขายรายเดือน','Sales by month'], net:['ยอดขาย','Sales'] },
+  sell: { priceHint:['ผู้ซื้อโอนให้คุณ {net} เต็มจำนวนตอนนัดรับ ไม่มีค่าคอมมิชชัน','Buyers pay you the full {net} at pickup — no commission.'] },
+  settings: { payout:['บัญชีรับโอน','Payment account'] },
+  apply: { bankInfo:['บัญชีรับโอนจากผู้ซื้อ','Account buyers pay into'] },
+  home: { featuredSub:['ผู้ขายดันรายการขึ้นมาได้ฟรี ตู้ละไม่เกิน 2 ชิ้น','Sellers can boost up to 2 listings each, for free.'], sponsored:['ผู้ขายดัน','Boosted'] },
+  card: { ad:['ดัน','Boosted'] },
+  browse: { titleFeatured:['เสื้อผ้าแนะนำ · ผู้ขายดัน','Featured · boosted by sellers'] },
+  notes: { moneyT:['การจ่ายเงิน: ผู้ซื้อโอนให้ผู้ขายโดยตรง','Payments: buyers pay sellers directly'] },
+  help: {
+    searchPh:['ค้นหาวิธีใช้งาน เช่น โอนเงิน นัดรับ วัดขนาด','Search help, e.g. paying, pickup, measuring'],
+    popBuyD:['เลือก นัดรับ ตรวจของ โอน และสแกนรับของ','Choose, meet, check, pay and scan'],
+    popPay:['การจ่ายเงิน','Paying'], popPayD:['โอนให้ผู้ขายตอนนัดรับ','Pay the seller at pickup'],
+    cPayments:['การจ่ายเงิน','Payments'], cPaymentsD:['โอนให้ผู้ขายโดยตรงตอนนัดรับ และกรณียกเลิก','Paying the seller at pickup, and what happens if an order is cancelled'],
+  },
+  guide: {
+    payT:['วิธีจ่ายเงินให้ผู้ขาย','How to pay the seller'],
+    y1t:['สั่งซื้อโดยยังไม่ต้องจ่าย','Order without paying'], y1d:['เลือกวัน เวลา และจุดนัดรับ แล้วยืนยันคำสั่งซื้อ ระบบยังไม่เก็บเงิน','Pick a time and place and place the order — nothing is charged.'],
+    y2t:['รอผู้ขายยืนยัน','Wait for the seller'], y2d:['เมื่อผู้ขายยืนยัน บัญชีรับโอน (PromptPay) ของผู้ขายจะแสดงในหน้าคำสั่งซื้อ','Once the seller confirms, their PromptPay details appear in the order.'],
+    y3t:['ตรวจเสื้อผ้าก่อนโอน','Check before you pay'], y3d:['เจอกันตามนัด ลองเทียบขนาดและดูตำหนิ ถ้าไม่ตรงตามที่ลงไว้ ไม่ต้องโอน ยกเลิกได้เลย','At the meetup, compare the size and look at the flaws. If it isn’t as described, don’t pay — cancel instead.'],
+    y4t:['โอนแล้วสแกน QR','Pay, then scan'], y4d:['โอนให้ผู้ขาย รอผู้ขายเห็นเงินเข้า แล้วสแกน QR จากเครื่องผู้ขายเพื่อปิดคำสั่งซื้อ','Pay the seller, let them see it arrive, then scan their QR to close the order.'],
+    bT:['วิธีดันรายการขึ้นหน้าแรก','How to boost a listing'],
+    b1t:['เปิดตู้เสื้อผ้าของฉัน → ดันรายการ','Open My closet → Boosts'], b1d:['หรือกด “ดัน” ข้างรายการในแท็บรายการของฉัน','Or press “Boost” next to a listing in My listings.'],
+    b2t:['เลือกรายการที่ยังเปิดขาย','Pick a listing that’s on sale'], b2d:['รายการที่ขายแล้วหรือมีคนจองดันไม่ได้','Sold or reserved pieces can’t be boosted.'],
+    b3t:['ขึ้นหน้าแรก 3 วัน ฟรี','On Home for 3 days, free'], b3d:['ดันได้ครั้งละ 2 ชิ้น เมื่อชิ้นไหนครบ 3 วันก็ดันชิ้นใหม่ได้','Up to 2 at a time; when one ends you can boost another.'],
+  },
+};
+for (const ns in COPY_DIRECT) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_DIRECT[ns]);
+
 const NOTES = {
   before: [
     ['g','แถบเมนูเดิม','Old sidebar'], ['','หน้าแรก','Home'],
@@ -2449,12 +2545,11 @@ const NOTES = {
     ['g','ทุกหน้า','Every page'], ['x','สวิตช์เปิด/ปิดแจ้งเตือน','Notification ON/OFF switch'], ['x','ประกาศกติกาด้านล่าง','Rules banner at the bottom'], ['x','ปุ่มแชทลากได้','Draggable chat button'],
   ],
   after: [
-    ['','หน้าแรก · เลือกดูเสื้อผ้า','Home · Browse clothes'],
-    ['g','ซื้อ','Buy'], ['in','คำสั่งซื้อของฉัน (นัดรับ + QR อยู่ในคำสั่งซื้อ)','My orders (pickup + QR live in the order)'], ['in','รายการที่บันทึกไว้','Saved items'], ['in','ตะกร้า','Cart'],
-    ['g','ขาย','Sell'], ['in','ตู้เสื้อผ้าของฉัน (ภาพรวม · รายการ · ออเดอร์ · โปรโมท · ยอดขาย)','My closet (overview · listings · orders · promotions · sales)'], ['in','ลงขายเสื้อผ้า','Sell clothes'], ['in','ออเดอร์ที่ขาย','Seller orders'], ['in','(ยังไม่ได้เป็นผู้ขาย → การ์ด “เริ่มขายเสื้อผ้า”)','(not a seller yet → “Start selling” card)'],
-    ['g','บัญชี','Account'], ['in','โปรไฟล์ · กระเป๋าเงิน · ตั้งค่า','Profile · Wallet · Settings'],
-    ['g','ช่วยเหลือ','Support'], ['in','ช่วยเหลือและติดต่อ','Help & support'],
-    ['g','มือถือ','Mobile'], ['in','แถบล่าง: หน้าแรก · เลือกดู · คำสั่งซื้อ · ตะกร้า · เมนู','Bottom bar: Home · Browse · Orders · Cart · Menu'],
+    ['g','แถบบน แถวที่ 1','Top bar, row 1'], ['in','โลโก้ · ค้นหา · ลงขายเสื้อผ้า · แชท · แจ้งเตือน · รายการที่บันทึก · ตะกร้า · เมนูบัญชี','Logo · search · Sell clothes · chat · notifications · saved · cart · account menu'],
+    ['g','แถบบน แถวที่ 2','Top bar, row 2'], ['in','หน้าแรก · เลือกดูเสื้อผ้า · 9 หมวด','Home · Browse clothes · the 9 categories'], ['in','คำสั่งซื้อของฉัน · ตู้เสื้อผ้าของฉัน (มีตัวเลขเมื่อมีเรื่องต้องทำ)','My orders · My closet (with a count when something needs you)'],
+    ['g','เมนูบัญชี (รูปโปรไฟล์)','Account menu (avatar)'], ['in','ซื้อ: คำสั่งซื้อ · รายการที่บันทึก','Buy: orders · saved'], ['in','ขาย: ตู้เสื้อผ้า · ออเดอร์ที่ขาย · ลงขาย','Sell: closet · seller orders · sell'], ['in','ตั้งค่า · ช่วยเหลือ · ภาษา · ธีม · ออกจากระบบ','Settings · help · language · theme · sign out'],
+    ['g','มือถือ','Mobile'], ['in','แถบล่าง: หน้าแรก · เลือกดู · คำสั่งซื้อ · ตะกร้า · เมนู','Bottom bar: Home · Browse · Orders · Cart · Menu'], ['in','แถบบน: ค้นหา · แชท · แจ้งเตือน','Top: search · chat · notifications'],
+    ['g','ไม่มีแล้ว','Gone'], ['x','กระเป๋าเงิน · เติมเหรียญ · แลกโค้ด · ถอนเงิน','Wallet · top up · redeem · withdraw'],
   ],
   terms: [
     ['เสื้อผ้า / รายการ','Clothes / listing','product — /api/products/*'],
@@ -2465,11 +2560,10 @@ const NOTES = {
     ['ออเดอร์ที่ขาย','Seller orders','/api/orders/sellerOrders'],
     ['ไซซ์ (หลายไซซ์)','Sizes (multi-size)','product.choices[]'],
     ['สไตล์','Style','tag_id — /api/system/tags'],
-    ['เสื้อผ้าแนะนำ · โฆษณา','Featured · Sponsored','/api/advertise/*'],
+    ['เสื้อผ้าแนะนำ · ดันรายการ (ฟรี)','Featured · boosts (free)','/api/advertise/* — no fee'],
     ['ลงใหม่','New listings','searchProducts?sort=time'],
-    ['เหรียญ (ผู้ซื้อ)','Coins (buyer)','user.balance.unWithdrawAble'],
-    ['ถอนได้ (ผู้ขาย)','Available to withdraw (seller)','user.balance.withdrawAble'],
-    ['ยอดขายสุทธิ','Net sales','netIncome — /api/orders/seller-revenue-summary'],
+    ['บัญชีรับโอนของผู้ขาย','Seller payment account','UserShop.bankName · BankAccountNumber · BankAccountName'],
+    ['ยอดขาย','Sales','/api/orders/seller-revenue-summary (no commission)'],
   ],
   fields: [
     ['รูปหลายรูป','Several photos',true,'image_name[] (formPostItem.jsx:488)','image_name[] (formPostItem.jsx:488)','ใส่ชนิดของรูป (ด้านหน้า/หลัง/ป้าย/ตำหนิ) เป็นอาร์เรย์คู่กัน รูปแรกยังเป็นรูปปก','Add a parallel array of photo kinds (front/back/tag/defect); the first stays the cover'],
@@ -2495,26 +2589,30 @@ const NOTES = {
     ['สวิตช์แจ้งเตือนบนแถบบน (Navbar.jsx:94, :195) → โปรไฟล์ → ตั้งค่า → การแจ้งเตือน','Notification switch in the top bar (Navbar.jsx:94, :195) → Profile → Settings → Notifications'],
     ['BottomAnnouncement ทุกหน้า (clientLayout.jsx:6, :47) → ช่วยเหลือ → กติกา และลิงก์ในส่วนท้าย','BottomAnnouncement on every page (clientLayout.jsx:6, :47) → Help → Rules, plus a footer link'],
     ['แชทลากได้ (Main/Chat.jsx:59, :437-446) → ปุ่มมุมขวาล่างตำแหน่งคงที่ มือถือเปิดเต็มจอ','Draggable chat (Main/Chat.jsx:59, :437-446) → fixed bottom-right launcher, full screen on phones'],
-    ['ยอดถอนได้ในกระเป๋าเงินผู้ซื้อ → แสดงเฉพาะใน ตู้เสื้อผ้าของฉัน → ยอดขาย','Withdrawable balance in the buyer wallet → only in My closet → Sales'],
+    ['ระบบเหรียญทั้งหมด: กระเป๋าเงิน เติมเหรียญ ตรวจสลิป แลกโค้ด คูปอง ถอนเงิน แลกเป็นเหรียญ และค่าคอมมิชชัน → ผู้ซื้อโอนให้ผู้ขายโดยตรงตอนนัดรับ','The whole coin system: wallet, top-up, slip check, redeem codes, coupons, withdrawals, convert-to-coins and commission → buyers pay sellers directly at pickup'],
+    ['เมนูข้าง (sidebar.jsx) → แถบบนสองแถว และเมนูบัญชีที่รูปโปรไฟล์ มือถือใช้แถบล่างเหมือนเดิม','The sidebar (sidebar.jsx) → a two-row top bar plus the account menu on the avatar; phones keep the bottom bar'],
     ['หมวดทั่วไป (ไอที อาหาร เครื่องเขียน ฯลฯ) ถูกซ่อนจากหน้าบ้าน ข้อมูลหลังบ้านยังอยู่ รายการเดิมที่ไม่ใช่เสื้อผ้าต้องแจ้งผู้ขาย','Generic categories (IT, food, stationery…) are hidden from the UI; backend data stays; sellers of non-clothing listings need a notice'],
   ],
   money: [
-    ['ผู้ซื้อจ่ายได้ทางเดียวคือเหรียญ: ตัวเลือก PromptPay ถูกคอมเมนต์ใน CartPage.jsx:1151-1188 จึงยังต้องมีกระเป๋าเงินผู้ซื้อ (ยอดเหรียญ เติมเหรียญ แลกโค้ด ประวัติ) แต่ไม่มียอดถอนได้','Coins are the only way to pay: the PromptPay option is commented out in CartPage.jsx:1151-1188, so the buyer wallet stays (balance, top up, redeem, history) — without any withdrawable money'],
-    ['ถ้าเปิด PromptPay อีกครั้ง ผู้ซื้อไม่ต้องมีเหรียญก็ซื้อได้ กระเป๋าเงินผู้ซื้อจะเหลือแค่คูปองและโค้ด','If PromptPay is switched back on, buyers won’t need coins and the buyer wallet can shrink to coupons and codes'],
-    ['เงินของผู้ขายอยู่ที่ ตู้เสื้อผ้าของฉัน → ยอดขาย เท่านั้น: ถอนได้ · รอส่งมอบ · ถอนแล้ว (+ กำลังโอน) · ยอดขายทั้งหมด และมีสมการให้เห็นว่ารวมกันได้เท่าไร','Seller money appears only in My closet → Sales: available · pending · withdrawn (+ in transit) · total sales, with the equation that ties them together'],
-    ['ยอดสุทธิต่อออเดอร์ = ราคาที่ผู้ซื้อจ่าย + ส่วนลดคูปอง − ค่าคอมมิชชัน 5% (นิยามเดียวกับ seller-revenue-summary)','Net per order = paid price + coupon discount − 5% commission (same definition as seller-revenue-summary)'],
-    ['บั๊ก: CartPage.jsx:1190, :1237, :1239 เทียบ (user?.balance || 0) < totalPrice ซึ่ง balance เป็นอ็อบเจกต์ ผลเป็น false เสมอ คำเตือนเหรียญไม่พอไม่เคยขึ้นและปุ่มไม่เคยถูกปิด ส่วน :1192 แสดง [object Object] — ใช้ user.balance.unWithdrawAble','Bug: CartPage.jsx:1190, :1237, :1239 compare (user?.balance || 0) < totalPrice where balance is an object — always false, so the not-enough-coins warning never shows and the button never disables; :1192 prints [object Object]. Use user.balance.unWithdrawAble'],
+    ['UNIXA ไม่ถือเงินแล้ว: ผู้ซื้อสั่งโดยยังไม่จ่าย เจอผู้ขายตามนัด ตรวจเสื้อผ้า แล้วโอนให้ผู้ขายผ่าน PromptPay หรือบัญชีธนาคาร จากนั้นสแกน QR ของผู้ขายเพื่อปิดคำสั่งซื้อ','UNIXA no longer holds money: buyers order without paying, meet the seller, check the clothes, pay by PromptPay or bank transfer, then scan the seller’s QR to close the order'],
+    ['บัญชีรับโอนใช้ฟิลด์ที่มีอยู่แล้วใน UserShop (bankName, BankAccountNumber, BankAccountName) ซึ่งกรอกตอนสมัครเป็นผู้ขาย ผู้ซื้อเห็นหลังผู้ขายยืนยันคำสั่งซื้อเท่านั้น ไม่แสดงบนตู้เสื้อผ้าสาธารณะ','The payment account uses fields UserShop already has (bankName, BankAccountNumber, BankAccountName), filled in when someone applies to sell. Buyers see it only after the seller confirms their order, never on the public closet'],
+    ['สร้าง QR PromptPay ในเครื่องจากเบอร์หรือเลขบัญชี ไม่ใช้บริการ QR ภายนอก (ปัญหาเดียวกับ api.qrserver.com ใน OrdersList.jsx:647)','Generate the PromptPay QR on the device; never call an outside QR service (same issue as api.qrserver.com in OrdersList.jsx:647)'],
+    ['หลังบ้านที่เลิกใช้ได้: coinController.js (เติม ถอน แลก) ตาราง Balance, TopUpHistory, WithdrawReq, SellerIncomeTransaction การตรวจสลิป EasySlip และ webhook เติมเงิน ซึ่งเป็นจุดเสี่ยงที่สุดของระบบเดิม','Backend that can go: coinController.js (top up, withdraw, exchange), the Balance, TopUpHistory, WithdrawReq and SellerIncomeTransaction tables, the EasySlip slip check and the top-up webhooks — the riskiest part of the old system'],
+    ['ไม่ต้องมีการคืนเงิน: ยกเลิกหรือผู้ขายไม่มาก่อนนัดรับ ไม่มีเงินค้างในระบบ การสแกน QR ส่งมอบเหลือแค่ปิดคำสั่งซื้อ ไม่ต้องจ่ายยอดเข้ายอดเงินผู้ขาย','No refunds needed: a cancel or no-show before pickup leaves no money in the system, and scanning the handoff QR only closes the order instead of crediting a seller balance'],
+    ['ความเสี่ยงใหม่คือผู้ซื้อรับของแล้วไม่โอน หน้าจอจึงให้ผู้ขายเช็กเงินเข้าก่อนเปิด QR ส่งมอบ และผู้ซื้อติ๊กว่าโอนแล้วก่อนสแกน','The new risk is a buyer taking the clothes without paying, so the seller checks the money arrived before showing the handoff QR, and the buyer ticks that they paid before scanning'],
+    ['โปรโมทแบบจ่ายเหรียญ → “ดันรายการ” ฟรี ตู้ละ 2 ชิ้น ชิ้นละ 3 วัน ใช้ /api/advertise เดิมโดยไม่หักเงิน ค่าคอมมิชชัน 5% หายไปด้วย ถ้า UNIXA ต้องมีรายได้ต้องเลือกโมเดลใหม่','Paid coin promotions → free “boosts”, 2 per closet, 3 days each, on the existing /api/advertise with no charge. The 5% commission goes too; if UNIXA needs revenue it needs a new model'],
   ],
   decisions: [
     ['เพิ่มหมวด “รองเท้า” เป็นหมวดที่ 9 เพราะรูปที่ได้รับมีรองเท้า (ถามแล้วและยืนยัน) ถุงมืออยู่ในหมวด “อื่น ๆ”','Added Shoes as a 9th group because the supplied photos include shoes (asked and confirmed). Gloves sit in Other'],
-    ['ใส่ “กระเป๋าเงิน” ไว้ในกลุ่มบัญชี เพราะเหรียญเป็นทางเดียวในการจ่าย ต้องเติมได้ในแตะเดียว','Kept Wallet in the Account group — coins are the only payment method, so topping up must be one tap away'],
+    ['เมนูหลักอยู่ที่แถบบน: งานที่ใช้บ่อย (ค้นหา ลงขาย ตะกร้า คำสั่งซื้อ ตู้เสื้อผ้า) อยู่บนจอตลอด ส่วนที่ใช้น้อย (ตั้งค่า ภาษา ธีม ช่วยเหลือ) อยู่ในเมนูบัญชี แบบเดียวกับ Vinted และ Carousell ลิ้นชักข้างแบบเดิมเปิดเทียบได้จากเมนูต้นแบบ','Navigation lives in the top bar: frequent jobs (search, sell, cart, orders, closet) stay on screen and rare ones (settings, language, theme, help) sit in the account menu, the Vinted/Carousell pattern. The old side drawer is still in the prototype menu for comparison'],
     ['“ออเดอร์ที่ขาย” เปิดแท็บในตู้เสื้อผ้าของฉัน แทนหน้า /sellerOrders ที่ซ้ำกับแดชบอร์ด','“Seller orders” opens the tab inside My closet instead of the /sellerOrders page that duplicated the dashboard'],
     ['แสดง “ยืนยันนักศึกษาแล้ว” ที่ตู้เสื้อผ้า เพราะการเป็นผู้ขายต้องส่งบัตรนักศึกษาให้แอดมินตรวจ (SellerRequestForm: evidenceImage) ผู้ซื้อไม่มีป้ายนี้','“Verified student” shows on closets because selling requires an admin-checked student ID (SellerRequestForm: evidenceImage). Buyers get no badge'],
     ['หน้าแรกใช้รูปรายการจริงแทน banner เดิมที่เป็นรูปเครื่องเขียน เปลี่ยน banner ได้จากตั้งค่าแอดมิน (/api/system/setBannerImage) ไม่ต้องแก้โค้ด','Home uses real listing photos instead of the stationery banners; swap banners from the admin setting (/api/system/setBannerImage), no code change'],
-    ['ย้ายการเลือกคูปองจากหน้ารายการไปที่ตะกร้า (ฟิลด์คูปองเดิมของ cart item) เพื่อให้กล่องซื้อสั้นลง','Moved the coupon choice from the listing to the cart line (same cart-item coupon field) to keep the buy box short'],
+    ['จ่ายตอนนัดรับแทนจ่ายก่อน เพราะเสื้อผ้ามือสองต้องดูของจริง และผู้ซื้อไม่ต้องเสี่ยงโอนก่อนแล้วผู้ขายไม่มา','Pay at pickup, not in advance: second-hand clothes need checking in person, and buyers never risk paying a seller who doesn’t show'],
     ['ช่องค้นหาบนแถบบนซ่อนตอนที่ช่องค้นหาใน Hero ยังอยู่บนจอ จะได้ไม่มีช่องค้นหาสองช่อง','The top-bar search hides while the hero search is on screen, so there are never two search boxes'],
   ],
   code: [
+    ['CartPage.jsx:1151-1239 ลบส่วนจ่ายเงินทั้งหมด (เหรียญ, PromptPay ที่คอมเมนต์ไว้ และการเช็กยอดที่เทียบอ็อบเจกต์กับตัวเลข) เหลือปุ่มยืนยันคำสั่งซื้อ','CartPage.jsx:1151-1239: remove the whole payment block (coins, the commented-out PromptPay, the balance check that compared an object with a number) and keep a plain place-order button'],
     ['profileCard.jsx:251-257 แสดงรหัสนักศึกษาต่อสาธารณะ — ลบออก เหลือป้ายยืนยันนักศึกษาแทน','profileCard.jsx:251-257 shows the student ID publicly — remove it and show the verified badge instead'],
     ['formPostItem.jsx:487 condition: formData.condition || true ถ้าไม่แตะช่องสภาพ ระบบบันทึกเป็น “ใหม่” เอง','formPostItem.jsx:487 condition: formData.condition || true silently saves “New” if the field is untouched'],
     ['Catalog.jsx:12 ตั้ง shakingId เป็น public_uid แต่ :65 เทียบกับ p.id และ :78-79 ยังเยื้องการ์ดคี่ — ใช้ public_uid และเอา translate-y-6 ออก','Catalog.jsx:12 stores public_uid but :65 compares p.id, and :78-79 still offsets odd cards — use public_uid and drop translate-y-6'],
@@ -2530,7 +2628,7 @@ const NOTES = {
     ['ข้อมูลทั้งหมดเป็นตัวอย่างในเบราว์เซอร์นี้ และรีเซ็ตเมื่อรีเฟรช','All data is sample data in this browser and resets on reload.'],
     ['รูป 18 รูปเป็นรูปที่ได้รับมา ราคา ขนาด และคำบรรยายเป็นข้อมูลสมมติ ส่วนรายการในหมวดชุดนักศึกษา เดรส กระโปรง ชุดกีฬา ใช้ภาพวาดแทนจนกว่าจะมีรูปจริง','The 18 photos are the supplied ones; prices, sizes and descriptions are made up. Uniforms, dresses, skirts and sportswear use drawn stand-ins until real photos arrive.'],
     ['ผู้ขายตัวอย่างยอมรับออเดอร์และตกลงเปลี่ยนนัดรับเองหลังไม่กี่วินาที เพื่อให้เห็นขั้นตอนต่อไป','Sample sellers accept orders and agree to pickup changes after a few seconds so you can see the next step.'],
-    ['กล้องสแกน QR การดาวน์โหลด CSV และการตรวจสลิปถูกจำลอง','The QR camera, CSV download and slip check are simulated.'],
+    ['กล้องสแกน QR และ QR PromptPay ถูกจำลอง เบอร์ PromptPay ของผู้ขายเป็นเลขสมมติ','The QR camera and PromptPay QR codes are simulated; sellers’ PromptPay numbers are made up.'],
     ['ภาพหน้าจอในคู่มือเป็นของแอปเวอร์ชันเดิม ต้องถ่ายใหม่หลังเปลี่ยนหน้าจอ','Guide screenshots are from the current app and need re-shooting after the redesign.'],
   ],
 };
@@ -2591,21 +2689,21 @@ const defaultFilters = () => ({ q:'', cat:'', sub:'', sizes:[], conds:[], colors
 function freshData(){
   return {
     listings: structuredClone(LISTINGS), ads: structuredClone(ADS), pastAds: structuredClone(PAST_ADS),
-    orders: structuredClone(ORDERS_START), sorders: structuredClone(SELLER_ORDERS_START), payouts: structuredClone(PAYOUTS_START),
-    txs: structuredClone(TX_START), notifs: structuredClone(NOTIFS_START), rooms: structuredClone(ROOMS_START), coupons: structuredClone(COUPONS_START),
+    orders: structuredClone(ORDERS_START), sorders: structuredClone(SELLER_ORDERS_START),
+    notifs: structuredClone(NOTIFS_START), rooms: structuredClone(ROOMS_START),
     sellers: structuredClone(SELLERS), saved: SAVED_START.slice(),
-    cart: [ { key:'k1', lid:'r11', sizeId:null, slot:{ date: dayAt(1, '12:00'), time:'12:00' }, loc:'cafeAmazon', qty:1, couponId:null } ],
-    coins: 1250, usedCodes: ['NEWUSER2024'], sellerReq: null,
+    cart: [ { key:'k1', lid:'r11', sizeId:null, slot:{ date: dayAt(1, '12:00'), time:'12:00' }, loc:'cafeAmazon', qty:1 } ],
+    sellerReq: null,
     line: true, nLine: true, nPush: false, nChat: true, nextOrder: 1047, nextListing: 1,
   };
 }
 const S = Object.assign({
-  lang: LS.get('lang', 'th'), themePref: LS.get('theme', 'system'), role: LS.get('role', 'buyer'), nav: false, navAnim: false, units: LS.get('units', 'in'),
+  lang: LS.get('lang', 'th'), themePref: LS.get('theme', 'system'), role: LS.get('role', 'buyer'), navStyle: LS.get('navStyle', 'top'), nav: false, navAnim: false, units: LS.get('units', 'in'),
   route: { name:'home', arg:'' }, f: defaultFilters(),
   ui: { menu:null, dialog:null, sheet:null, focus:null, clearKeep:false },
   chat: { open:false, room:null },
-  pd: null, ordersTab:'pickup', closetOF:'new', closetLF:'all', closetLQ:'', txF:'all', txQ:'', txOpen:null, helpQ:'', clCat:'',
-  top: { stage:'idle', preview:null }, red: { msg:null, ok:false }, scan: { step:1, checked:false, manual:false, err:null },
+  pd: null, ordersTab:'pickup', closetOF:'new', closetLF:'all', closetLQ:'', helpQ:'', clCat:'',
+  scan: { step:1, checked:false, manual:false, err:null },
   sellForm: null, returnTo: null,
 }, freshData());
 
@@ -2634,7 +2732,6 @@ const notifs = () => S.notifs.filter(n => !n.seller || isSeller()).sort((a, b) =
 const unreadN = () => notifs().filter(n => !n.read).length;
 const rooms = () => S.rooms.filter(r => !r.seller || isSeller());
 const chatUnread = () => rooms().reduce((n, r) => n + r.unread, 0);
-const couponById = id => S.coupons.find(c => c.id === id);
 const initial = s => (s || '?').trim().charAt(0).toUpperCase();
 const sizeOpt = (p, sid) => p.sizes ? p.sizes.find(x => x.id === sid) : null;
 function sizeText(p){
@@ -2642,11 +2739,9 @@ function sizeText(p){
   const inStock = p.sizes.filter(x => x.stock > 0).map(x => x.size);
   return inStock.length > 1 ? t('size.range', { a:inStock[0], b:inStock[inStock.length - 1] }) : (inStock[0] || p.sizes[0].size);
 }
-function priceBreak(p, qty, cp){
+function priceBreak(p, qty){
   const orig = p.price * qty, after = unitPrice(p) * qty;
-  let cDisc = 0;
-  if (cp) cDisc = cp.type === 'percentage' ? after * cp.value / 100 : Math.min(cp.value, after);
-  return { orig: r2(orig), promoDisc: r2(orig - after), cDisc: r2(cDisc), total: r2(after - cDisc) };
+  return { orig: r2(orig), promoDisc: r2(orig - after), total: r2(after) };
 }
 function slotsFor(p){
   const sh = S.sellers[p.seller]; const times = p.times || sh.times; const out = [];
@@ -2660,32 +2755,29 @@ function slotsFor(p){
 }
 const locsFor = p => p.locs || S.sellers[p.seller].locs;
 
-/* seller money — one source of truth for every figure shown to the seller */
-const sNet = o => r2(o.price + (o.coupon || 0) - r2(o.price * COMMISSION));
+/* seller sales — buyers pay sellers directly, so this is a record of completed orders, not a balance */
+const sNet = o => o.price;
 function revenueRows(){
   const rows = [];
   for (let i = -5; i <= 0; i++) {
-    const key = monthKey(i), b = REV_BASE[String(i)] || [0, 0, 0];
-    const r = { month:key, orderCount:b[0], totalPrice:b[1], totalCouponDiscount:b[2] };
-    S.sorders.filter(o => o.status === 'done' && monthOf(o.doneAt || o.date) === key).forEach(o => { r.orderCount++; r.totalPrice = r2(r.totalPrice + o.price); r.totalCouponDiscount = r2(r.totalCouponDiscount + (o.coupon || 0)); });
-    r.totalCommission = r2(b[1] * COMMISSION + S.sorders.filter(o => o.status === 'done' && monthOf(o.doneAt || o.date) === key).reduce((n, o) => n + r2(o.price * COMMISSION), 0));
-    r.netIncome = r2(r.totalPrice + r.totalCouponDiscount - r.totalCommission);
-    rows.push(r);
+    const key = monthKey(i), b = REV_BASE[String(i)] || [0, 0];
+    const done = S.sorders.filter(o => o.status === 'done' && monthOf(o.doneAt || o.date) === key);
+    rows.push({ month:key, orderCount:b[0] + done.length, total:r2(b[1] + done.reduce((n, o) => n + o.price, 0)) });
   }
   return rows;
 }
 function money4Seller(){
-  const rows = revenueRows();
-  const total = r2(rows.reduce((n, r) => n + r.netIncome, 0));
-  const withdrawn = r2(S.payouts.filter(x => x.kind === 'withdraw' && x.status === 'completed').reduce((n, x) => n + x.amount, 0));
-  const transit = r2(S.payouts.filter(x => x.kind === 'withdraw' && x.status === 'pending').reduce((n, x) => n + x.amount, 0));
-  const converted = r2(S.payouts.filter(x => x.kind === 'exchange').reduce((n, x) => n + x.amount, 0));
-  const open = S.sorders.filter(o => o.status === 'pending' || o.status === 'accept');
-  return { rows, total, withdrawn, transit, converted, avail: r2(total - withdrawn - transit - converted), pending: r2(open.reduce((n, o) => n + sNet(o), 0)), pendingN: open.length };
+  const rows = revenueRows(), open = S.sorders.filter(o => o.status === 'accept');
+  return { rows, total:r2(rows.reduce((n, r) => n + r.total, 0)), orders:rows.reduce((n, r) => n + r.orderCount, 0), pending:r2(open.reduce((n, o) => n + o.price, 0)), pendingN:open.length };
+}
+function payee(sid){
+  let h = 7; for (const c of sid) h = (h * 31 + c.charCodeAt(0)) % 100000000;
+  const no = '08' + String(h).padStart(8, '0'), sh = S.sellers[sid];
+  return { no, fmt:no.slice(0, 3) + '-' + no.slice(3, 6) + '-' + no.slice(6), name:L(sh.full || sh.name) };
 }
 
 /* ============================== router ============================== */
-const PROTECTED = new Set(['orders','checkout','scan','receipt','wallet','mycloset','sell','apply','profile','settings','saved']);
+const PROTECTED = new Set(['orders','checkout','scan','receipt','mycloset','sell','apply','profile','settings','saved']);
 function parse(h){
   h = (h || '').replace(/^#/, '');
   try { h = decodeURIComponent(h); } catch(e){}
@@ -2714,8 +2806,6 @@ function enter(r){
   }
   if (r.name === 'item' && (!S.pd || S.pd.id !== r.arg)) S.pd = { id:r.arg, photo:0, sizeId:null, day:null, slot:null, loc:null, qty:1, tried:false };
   if (r.name === 'scan') S.scan = { step:1, checked:false, manual:false, err:null };
-  if (r.name === 'wallet' && r.arg === 'topup') S.top = { stage:'idle', preview:null };
-  if (r.name === 'wallet' && r.arg === 'redeem') S.red = { msg:null, ok:false };
   if (r.name === 'sell' && !S.sellForm) S.sellForm = freshSellForm();
   if (r.name === 'closet') S.clCat = '';
 }
@@ -2730,7 +2820,7 @@ function render(){
   const kept = {};
   document.querySelectorAll('[data-keep]').forEach(el => { if (el.dataset.keep === 'always' || el === act) kept[el.id] = el.value; });
   const forms = snapForms();
-  app.className = 'r-' + S.route.name + (S.route.name === 'item' ? ' is-item' : '');
+  app.className = 'r-' + S.route.name + (S.route.name === 'item' ? ' is-item' : '') + (S.navStyle === 'drawer' ? ' nav-drawer' : ' nav-top');
   app.innerHTML = vApp();
   for (const id in kept) { const el = document.getElementById(id); if (el && !S.ui.clearKeep) el.value = kept[id]; }
   restoreForms(forms);
@@ -2777,15 +2867,15 @@ function heroWatch(){
 /* ---- 02-shell.js ---- */
 /* ============================== shell ============================== */
 function vApp(){
-  const r = S.route;
+  const r = S.route, top = S.navStyle !== 'drawer';
   const locked = PROTECTED.has(r.name) && isGuest();
   const view = locked ? vLogin(true) : (VIEWS[r.name] || vNotFound)(r.arg);
   return '<a class="skip" href="#main" data-act="skip">' + t('common.skip') + '</a>' +
-    '<div class="shell' + (S.nav ? ' nav-open' : '') + '">' + vSidebar() + (S.nav ? '<div class="nav-scrim" data-act="sb" aria-hidden="true"></div>' : '') +
-      '<div class="main-col">' + vTopbar() +
+    '<div class="shell' + (S.nav ? ' nav-open' : '') + '">' + (top ? '' : vSidebar() + (S.nav ? '<div class="nav-scrim" data-act="sb" aria-hidden="true"></div>' : '')) +
+      '<div class="main-col">' + vTopbar() + (top ? vNavRow() : '') +
         '<main id="main" class="content" tabindex="-1">' + view + '</main>' + vFooter() +
       '</div>' +
-    '</div>' + vBottomNav() + (isGuest() ? '' : vChat()) + vOverlays();
+    '</div>' + vBottomNav() + (top ? vDemoFab() : '') + (isGuest() ? '' : vChat()) + vOverlays();
 }
 
 function curOf(key){
@@ -2801,7 +2891,6 @@ function curOf(key){
     case 'sell': return r.name === 'sell';
     case 'apply': return r.name === 'apply';
     case 'profile': return r.name === 'profile';
-    case 'wallet': return r.name === 'wallet';
     case 'settings': return r.name === 'settings';
     case 'help': return r.name === 'help';
   }
@@ -2825,7 +2914,7 @@ function vSidebar(){
     h += '<div class="sb-cta"><p>' + t('nav.signInPrompt') + '</p><a class="btn btn-primary btn-sm" href="#login" data-go="login">' + t('common.signIn') + '</a></div>';
   } else {
     const bn = buyerNeeds();
-    h += sbSec(t('nav.buy')) + sbLink('orders', 'shopping-bag', t('nav.myOrders'), bn, t('nav.needAction', { n:bn })) + sbLink('saved', 'heart', t('nav.saved'), S.saved.length, t('saved.title') + ' ' + S.saved.length) + sbLink('cart', 'shopping-cart', t('nav.cart'), cartCount(), t('nav.cartN', { n:cartCount() })) + sbLink('wallet', 'wallet', t('nav.wallet'));
+    h += sbSec(t('nav.buy')) + sbLink('orders', 'shopping-bag', t('nav.myOrders'), bn, t('nav.needAction', { n:bn })) + sbLink('saved', 'heart', t('nav.saved'), S.saved.length, t('saved.title') + ' ' + S.saved.length) + sbLink('cart', 'shopping-cart', t('nav.cart'), cartCount(), t('nav.cartN', { n:cartCount() }));
     h += sbSec(t('nav.sell'));
     if (sel) { const nn = sellerNew(); h += sbLink('mycloset', 'hanger', t('nav.myCloset'), 0, '', true) + sbLink('sell', 'circle-plus', t('nav.sellClothes')) + sbLink('mycloset.orders', 'clipboard-list', t('nav.sellerOrders'), nn, t('nav.newOrders', { n:nn })); }
     else if (S.sellerReq) h += sbLink('apply', 'hourglass', t('nav.requestPending'));
@@ -2840,13 +2929,73 @@ function vSidebar(){
 const roleLabel = () => t('demo.' + S.role);
 function vDemoMenu(pos){
   const opt = (r, icon) => '<button class="menu-item" role="menuitemradio" aria-checked="' + (S.role === r) + '" data-act="role" data-v="' + r + '">' + ic(S.role === r ? 'circle-check' : icon) + t('demo.' + r) + '</button>';
+  const style = S.navStyle === 'drawer' ? 'drawer' : 'top';
+  const navOpt = (v, icon) => '<button class="menu-item" role="menuitemradio" aria-checked="' + (style === v) + '" data-act="navStyle" data-v="' + v + '">' + ic(style === v ? 'circle-check' : icon) + t(v === 'top' ? 'demo.navTop' : 'demo.navDrawer') + '</button>';
   return '<div class="menu ' + pos + '" role="menu" aria-label="' + t('demo.title') + '"><div class="menu-h">' + t('demo.viewingAs') + '</div>' +
     opt('guest', 'user') + opt('buyer', 'shopping-bag') + opt('seller', 'store') + '<div class="menu-sep"></div>' +
     '<button class="menu-item" role="menuitem" data-act="reset">' + ic('rotate-ccw') + t('demo.reset') + '</button>' +
-    '<a class="menu-item" role="menuitem" href="#notes" data-go="notes">' + ic('file-text') + t('demo.notes') + '</a></div>';
+    '<div class="menu-sep"></div><div class="menu-h">' + t('demo.navStyle') + '</div>' + navOpt('top', 'layout-dashboard') + navOpt('drawer', 'panel-left') +
+    '<div class="menu-sep"></div><a class="menu-item" role="menuitem" href="#notes" data-go="notes">' + ic('file-text') + t('demo.notes') + '</a></div>';
+}
+function vDemoFab(){
+  const label = t('common.prototype') + ' · ' + roleLabel();
+  return '<div class="demo-fab fb-wrap" data-menu-root="demo"><button class="demo-btn" data-act="menu" data-menu="demo" aria-haspopup="true" aria-expanded="' + (S.ui.menu === 'demo') + '" aria-label="' + esc(label) + '" title="' + esc(label) + '">' + ic('flask-conical', 'i-sm') + '</button>' + (S.ui.menu === 'demo' ? vDemoMenu('up left') : '') + '</div>';
 }
 
-function vTopbar(){
+function vTopbar(){ return S.navStyle === 'drawer' ? vTopbarDrawer() : vTopbarTop(); }
+function vTopbarTop(){
+  const g = isGuest(), cc = cartCount(), un = unreadN(), dark = isDark();
+  const icoLink = (key, icon, label, count) => '<a class="icon-btn desk" href="#' + key + '" data-go="' + key + '" aria-label="' + esc(label) + '"' + (curOf(key) ? ' aria-current="page"' : '') + '>' + ic(icon) + (count ? '<span class="count" aria-hidden="true">' + count + '</span>' : '') + '</a>';
+  let h = '<header class="topbar tb-top' + (S.route.name === 'home' ? ' on-home' : '') + '"><div class="topbar-in">' +
+    '<a class="tb-logo" href="#home" data-go="home" aria-label="UNIXA"><img src="a/logo.png" alt="" width="49" height="26"></a>' +
+    '<form class="search" role="search" data-form="search"><label for="q" class="sr-only">' + t('common.searchLabel') + '</label>' + ic('search', 'i-sm') +
+    '<input id="q" name="q" type="search" data-keep="focus" enterkeyhint="search" autocomplete="off" placeholder="' + esc(t('common.searchPh')) + '" value="' + esc(S.f.q) + '">' +
+    '<button class="search-go" type="submit" aria-label="' + t('common.search') + '">' + ic('arrow-right', 'i-sm') + '</button></form>' +
+    '<div class="tb-actions">';
+  if (g) h += '<button class="icon-btn lang-btn desk" data-act="lang" aria-label="' + t('nav.lang') + '">' + ic('globe', 'i-sm') + '<span style="margin-left:4px">' + S.lang.toUpperCase() + '</span></button>' +
+    '<button class="icon-btn desk" data-act="theme" aria-label="' + t(dark ? 'nav.toLight' : 'nav.toDark') + '">' + ic(dark ? 'sun' : 'moon') + '</button>';
+  h += '<a class="btn btn-primary btn-sm tb-sell desk" href="#' + sellTarget() + '" data-go="' + sellTarget() + '"' + (curOf('sell') ? ' aria-current="page"' : '') + '>' + ic('plus', 'i-sm') + t('nav.sellClothes') + '</a>';
+  if (!g) {
+    const cu = chatUnread();
+    h += '<button class="icon-btn mob-chat" data-act="chatOpen" aria-label="' + esc(cu ? t('chat.openN', { n:cu }) : t('chat.open')) + '">' + ic('message-circle') + (cu ? '<span class="count attn" aria-hidden="true">' + cu + '</span>' : '') + '</button>';
+    h += '<div class="fb-wrap" data-menu-root="notif"><button class="icon-btn" data-act="notif" aria-haspopup="true" aria-expanded="' + (S.ui.menu === 'notif') + '" aria-label="' + esc(un ? t('nav.notifN', { n:un }) : t('nav.notifications')) + '">' + ic('bell') + (un ? '<span class="count attn" aria-hidden="true">' + un + '</span>' : '') + '</button>' +
+      (S.ui.menu === 'notif' ? '<div class="menu right top notif">' + vNotifPanel() + '</div>' : '') + '</div>';
+    h += icoLink('saved', 'heart', t('nav.saved'), S.saved.length);
+  }
+  h += icoLink('cart', 'shopping-cart', t('nav.cartN', { n:cc }), cc);
+  if (g) h += '<a class="btn btn-secondary btn-sm desk" href="#login" data-go="login">' + t('common.signIn') + '</a>';
+  else h += '<div class="fb-wrap desk" data-menu-root="me"><button class="me-btn" data-act="menu" data-menu="me" aria-haspopup="true" aria-expanded="' + (S.ui.menu === 'me') + '" aria-label="' + t('nav.accountMenu') + '"><span class="avatar">' + initial(L(ME.name)) + '</span>' + ic('chevron-down', 'i-sm') + '</button>' + (S.ui.menu === 'me' ? vMeMenuFull() : '') + '</div>';
+  return h + '</div></div></header>';
+}
+function vNavRow(){
+  const r = S.route, cur = on => on ? ' aria-current="page"' : '';
+  const link = (go, label, on, extra) => '<a class="nr-link" href="#' + go + '" data-go="' + go + '"' + cur(on) + '>' + (extra || '') + esc(label) + '</a>';
+  let h = '<nav class="navrow" aria-label="' + t('nav.main') + '"><div class="navrow-in"><div class="nr-main">' +
+    link('home', t('nav.home'), r.name === 'home') + link('browse', t('nav.browse'), r.name === 'browse' && !/^c-/.test(r.arg)) + '<span class="nr-sep" aria-hidden="true"></span>' +
+    CATS.map(c => link('browse.c-' + c.id, catLabel(c.id), r.name === 'browse' && r.arg === 'c-' + c.id)).join('') + '</div>';
+  if (!isGuest()) {
+    const bn = buyerNeeds(), nn = sellerNew();
+    h += '<div class="nr-me">' + '<a class="nr-link" href="#orders" data-go="orders"' + cur(curOf('orders')) + '>' + ic('shopping-bag', 'i-sm') + esc(t('nav.myOrders')) + (bn ? '<span class="count" aria-label="' + esc(t('nav.needAction', { n:bn })) + '">' + bn + '</span>' : '') + '</a>' +
+      (isSeller() ? '<a class="nr-link" href="#mycloset" data-go="mycloset"' + cur(r.name === 'mycloset') + '>' + glyph('hanger', 'i-sm') + esc(t('nav.myCloset')) + (nn ? '<span class="count attn" aria-label="' + esc(t('nav.newOrders', { n:nn })) + '">' + nn + '</span>' : '') + '</a>' : '') + '</div>';
+  }
+  return h + '</div></nav>';
+}
+function vMeMenuFull(){
+  const sel = isSeller(), bn = buyerNeeds(), nn = sellerNew();
+  const mi = (key, icon, label, n, attn, isGlyph) => '<a class="menu-item" role="menuitem" href="#' + key + '" data-go="' + key + '">' + (isGlyph ? glyph(icon) : ic(icon)) + '<span style="flex:1">' + esc(label) + '</span>' + (n ? '<span class="count' + (attn ? ' attn' : ' soft') + '">' + n + '</span>' : '') + '</a>';
+  const seg = (label, html) => '<div class="menu-row"><span>' + label + '</span>' + html + '</div>';
+  return '<div class="menu right top me-menu" role="menu" aria-label="' + t('nav.accountMenu') + '">' +
+    '<a class="menu-me-h" role="menuitem" href="#profile" data-go="profile"><span class="avatar lg">' + initial(L(ME.name)) + '</span><span><span style="display:block;font-weight:600">' + esc(L(ME.name)) + '</span><span class="subtle" style="font-size:13px">' + t('nav.viewProfile') + '</span></span></a>' +
+    '<div class="menu-sep"></div><div class="menu-h">' + t('nav.buy') + '</div>' + mi('orders', 'shopping-bag', t('nav.myOrders'), bn) + mi('saved', 'heart', t('nav.saved'), S.saved.length) +
+    '<div class="menu-h">' + t('nav.sell') + '</div>' +
+    (sel ? mi('mycloset', 'hanger', t('nav.myCloset'), 0, false, true) + mi('mycloset.orders', 'clipboard-list', t('nav.sellerOrders'), nn, true) + mi('sell', 'circle-plus', t('nav.sellClothes'))
+      : mi('apply', S.sellerReq ? 'hourglass' : 'circle-plus', S.sellerReq ? t('nav.requestPending') : t('nav.startSelling'))) +
+    '<div class="menu-sep"></div>' + mi('settings', 'settings', t('nav.settings')) + mi('help', 'life-buoy', t('nav.help')) +
+    seg(t('settings.language'), '<div class="seg sm"><button aria-pressed="' + (S.lang === 'th') + '" data-act="setLang" data-v="th">ไทย</button><button aria-pressed="' + (S.lang === 'en') + '" data-act="setLang" data-v="en">EN</button></div>') +
+    seg(t('settings.theme'), '<div class="seg sm">' + [['system','monitor'],['light','sun'],['dark','moon']].map(([k, i]) => '<button aria-pressed="' + (S.themePref === k) + '" data-act="setTheme" data-v="' + k + '" aria-label="' + t('settings.' + k) + '">' + ic(i, 'i-sm') + '</button>').join('') + '</div>') +
+    '<div class="menu-sep"></div><button class="menu-item danger" role="menuitem" data-act="signout">' + ic('log-out') + t('common.signOut') + '</button></div>';
+}
+function vTopbarDrawer(){
   const g = isGuest(), cc = cartCount(), un = unreadN(), dark = isDark();
   let h = '<header class="topbar' + (S.route.name === 'home' ? ' on-home' : '') + '"><div class="topbar-in">' +
     '<button class="icon-btn nav-btn" data-act="sb" aria-controls="sidebar" aria-expanded="' + S.nav + '" aria-label="' + t(S.nav ? 'nav.closeNav' : 'nav.openNav') + '">' + ic('menu') + '</button>' +
@@ -2871,7 +3020,7 @@ function vTopbar(){
 function vMeMenu(){
   let h = '<div class="menu right top" role="menu" aria-label="' + t('nav.accountMenu') + '"><div style="padding:10px 10px 12px;display:flex;gap:10px;align-items:center"><span class="avatar lg">' + initial(L(ME.name)) + '</span><div><div style="font-weight:600">' + esc(L(ME.name)) + '</div><div class="subtle" style="font-size:13px">@' + ME.username + '</div></div></div>' +
     '<a class="menu-item" role="menuitem" href="#profile" data-go="profile">' + ic('circle-user') + t('nav.profile') + '</a>' +
-    '<a class="menu-item" role="menuitem" href="#wallet" data-go="wallet">' + ic('wallet') + '<span style="flex:1">' + t('nav.wallet') + '</span><b class="num">' + money2(S.coins) + '</b></a>';
+    '';
   if (isSeller()) h += '<a class="menu-item" role="menuitem" href="#closet.me" data-go="closet.me">' + glyph('hanger') + t('nav.publicCloset') + '</a>';
   h += '<a class="menu-item" role="menuitem" href="#settings" data-go="settings">' + ic('settings') + t('nav.settings') + '</a><div class="menu-sep"></div>' +
     '<button class="menu-item" role="menuitem" data-act="signout">' + ic('log-out') + t('common.signOut') + '</button></div>';
@@ -2894,8 +3043,6 @@ function notifMeta(n){
     case 'accepted': return { icon:'calendar-check', lid, t:t('notif.acceptedT'), d:t('notif.acceptedD', { id:n.order }), go:'orders.' + n.order };
     case 'newOrder': { const p = findL(n.lid); return { icon:'package', lid, t:t('notif.newOrderT'), d:t('notif.newOrderD', { product: p ? L(p.t) : '' }), go:'mycloset.orders' }; }
     case 'completed': return { icon:'circle-check', lid, t:t('notif.completedT'), d:t('notif.completedD', { id:n.order }), go:(n.seller ? 'mycloset.orders' : 'orders.' + n.order) };
-    case 'topup': return { icon:'wallet', t:t('notif.topupT'), d:t('notif.topupD', { amt:money(n.amount) }), go:'wallet' };
-    case 'refund': return { icon:'undo-2', lid, t:t('notif.refundT'), d:t('notif.refundD', { amt:money(n.amount), id:n.order }), go:'wallet' };
     case 'pickup': return { icon:'map-pin', lid, t:t('notif.pickupT'), d:t('notif.pickupD', { id:n.order, d:o ? fmtDay(o.date) + ' ' + fmtTime(o.time) : '', p:o ? locName(o.loc) : '' }), go:'orders.' + n.order };
   }
   return { icon:'bell', t:'', d:'', go:'home' };
@@ -3282,27 +3429,24 @@ function vSaved(){
 /* ---- 06-cart-orders.js ---- */
 /* ============================== CART / CHECKOUT ============================== */
 function cartLine(c){
-  const p = findL(c.lid); const cp = c.couponId ? couponById(c.couponId) : null;
-  return { c, p, cp, pb: priceBreak(p, c.qty, cp), sz: sizeOpt(p, c.sizeId), ok: p && (p.sizes ? (sizeOpt(p, c.sizeId) || {}).stock >= c.qty : p.stock > 0) };
+  const p = findL(c.lid);
+  return { c, p, pb: priceBreak(p, c.qty), sz: sizeOpt(p, c.sizeId), ok: p && (p.sizes ? (sizeOpt(p, c.sizeId) || {}).stock >= c.qty : p.stock > 0) };
 }
-function cartTotals(lines){ return lines.filter(l => l.ok).reduce((a, l) => ({ orig: a.orig + l.pb.orig, disc: a.disc + l.pb.promoDisc + l.pb.cDisc, total: a.total + l.pb.total }), { orig:0, disc:0, total:0 }); }
+function cartTotals(lines){ return lines.filter(l => l.ok).reduce((a, l) => ({ orig: a.orig + l.pb.orig, disc: a.disc + l.pb.promoDisc, total: a.total + l.pb.total }), { orig:0, disc:0, total:0 }); }
 function vCart(){
   const lines = S.cart.map(cartLine).filter(l => l.p);
   if (!lines.length) return '<div class="page-h"><h1 id="page-title" tabindex="-1">' + t('cart.title') + '</h1></div>' + vEmpty('shopping-cart', t('cart.empty'), t('cart.emptySub'), '<a class="btn btn-primary" href="#browse" data-go="browse">' + t('home.ctaBrowse') + '</a>', false, 2);
   const groups = {}; lines.forEach(l => { (groups[l.p.seller] = groups[l.p.seller] || []).push(l); });
   const tot = cartTotals(lines), bad = lines.some(l => !l.ok);
-  const usedCp = id => S.cart.some(c => c.couponId === id);
   let h = '<div class="page-h"><div><h1 id="page-title" tabindex="-1">' + t('cart.title') + '</h1><p>' + t('cart.count', { n:cartCount(), s:Object.keys(groups).length }) + '</p></div></div><div class="two-col"><div class="stack">';
   for (const sid in groups) {
     h += '<section class="card shop-group" aria-label="' + esc(closetName(sid)) + '"><div class="sg-h">' + glyph('hanger', 'i-sm') + '<a href="#closet.' + sid + '" data-go="closet.' + sid + '">' + esc(closetName(sid)) + '</a></div>';
     groups[sid].forEach(l => {
-      const cps = isGuest() ? [] : S.coupons.filter(c => c.id === l.c.couponId || !usedCp(c.id));
       h += '<div class="citem' + (l.ok ? '' : ' gone') + '">' + thumb(l.p, 'lg') + '<div style="min-width:0"><a class="ci-title" href="#item.' + l.p.id + '" data-go="item.' + l.p.id + '">' + esc(L(l.p.t)) + '</a>' +
         '<div class="ci-meta"><span>' + ic('tag') + esc(l.sz ? l.sz.size : sizeLabel(l.p.size)) + ' · ' + condLabel(l.p.cond) + '</span>' + pickupLine(l.c) + '</div>' +
         (l.ok ? '' : '<p class="need-hint">' + ic('circle-alert') + t('cart.unavailable') + '</p>') +
-        (l.ok && cps.length ? '<div class="field ci-cp"><label class="sr-only" for="cp-' + l.c.key + '">' + t('cart.coupon') + '</label><select class="select sm" id="cp-' + l.c.key + '" data-act="cartCoupon" data-k="' + l.c.key + '"><option value="">' + t('cart.couponNone') + '</option>' + cps.map(c => '<option value="' + c.id + '"' + (l.c.couponId === c.id ? ' selected' : '') + '>' + esc(c.code) + ' · ' + (c.type === 'percentage' ? '−' + c.value + '%' : '−฿' + c.value) + '</option>').join('') + '</select></div>' : '') +
         (l.p.sizes && l.ok ? '<div style="margin-top:10px">' + stepper('cartQty', l.c.key, l.c.qty, 1, l.sz.stock, null, true) + '</div>' : '') + '</div>' +
-        '<div class="ci-right"><span class="ci-price">' + money(l.pb.total) + '</span>' + (l.pb.cDisc ? '<span class="subtle" style="font-size:12px">−' + money(l.pb.cDisc) + '</span>' : '') + '<button class="icon-btn sm" data-act="cartRemove" data-v="' + l.c.key + '" aria-label="' + esc(t('cart.remove', { title:L(l.p.t) })) + '">' + ic('trash-2', 'i-sm') + '</button></div></div>';
+        '<div class="ci-right"><span class="ci-price">' + money(l.pb.total) + '</span>' + '<button class="icon-btn sm" data-act="cartRemove" data-v="' + l.c.key + '" aria-label="' + esc(t('cart.remove', { title:L(l.p.t) })) + '">' + ic('trash-2', 'i-sm') + '</button></div></div>';
     });
     h += '</section>';
   }
@@ -3315,15 +3459,14 @@ function vCart(){
 function vCheckout(){
   const lines = S.cart.map(cartLine).filter(l => l.p && l.ok);
   if (!lines.length) return vEmpty('shopping-cart', t('checkout.empty'), '', '<a class="btn btn-secondary" href="#cart" data-go="cart">' + t('cart.title') + '</a>');
-  const tot = cartTotals(lines), short = r2(tot.total - S.coins);
+  const tot = cartTotals(lines);
   let h = '<nav class="crumbs"><a href="#cart" data-go="cart">' + t('cart.title') + '</a>' + ic('chevron-right', 'i-xs') + '<span aria-current="page">' + t('checkout.title') + '</span></nav><div class="page-h"><h1 id="page-title" tabindex="-1">' + t('checkout.title') + '</h1></div><div class="two-col"><div class="stack-lg">';
   h += '<section class="card" aria-labelledby="pk-h"><div class="card-h"><h2 id="pk-h">' + t('checkout.pickups') + '</h2></div>' + lines.map(l => '<div class="citem">' + thumb(l.p) + '<div style="min-width:0"><div class="ci-title">' + esc(L(l.p.t)) + (l.c.qty > 1 ? ' <span class="muted" style="font-weight:400">×' + l.c.qty + '</span>' : '') + '</div><div class="ci-meta"><span>' + glyph('hanger', 'i-xs') + esc(closetName(l.p.seller)) + '</span>' + pickupLine(l.c) + '</div></div><span class="ci-price">' + money(l.pb.total) + '</span></div>').join('') + '</section>';
-  h += '<section aria-labelledby="pm-h"><h2 id="pm-h" style="font-size:17px;margin-bottom:10px">' + t('checkout.method') + '</h2><div class="pay-opt" aria-checked="true"><span class="po-ic">' + ic('coins') + '</span><span><span class="po-t" style="display:block">' + t('checkout.coins') + '</span><span class="po-s">' + t('checkout.coinsSub', { b:money2(S.coins) }) + '</span></span><span class="radio-dot"></span></div>' +
-    '<p class="subtle" style="font-size:12.5px;margin-top:8px">' + t('checkout.onlyCoins') + '</p>';
-  if (short > 0) h += '<div class="note note-warn" style="margin-top:10px">' + ic('triangle-alert') + '<span>' + t('checkout.short', { n:money(short) }) + '</span><button class="btn btn-secondary btn-sm" style="margin-left:auto" data-act="topupFor" data-v="' + Math.ceil(short) + '">' + t('checkout.topUp', { n:money(Math.ceil(short)) }) + '</button></div>';
-  h += '</section><p class="note note-info">' + ic('info') + '<span>' + t('checkout.after') + '</span></p></div>';
+  h += '<section aria-labelledby="pm-h"><h2 id="pm-h" style="font-size:17px;margin-bottom:10px">' + t('checkout.method') + '</h2><div class="pay-opt" aria-checked="true"><span class="po-ic">' + ic('landmark') + '</span><span><span class="po-t" style="display:block">' + t('pay.direct') + '</span><span class="po-s">' + t('pay.directSub') + '</span></span><span class="radio-dot"></span></div>' +
+    '<ol class="pay-steps">' + ['s1','s2','s3'].map(k => '<li>' + t('pay.' + k) + '</li>').join('') + '</ol></section></div>';
   h += '<aside class="card card-pad sticky-side"><h2 style="font-size:17px;margin-bottom:10px">' + t('cart.summary') + '</h2><div class="kv"><span>' + t('cart.items') + '</span><span class="num">' + money(tot.orig) + '</span></div>' + (tot.disc ? '<div class="kv"><span>' + t('cart.discounts') + '</span><span class="num">−' + money(tot.disc) + '</span></div>' : '') +
-    '<div class="kv total"><span>' + t('cart.total') + '</span><span class="num">' + money(tot.total) + '</span></div><button class="btn btn-primary btn-lg btn-block" style="margin-top:14px" data-act="placeOrder"' + (short > 0 ? ' disabled' : '') + '>' + t('checkout.place', { amt:money(tot.total) }) + '</button></aside></div>';
+    '<div class="kv total"><span>' + t('cart.total') + '</span><span class="num">' + money(tot.total) + '</span></div><button class="btn btn-primary btn-lg btn-block" style="margin-top:14px" data-act="placeOrder">' + t('checkout.place', { amt:money(tot.total) }) + '</button>' +
+    '<p class="subtle" style="font-size:12.5px;margin-top:10px">' + t('pay.notNow') + '</p></aside></div>';
   return h;
 }
 
@@ -3341,7 +3484,6 @@ function buyerActions(o, detail){
   else if (isOverdue(o)) h += '<button class="btn btn-danger btn-sm" data-act="dialog" data-v="notReceived" data-id="' + o.id + '">' + t('orders.btnNotReceived') + '</button>';
   else if (o.status === 'accept') h += '<a class="btn btn-primary btn-sm" href="#scan.' + o.id + '" data-go="scan.' + o.id + '">' + ic('scan-qr-code', 'i-sm') + t('orders.btnScan') + '</a>';
   else if (o.status === 'done') h += o.reviewed ? '<span class="muted" style="font-size:13.5px;display:inline-flex;gap:6px;align-items:center">' + ic('check', 'i-sm') + t('orders.reviewed') + '</span>' : '<button class="btn btn-secondary btn-sm" data-act="dialog" data-v="rate" data-id="' + o.id + '">' + ic('star', 'i-sm') + t('orders.btnRate') + '</button>';
-  else if (o.refunded) h += '<span class="muted" style="font-size:13.5px">' + t('orders.refunded', { amt:money(o.price) }) + '</span>';
   if (!detail) h += '<a class="btn btn-ghost btn-sm" href="#orders.' + o.id + '" data-go="orders.' + o.id + '">' + t('orders.details') + ic('chevron-right', 'i-sm') + '</a>';
   return h;
 }
@@ -3384,18 +3526,30 @@ function pickupCard(o, sellerSide){
     (o.change ? '<p class="note note-warn" style="margin-top:12px">' + ic('hourglass') + '<span>' + t('pickup.requested', { d:fmtDay(o.change.date) + ' ' + fmtTime(o.change.time), p:locName(o.change.loc) }) + '</span></p>' : '') +
     (open && !sellerSide ? '<p class="subtle" style="font-size:12.5px;margin-top:10px">' + t('pickup.reminder') + '</p>' : '') + '</section>';
 }
+function payeeBox(sid, amt){
+  const p = payee(sid);
+  return '<div class="payee"><div class="fake-qr" role="img" aria-label="' + esc(t('pay.scanApp')) + '">' + fakeQR('PP' + p.no) + '</div><div class="pe-info"><div class="pu-l">' + t('pay.amount') + '</div><div class="pe-amt num">' + money(amt) + '</div>' +
+    '<div class="pu-l" style="margin-top:8px">' + t('pay.to') + '</div><div class="pe-name">' + esc(p.name) + '</div><div class="row" style="gap:4px;flex-wrap:wrap"><span class="mono">PromptPay ' + p.fmt + '</span><button class="btn btn-ghost btn-sm" data-act="copy" data-v="' + p.no + '">' + ic('copy', 'i-sm') + t('common.copy') + '</button></div>' +
+    '<div class="subtle" style="font-size:12.5px">' + t('pay.scanApp') + '</div></div></div>';
+}
+function payCard(o){
+  if (o.status === 'pending') return '<section class="card card-pad" aria-labelledby="pay-h"><div class="pd-sec-h"><h2 id="pay-h">' + t('pay.title') + '</h2></div><p class="muted" style="font-size:14px">' + t('pay.afterAccept') + '</p></section>';
+  if (o.status !== 'accept' || isOverdue(o)) return '';
+  return '<section class="card card-pad" aria-labelledby="pay-h"><div class="pd-sec-h"><h2 id="pay-h">' + t('pay.title') + '</h2><span class="picked">' + t('pay.atPickup') + '</span></div>' + payeeBox(o.sellerId, o.price) + '<p class="subtle" style="font-size:12.5px;margin-top:10px">' + t('pay.tip') + '</p></section>';
+}
+const payState = o => o.status === 'done' ? t('pay.paidDirect') : ['canceled','rejected'].includes(o.status) ? t('pay.none') : t('pay.unpaid');
 function vOrder(id){
   const o = S.orders.find(x => x.id === id);
   if (!o) return vEmpty('search-x', t('order.notFound'), '', '<a class="btn btn-secondary" href="#orders" data-go="orders">' + t('order.back') + '</a>');
   const p = findL(o.lid), sz = sizeOpt(p, o.sizeId);
   let h = '<nav class="crumbs"><a href="#orders" data-go="orders">' + t('orders.title') + '</a>' + ic('chevron-right', 'i-xs') + '<span aria-current="page">#' + o.id + '</span></nav>' +
     '<div class="page-h"><div><h1 id="page-title" tabindex="-1" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">' + t('orders.orderNo', { id:o.id }) + ' ' + statusChip(o) + '</h1><p>' + t('order.placedOn', { d:fmtDT(o.createdAt) }) + '</p></div></div><div class="stack-lg">';
-  if (o.status === 'canceled' || o.status === 'rejected') h += '<div class="note note-err">' + ic('circle-x') + '<span><b>' + t('order.cancelledT') + '</b> — ' + t('order.cancelledD') + (o.refunded ? ' ' + t('orders.refunded', { amt:money(o.price) }) : '') + '</span></div>';
+  if (o.status === 'canceled' || o.status === 'rejected') h += '<div class="note note-err">' + ic('circle-x') + '<span><b>' + t('order.cancelledT') + '</b> — ' + t('order.cancelledD') + '</span></div>';
   else h += tracker(o) + actionCard(o);
-  h += '<div class="two-col"><div class="stack-lg">' + (['pending','accept'].includes(o.status) ? pickupCard(o) : '') +
+  h += '<div class="two-col"><div class="stack-lg">' + (['pending','accept'].includes(o.status) ? pickupCard(o) : '') + payCard(o) +
     '<section class="card" aria-labelledby="oi-h"><div class="card-h"><h2 id="oi-h">' + t('order.item') + '</h2></div><div class="citem" style="grid-template-columns:auto minmax(0,1fr)">' + thumb(p, 'lg') + '<div><a class="ci-title" href="#item.' + p.id + '" data-go="item.' + p.id + '">' + esc(L(p.t)) + '</a><div class="ci-meta"><span>' + t('item.size') + ': ' + esc(sz ? sz.size : sizeLabel(p.size)) + ' · ' + condLabel(p.cond) + '</span>' + (p.defect ? '<span>' + ic('triangle-alert') + esc(L(p.defect)) + '</span>' : '') + (o.qty > 1 ? '<span>' + t('item.qty') + ': ' + o.qty + '</span>' : '') + '</div></div></div>' +
-    '<div class="card-pad" style="border-top:1px solid var(--border)"><div class="kv"><span>' + t('order.unit') + '</span><span class="num">' + money(o.discountPct ? r2(o.unit / (1 - o.discountPct / 100)) : o.unit) + (o.qty > 1 ? ' × ' + o.qty : '') + '</span></div>' + (o.discountPct ? '<div class="kv"><span>' + t('order.promo', { p:o.discountPct }) + '</span><span class="num">−' + money(r2((o.unit / (1 - o.discountPct / 100) - o.unit) * o.qty)) + '</span></div>' : '') + (o.coupon ? '<div class="kv"><span>' + t('order.coupon') + '</span><span class="num">−' + money(o.coupon) + '</span></div>' : '') +
-    '<div class="kv total"><span>' + t('order.net') + '</span><span class="num">' + money(o.price) + '</span></div><div class="kv" style="font-size:13px"><span>' + t('order.paidWith') + '</span><span>' + t('checkout.coins') + '</span></div></div></section>' +
+    '<div class="card-pad" style="border-top:1px solid var(--border)"><div class="kv"><span>' + t('order.unit') + '</span><span class="num">' + money(o.discountPct ? r2(o.unit / (1 - o.discountPct / 100)) : o.unit) + (o.qty > 1 ? ' × ' + o.qty : '') + '</span></div>' + (o.discountPct ? '<div class="kv"><span>' + t('order.promo', { p:o.discountPct }) + '</span><span class="num">−' + money(r2((o.unit / (1 - o.discountPct / 100) - o.unit) * o.qty)) + '</span></div>' : '') + '' +
+    '<div class="kv total"><span>' + t('order.net') + '</span><span class="num">' + money(o.price) + '</span></div><div class="kv" style="font-size:13px"><span>' + t('order.paidWith') + '</span><span>' + payState(o) + '</span></div></div></section>' +
     (['pending','accept'].includes(o.status) ? '' : pickupCard(o, true)) + '</div>' +
     '<aside class="card card-pad sticky-side"><div class="subtle" style="font-size:12.5px;margin-bottom:8px">' + t('order.seller') + '</div><div class="row"><span class="avatar lg">' + initial(firstName(o.sellerId)) + '</span><div style="min-width:0;flex:1"><a style="font-weight:600" href="#closet.' + o.sellerId + '" data-go="closet.' + o.sellerId + '">' + esc(closetName(o.sellerId)) + '</a><div class="muted" style="font-size:13px">' + ic('star', 'i-fill i-xs star') + ' ' + S.sellers[o.sellerId].rating.toFixed(1) + '</div></div></div>' +
     '<div style="margin-top:10px">' + verifiedBadge() + '</div><div class="row wrap" style="margin-top:14px"><button class="btn btn-secondary btn-sm" data-act="chatSeller" data-v="' + o.sellerId + '" data-l="' + p.id + '">' + ic('message-circle', 'i-sm') + t('order.chat') + '</button>' + (o.status === 'done' ? '<a class="btn btn-secondary btn-sm" href="#receipt.' + o.id + '" data-go="receipt.' + o.id + '">' + ic('receipt', 'i-sm') + t('order.receipt') + '</a>' : '') + '</div></aside></div></div>';
@@ -3406,7 +3560,7 @@ function vReceipt(id){
   const p = findL(o.lid);
   return '<div class="card card-pad" style="max-width:520px;margin:0 auto"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h1 id="page-title" tabindex="-1" style="font-size:22px">' + t('order.receiptT') + '</h1><div class="muted mono">' + t('order.receiptNo', { id:'RC-' + o.id }) + '</div></div><img src="a/logo.png" alt="UNIXA" style="height:28px;filter:var(--logo-filter)"></div>' +
     '<div style="margin:18px 0;border-top:1px dashed var(--border-strong)"></div><div class="kv"><span>' + t('orders.orderNo', { id:'' }).replace('#', '').trim() + '</span><span class="mono">#' + o.id + '</span></div><div class="kv"><span>' + t('order.seller') + '</span><span>' + esc(closetName(o.sellerId)) + '</span></div><div class="kv"><span>' + t('order.buyer') + '</span><span>' + esc(L(ME.name)) + '</span></div><div class="kv"><span>' + t('order.date') + '</span><span>' + esc(fmtDT(o.doneAt || o.date)) + '</span></div>' +
-    '<div style="margin:14px 0;border-top:1px dashed var(--border-strong)"></div><div class="kv"><span>' + esc(L(p.t)) + (o.qty > 1 ? ' ×' + o.qty : '') + '</span><span class="num">' + money(o.price + o.coupon) + '</span></div>' + (o.coupon ? '<div class="kv"><span>' + t('order.coupon') + '</span><span class="num">−' + money(o.coupon) + '</span></div>' : '') + '<div class="kv total"><span>' + t('order.net') + '</span><span class="num">' + money(o.price) + '</span></div><div class="kv" style="font-size:13px"><span>' + t('order.paidWith') + '</span><span>' + t('checkout.coins') + '</span></div>' +
+    '<div style="margin:14px 0;border-top:1px dashed var(--border-strong)"></div><div class="kv"><span>' + esc(L(p.t)) + (o.qty > 1 ? ' ×' + o.qty : '') + '</span><span class="num">' + money(o.price) + '</span></div>' + '' + '<div class="kv total"><span>' + t('order.net') + '</span><span class="num">' + money(o.price) + '</span></div><div class="kv" style="font-size:13px"><span>' + t('order.paidWith') + '</span><span>' + payState(o) + '</span></div>' +
     '<a class="btn btn-secondary btn-block" style="margin-top:18px" href="#orders.' + o.id + '" data-go="orders.' + o.id + '">' + t('order.back') + '</a></div>';
 }
 
@@ -3423,103 +3577,14 @@ function vScan(id){
   if (sc.step === 1) return h + '<section class="card card-pad stack" aria-labelledby="s1-h"><div class="row">' + thumb(p, 'lg') + '<div><h2 id="s1-h" style="font-size:17px">' + t('scan.s1') + '</h2><div class="muted" style="font-size:13.5px">' + esc(sizeLabel(p.size)) + ' · ' + condLabel(p.cond) + (p.defect ? ' · ' + esc(L(p.defect)) : '') + '</div></div></div><ul class="stack" style="gap:8px">' +
     ['l1','l2','l3','l4'].map(k => '<li class="row" style="align-items:flex-start;gap:10px">' + ic('list-checks', 'i-sm') + '<span>' + t('scan.' + k) + '</span></li>').join('') + '</ul>' +
     '<div class="note note-warn">' + ic('triangle-alert') + '<span><b>' + t('scan.warn') + '</b></span></div><p class="subtle" style="font-size:12.5px">' + t('scan.disclaimer') + '</p>' +
-    '<label class="check" for="scan-ok"><input id="scan-ok" type="checkbox" data-act="scanCheck"' + (sc.checked ? ' checked' : '') + '>' + t('scan.checked') + '</label>' +
+    '<div class="stack" style="gap:8px"><h3 style="font-size:15px">' + t('scan.payT') + '</h3>' + payeeBox(o.sellerId, o.price) + '</div>' +
+    '<label class="check" for="scan-ok"><input id="scan-ok" type="checkbox" data-act="scanCheck"' + (sc.checked ? ' checked' : '') + '>' + t('scan.checked', { amt:money(o.price) }) + '</label>' +
     '<button class="btn btn-primary btn-lg btn-block" data-act="scanNext"' + (sc.checked ? '' : ' disabled aria-disabled="true"') + '>' + t('scan.continue') + ic('arrow-right', 'i-sm') + '</button></section></div>';
   h += '<section class="stack" aria-labelledby="s2-h"><h2 id="s2-h" class="sr-only">' + t('scan.camTitle') + '</h2>';
   if (!sc.manual) h += '<div class="cam" role="img" aria-label="' + esc(t('scan.camNote')) + '"><div class="frame"></div><div class="line"></div><div class="cam-note">' + t('scan.camSub') + '<br><span style="opacity:.75">' + t('scan.camNote') + '</span></div></div><div class="row wrap"><button class="btn btn-primary btn-lg" style="flex:1" data-act="scanSim" data-v="' + o.id + '">' + ic('scan-line', 'i-sm') + t('scan.simulate') + '</button><button class="btn btn-secondary btn-lg" style="flex:1" data-act="scanManual">' + ic('keyboard', 'i-sm') + t('scan.manual') + '</button></div>';
   else h += '<form class="card card-pad stack" data-form="uid" data-id="' + o.id + '" novalidate><div class="field"><label for="uid">' + t('scan.uidLabel') + '</label><input class="input mono" id="uid" name="uid" autocomplete="off" autocapitalize="characters" placeholder="' + esc(t('scan.uidPh')) + '" data-keep="always"' + (sc.err ? ' aria-invalid="true" aria-describedby="uid-err"' : ' aria-describedby="uid-hint"') + '><span class="hint" id="uid-hint">' + t('scan.uidHint') + ' ' + t('scan.demoUid', { uid:UIDS[o.id] || '4F9K27' }) + '</span>' + (sc.err ? '<span class="err" id="uid-err" role="alert">' + ic('circle-alert') + t('scan.wrong') + '</span>' : '') + '</div>' +
     '<div class="row wrap"><button class="btn btn-secondary" type="button" data-act="scanCam" style="flex:1">' + ic('scan-line', 'i-sm') + t('scan.camTitle') + '</button><button class="btn btn-primary" type="submit" style="flex:1">' + t('scan.verify') + '</button></div></form>';
   return h + '</section></div>';
-}
-
-/* ---- 07-wallet.js ---- */
-/* ============================== BUYER WALLET (coins only — no withdrawable money here) ============================== */
-const NOTE_PATTERNS = [
-  [/Advertisement fee for product ID: (.*?) for (.*?) days/i, 'AdFee', ['id','days']],
-  [/Exchanged (.*?) to coins/i, 'Exchange', ['amount']],
-  [/Income from completed Order ID (.*)/i, 'IncomeOrder', ['id']],
-  [/Refund for canceled Order ID (.*)/i, 'RefundOrder', ['id']],
-  [/Top Up with SlipVerify\. Transaction ID: (.*)/i, 'TopUpVerify', ['id']],
-  [/Withdraw request of amount (.*)/i, 'Withdraw', ['amount']],
-  [/Promotion fee: (.*?), (\d+) days/i, 'PromoteFee', ['title','days']],
-  [/Purchase of (.*)/i, 'PurchaseItem', ['item']],
-];
-function noteText(note){
-  for (const [re, key, ps] of NOTE_PATTERNS) {
-    const m = note.match(re); if (!m) continue;
-    const v = {}; ps.forEach((k, i) => v[k] = (m[i + 1] || '').trim());
-    const byEn = s => S.listings.find(x => x.t.en === s);
-    if (key === 'PurchaseItem') { const p = byEn(v.item); if (p) v.item = L(p.t); }
-    if (key === 'PromoteFee') { const p = byEn(v.title); if (p) v.title = L(p.t); }
-    return t('notePat.' + key, v);
-  }
-  return note;
-}
-function txKind(tx){ if (tx.type === 'deposit') return 'topup'; if (tx.type === 'refund') return 'refund'; if (/^Purchase of/i.test(tx.note)) return 'purchase'; return tx.amount >= 0 ? 'in' : 'out'; }
-function txIcon(tx){ const k = txKind(tx); return k === 'topup' ? 'arrow-down-left' : k === 'refund' ? 'undo-2' : k === 'purchase' ? 'shopping-bag' : /Advertisement|Promotion/i.test(tx.note) ? 'megaphone' : /Exchanged/i.test(tx.note) ? 'repeat' : tx.amount >= 0 ? 'arrow-down-left' : 'arrow-up-right'; }
-function txList(){
-  const list = S.txs.filter(x => !x.seller || isSeller()).sort((a, b) => b.at - a.at);
-  let bal = S.coins;
-  list.forEach(x => { x._after = r2(bal); x._before = r2(bal - x.amount); bal = x._before; });
-  return list;
-}
-const TXF = [['all','wallet.fAll'],['in','wallet.fIn'],['out','wallet.fOut'],['topup','wallet.fTopup'],['purchase','wallet.fPurchase'],['refund','wallet.fRefund']];
-function txMatches(x){
-  const f = S.txF, k = txKind(x);
-  if (f === 'in' && x.amount < 0) return false; if (f === 'out' && x.amount >= 0) return false;
-  if (['topup','purchase','refund'].includes(f) && k !== f) return false;
-  const q = S.txQ.trim().toLowerCase(); if (q && !(x.id + ' ' + x.note + ' ' + noteText(x.note)).toLowerCase().includes(q)) return false;
-  return true;
-}
-const typeLabel = x => t('wallet.t' + x.type.charAt(0).toUpperCase() + x.type.slice(1));
-const statusLabel = s => t('wallet.s' + s.charAt(0).toUpperCase() + s.slice(1));
-function vTxList(){
-  const list = txList().filter(txMatches);
-  if (!list.length) return '<div class="empty">' + ic('receipt') + '<h3>' + t('wallet.empty') + '</h3><p>' + t('wallet.emptyD') + '</p></div>';
-  let h = '', lastDay = '';
-  list.forEach(x => {
-    const dk = sod(x.at).getTime();
-    if (dk !== lastDay) { h += '<div class="txday">' + esc(fmtDayFull(x.at)) + '</div>'; lastDay = dk; }
-    const open = S.txOpen === x.id, pos = x.amount >= 0;
-    h += '<button class="tx" data-act="txToggle" data-v="' + x.id + '" aria-expanded="' + open + '" aria-controls="txd-' + x.id + '"><span class="tx-ic' + (pos ? ' in' : '') + '">' + ic(txIcon(x)) + '</span><span style="min-width:0"><span class="tx-t" style="display:block">' + esc(noteText(x.note)) + '</span><span class="tx-s">' + hm(x.at) + ' · ' + typeLabel(x) + (x.status !== 'completed' ? ' <span class="st st-warning">' + ic('hourglass') + statusLabel(x.status) + '</span>' : '') + '</span></span><span class="tx-a' + (pos ? ' in' : '') + '">' + (pos ? '+' : '−') + money2(Math.abs(x.amount)) + '</span></button>';
-    if (open) h += '<div class="tx-detail" id="txd-' + x.id + '"><div><div class="l">' + t('wallet.before') + '</div><div class="num">' + money2(x._before) + '</div></div><div><div class="l">' + t('wallet.after') + '</div><div class="num"><b>' + money2(x._after) + '</b></div></div><div><div class="l">' + t('wallet.status') + '</div><div>' + statusLabel(x.status) + '</div></div><div><div class="l">' + t('wallet.txid') + '</div><div class="row" style="gap:6px"><span class="mono">' + x.id + '</span><button class="icon-btn sm" data-act="copy" data-v="' + x.id + '" aria-label="' + t('common.copy') + ' ' + x.id + '">' + ic('copy', 'i-sm') + '</button></div></div></div>';
-  });
-  return h;
-}
-function vWallet(arg){
-  let h = '<div class="page-h"><div><h1 id="page-title" tabindex="-1">' + t('wallet.title') + '</h1><p>' + t('wallet.sub') + '</p></div></div>';
-  if (S.returnTo === 'checkout' && arg !== 'topup') h += '<div class="note note-info" style="margin-bottom:16px">' + ic('shopping-cart') + '<span>' + t('wallet.backNote') + '</span><a class="btn btn-primary btn-sm" style="margin-left:auto" href="#checkout" data-go="checkout">' + t('checkout.backToCheckout') + '</a></div>';
-  if (arg === 'topup') h += vTopup();
-  if (arg === 'redeem') h += vRedeem();
-  h += '<div class="bal-grid"><section class="card bal primary-bal" aria-labelledby="cb-l"><div class="b-l" id="cb-l">' + ic('coins', 'i-sm') + t('wallet.coins') + '</div><div class="b-v num">' + money2(S.coins) + '</div><div class="b-s">' + t('wallet.coinsNote') + '</div>' +
-    '<div class="b-act"><a class="btn btn-primary" href="#wallet.topup" data-go="wallet.topup"' + (arg === 'topup' ? ' aria-current="true"' : '') + '>' + ic('plus', 'i-sm') + t('wallet.topUp') + '</a><a class="btn btn-secondary" href="#wallet.redeem" data-go="wallet.redeem"' + (arg === 'redeem' ? ' aria-current="true"' : '') + '>' + ic('ticket', 'i-sm') + t('wallet.redeem') + '</a></div></section>';
-  h += '<section class="card bal" aria-labelledby="cp-h"><div class="b-l" id="cp-h">' + ic('ticket', 'i-sm') + t('wallet.coupons') + ' <span class="count soft">' + S.coupons.length + '</span></div>' +
-    (S.coupons.length ? '<div class="stack" style="gap:8px">' + S.coupons.map(c => '<div class="cpn"><span class="c-val">' + (c.type === 'percentage' ? '−' + c.value + '%' : '−฿' + c.value) + '</span><div style="min-width:0"><div style="font-weight:600">' + esc(L(c.name)) + '</div><div class="muted" style="font-size:12.5px"><span class="mono">' + c.code + '</span> · ' + t('wallet.exp', { d:fmtDate(c.exp) }) + '</div></div></div>').join('') + '</div>' : '<p class="muted">' + t('wallet.couponsEmpty') + '</p>') + '</section></div>';
-  if (isSeller()) h += '<p class="note note-info" style="margin-bottom:20px">' + glyph('hanger', 'i-sm') + '<span>' + t('wallet.sellerNote') + '</span><a class="btn btn-secondary btn-sm" style="margin-left:auto" href="#mycloset.sales" data-go="mycloset.sales">' + t('wallet.sellerLink') + '</a></p>';
-  h += '<section class="card" aria-labelledby="tx-h"><div class="card-h"><h2 id="tx-h">' + t('wallet.history') + '</h2><button class="btn btn-secondary btn-sm" data-act="csv">' + ic('file-down', 'i-sm') + t('wallet.export') + '</button></div>' +
-    '<div class="card-pad" style="padding-bottom:4px"><div class="txtools"><label class="sr-only" for="txq">' + t('wallet.searchPh') + '</label><input class="input" id="txq" type="search" placeholder="' + esc(t('wallet.searchPh')) + '" value="' + esc(S.txQ) + '" data-keep="focus"><div class="chips" role="radiogroup" aria-label="' + t('wallet.filters') + '">' + TXF.map(([k, l]) => '<button class="chip sm" role="radio" aria-checked="' + (S.txF === k) + '" data-act="txF" data-v="' + k + '">' + t(l) + '</button>').join('') + '</div></div></div>' +
-    '<div id="tx-list">' + vTxList() + '</div></section>';
-  return h;
-}
-function vTopup(){
-  const tp = S.top;
-  let h = '<section class="card panel" aria-labelledby="tp-h"><div class="panel-h"><h2 id="tp-h">' + t('wallet.topTitle') + '</h2><a class="icon-btn" href="#wallet" data-go="wallet" aria-label="' + t('common.close') + '">' + ic('x') + '</a></div>';
-  if (tp.stage === 'done') return h + '<div class="note note-ok">' + ic('circle-check') + '<span><b>' + t('wallet.topDone') + '</b> ' + t('wallet.topDoneAmt', { amt:money(tp.amount) }) + '</span></div><div class="row wrap" style="margin-top:12px">' + (S.returnTo === 'checkout' ? '<a class="btn btn-primary" href="#checkout" data-go="checkout">' + t('checkout.backToCheckout') + '</a>' : '') + '<button class="btn btn-secondary" data-act="topAgain">' + t('wallet.again') + '</button></div></section>';
-  h += '<div class="note note-warn" style="margin-bottom:16px">' + ic('triangle-alert') + '<span><b>' + t('wallet.noRefundT') + ':</b> ' + t('wallet.noRefund') + '</span></div><ol class="nsteps">' +
-    '<li class="nstep"><div><h3>' + t('wallet.topS1') + '</h3><p class="muted" style="font-size:13.5px">' + t('wallet.topS1d') + '</p>' +
-      acctRow(t('wallet.bank'), t('wallet.bankName'), TOPUP_INFO.bank) + acctRow(t('wallet.holder'), esc(TOPUP_INFO.holder), TOPUP_INFO.holder) + acctRow(t('wallet.number'), '<span class="mono" style="font-size:17px">' + TOPUP_INFO.number + '</span>', TOPUP_INFO.number.replace(/-/g, '')) + '</div></li>' +
-    '<li class="nstep"><div><h3>' + t('wallet.topS2') + '</h3><p class="muted" style="font-size:13.5px;margin-bottom:10px">' + t('wallet.topS2d') + '</p>';
-  if (tp.stage === 'verifying') h += '<div class="drop" aria-live="polite">' + (tp.preview ? '<img src="' + tp.preview + '" alt="">' : ic('loader-circle')) + '<b>' + t('wallet.verifying') + '</b></div>';
-  else h += '<label class="drop" for="slip">' + ic('image-up') + '<b>' + t('wallet.upload') + '</b><span style="font-size:13px">' + t('wallet.types') + '</span><input id="slip" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only" data-act="slip"></label><button class="btn btn-link" style="margin-top:8px;font-size:13.5px" data-act="slipSample">' + t('wallet.sample') + '</button>';
-  return h + '</div></li><li class="nstep"><div><h3>' + t('wallet.topS3') + '</h3><p class="muted" style="font-size:13.5px">' + t('wallet.topS3d') + '</p></div></li></ol></section>';
-}
-function acctRow(label, valueHtml, copyVal){ return '<div class="acct"><div><div class="a-l">' + label + '</div><div class="a-v">' + valueHtml + '</div></div><button class="btn btn-ghost btn-sm" data-act="copy" data-v="' + esc(copyVal) + '">' + ic('copy', 'i-sm') + t('common.copy') + '</button></div>'; }
-function vRedeem(){
-  const r = S.red;
-  return '<section class="card panel" aria-labelledby="rd-h"><div class="panel-h"><h2 id="rd-h">' + t('wallet.redTitle') + '</h2><a class="icon-btn" href="#wallet" data-go="wallet" aria-label="' + t('common.close') + '">' + ic('x') + '</a></div><p class="muted" style="margin-bottom:12px">' + t('wallet.redDesc') + '</p>' +
-    '<form class="row wrap" data-form="redeem" novalidate style="align-items:flex-start"><div class="field" style="flex:1;min-width:220px"><label for="rcode" class="sr-only">' + t('wallet.redTitle') + '</label><input class="input mono" id="rcode" name="code" autocomplete="off" autocapitalize="characters" placeholder="' + esc(t('wallet.redPh')) + '" data-keep="always" style="text-transform:uppercase;letter-spacing:.08em"' + (r.msg && !r.ok ? ' aria-invalid="true" aria-describedby="rd-msg"' : '') + '></div><button class="btn btn-primary" type="submit">' + t('wallet.redBtn') + '</button></form>' +
-    (r.msg ? '<div id="rd-msg" role="' + (r.ok ? 'status' : 'alert') + '" class="note ' + (r.ok ? 'note-ok' : 'note-err') + '" style="margin-top:12px">' + ic(r.ok ? 'circle-check' : 'circle-alert') + '<span>' + esc(r.msg) + '</span></div>' : '') +
-    '<p class="subtle" style="font-size:12.5px;margin-top:10px">' + t('wallet.redHint') + '</p></section>';
 }
 
 /* ---- 08-closet.js ---- */
@@ -3554,8 +3619,8 @@ function cOverview(){
   let h = '<div class="stats">' +
     '<div class="card stat"><div class="s-l">' + ic('shirt') + t('closet.stListings') + '</div><div class="s-v">' + active + '</div><div class="s-f">' + t('closet.stListingsF', { r:reserved, s:sold }) + '</div><a class="s-link" href="#mycloset.listings" data-go="mycloset.listings">' + t('closet.tListings') + ' →</a></div>' +
     '<div class="card stat"><div class="s-l">' + ic('clipboard-list') + t('closet.stPending') + '</div><div class="s-v">' + pend.length + '</div><div class="s-f">' + t('closet.stPendingF', { n:todayN }) + '</div><a class="s-link" href="#mycloset.orders" data-go="mycloset.orders">' + t('closet.tOrders') + ' →</a></div>' +
-    '<div class="card stat"><div class="s-l">' + ic('chart-column') + t('closet.stSales') + '</div><div class="s-v">' + money(cur.netIncome) + '</div><div class="s-f">' + t('closet.stSalesF') + '</div><a class="s-link" href="#mycloset.sales" data-go="mycloset.sales">' + t('closet.tSales') + ' →</a></div>' +
-    '<div class="card stat"><div class="s-l">' + ic('landmark') + t('closet.stAvail') + '</div><div class="s-v">' + money2(m.avail) + '</div><div class="s-f">' + t('sales.pending') + ' ' + money(m.pending) + '</div><div class="s-act"><button class="btn btn-secondary btn-sm" data-act="dialog" data-v="withdraw">' + t('sales.withdraw') + '</button></div></div></div>';
+    '<div class="card stat"><div class="s-l">' + ic('chart-column') + t('closet.stSales') + '</div><div class="s-v">' + money(cur.total) + '</div><div class="s-f">' + t('closet.stSalesF') + '</div><a class="s-link" href="#mycloset.sales" data-go="mycloset.sales">' + t('closet.tSales') + ' →</a></div>' +
+    '<div class="card stat"><div class="s-l">' + ic('landmark') + t('closet.stCollect') + '</div><div class="s-v">' + money(m.pending) + '</div><div class="s-f">' + t('closet.stCollectF', { n:m.pendingN }) + '</div><a class="s-link" href="#mycloset.orders" data-go="mycloset.orders">' + t('closet.tOrders') + ' →</a></div></div>';
   h += '<div class="split"><section class="card" aria-labelledby="att-h"><div class="card-h"><h2 id="att-h">' + t('closet.attention') + '</h2>' + (pend.length ? '<span class="count attn">' + pend.length + '</span>' : '') + '</div>' + (pend.length ? pend.map(o => sRow(o, true)).join('') : '<p class="muted card-pad">' + t('closet.attentionEmpty') + '</p>') + '</section>' +
     '<section class="card" aria-labelledby="ho-h"><div class="card-h"><h2 id="ho-h">' + t('closet.handoffs') + '</h2></div>' + (up.length ? up.map(o => sRow(o, true)).join('') : '<p class="muted card-pad">' + t('closet.handoffsEmpty') + '</p>') + '</section></div>';
   return h;
@@ -3582,41 +3647,39 @@ function cOrders(){
   return '<div class="chips" role="radiogroup" aria-label="' + t('closet.tOrders') + '" style="margin-bottom:14px">' + SOF.map(([k, l, f]) => { const n = S.sorders.filter(f).length; return '<button class="chip" role="radio" aria-checked="' + (k === cur[0]) + '" data-act="cof" data-v="' + k + '">' + t(l) + (n ? ' <span class="sub">' + n + '</span>' : '') + '</button>'; }).join('') + '</div>' +
     '<section class="card">' + (list.length ? list.map(o => sRow(o, true)).join('') : '<div class="empty">' + ic('clipboard-list') + '<h3>' + t('closet.ordersEmpty') + '</h3></div>') + '</section>';
 }
+const myBoosts = () => S.ads.filter(a => { const p = findL(a.id); return p && p.seller === 'me'; });
 function cPromos(){
-  const act = S.ads.filter(a => { const p = findL(a.id); return p && p.seller === 'me'; });
-  let h = '<div class="row wrap" style="justify-content:space-between;margin-bottom:14px"><p class="note note-info" style="flex:1;min-width:260px">' + ic('info') + '<span>' + t('closet.prNote') + '</span></p><button class="btn btn-primary" data-act="dialog" data-v="promote">' + ic('megaphone', 'i-sm') + t('closet.prCta') + '</button></div>';
-  h += '<section class="card" aria-labelledby="pa-h"><div class="card-h"><h2 id="pa-h">' + t('closet.prActive') + '</h2></div>' + (act.length ? act.map(a => { const p = findL(a.id); return '<div class="srow">' + thumb(p) + '<div style="min-width:0"><div class="sr-t">' + esc(L(p.t)) + '</div><div class="sr-s"><span class="st st-info">' + ic('megaphone') + t('closet.prDaysLeft', { n:a.left }) + '</span><span>' + t('closet.prCost', { n:a.cost }) + '</span></div></div></div>'; }).join('') : '<p class="muted card-pad">' + t('closet.prEmpty') + '</p>') + '</section>';
-  if (S.pastAds.length) h += '<section class="card" style="margin-top:16px" aria-labelledby="pe-h"><div class="card-h"><h2 id="pe-h">' + t('closet.prEnded') + '</h2></div>' + S.pastAds.map(a => { const p = findL(a.id); return '<div class="srow">' + thumb(p) + '<div style="min-width:0"><div class="sr-t">' + esc(L(p.t)) + '</div><div class="sr-s"><span>' + t('closet.prEndedAgo', { n:a.endedDaysAgo }) + '</span><span>' + t('closet.prCost', { n:a.cost }) + '</span></div></div><div class="sr-a">' + (available(p) && !myAd(p.id) ? '<button class="btn btn-secondary btn-sm" data-act="dialog" data-v="promote" data-id="' + p.id + '">' + t('closet.promote') + '</button>' : '') + '</div></div>'; }).join('') + '</section>';
+  const act = myBoosts(), full = act.length >= BOOST_MAX;
+  let h = '<div class="row wrap" style="justify-content:space-between;margin-bottom:14px"><p class="note note-info" style="flex:1;min-width:260px">' + ic('info') + '<span>' + t('closet.prNote', { max:BOOST_MAX, d:BOOST_DAYS }) + '</span></p><button class="btn btn-primary" data-act="dialog" data-v="promote"' + (full ? ' disabled' : '') + '>' + ic('megaphone', 'i-sm') + t('closet.prCta') + '</button></div>';
+  if (full) h += '<p class="subtle" style="font-size:12.5px;margin:-6px 0 12px">' + t('closet.pmFull', { max:BOOST_MAX }) + '</p>';
+  h += '<section class="card" aria-labelledby="pa-h"><div class="card-h"><h2 id="pa-h">' + t('closet.prActive') + '</h2><span class="subtle" style="font-size:13px">' + t('closet.prSlots', { n:act.length, max:BOOST_MAX }) + '</span></div>' + (act.length ? act.map(a => { const p = findL(a.id); return '<div class="srow">' + thumb(p) + '<div style="min-width:0"><div class="sr-t">' + esc(L(p.t)) + '</div><div class="sr-s"><span class="st st-info">' + ic('megaphone') + t('closet.prDaysLeft', { n:a.left }) + '</span></div></div></div>'; }).join('') : '<p class="muted card-pad">' + t('closet.prEmpty') + '</p>') + '</section>';
+  if (S.pastAds.length) h += '<section class="card" style="margin-top:16px" aria-labelledby="pe-h"><div class="card-h"><h2 id="pe-h">' + t('closet.prEnded') + '</h2></div>' + S.pastAds.map(a => { const p = findL(a.id); return '<div class="srow">' + thumb(p) + '<div style="min-width:0"><div class="sr-t">' + esc(L(p.t)) + '</div><div class="sr-s"><span>' + t('closet.prEndedAgo', { n:a.endedDaysAgo }) + '</span></div></div><div class="sr-a">' + (available(p) && !myAd(p.id) && !full ? '<button class="btn btn-secondary btn-sm" data-act="dialog" data-v="promote" data-id="' + p.id + '">' + t('closet.promote') + '</button>' : '') + '</div></div>'; }).join('') + '</section>';
   return h;
 }
 function revChart(rows, height){
-  const max = Math.max(...rows.map(r => r.netIncome), 1), cur = monthKey(0);
-  const label = t('rev.chart') + ': ' + rows.map(r => fmtMonth(r.month) + ' ' + money(r.netIncome)).join(', ');
-  return '<div class="bars" role="img" aria-label="' + esc(label) + '" style="--h:' + (height || 190) + 'px">' + rows.map(r => '<div class="bar-col"><span class="bv">' + Math.round(r.netIncome).toLocaleString('en-US') + '</span><span class="bar' + (r.month === cur ? ' cur' : '') + '" style="height:' + Math.max(2, Math.round(r.netIncome / max * 82)) + '%"></span></div>').join('') + '</div>' +
+  const max = Math.max(...rows.map(r => r.total), 1), cur = monthKey(0);
+  const label = t('rev.chart') + ': ' + rows.map(r => fmtMonth(r.month) + ' ' + money(r.total)).join(', ');
+  return '<div class="bars" role="img" aria-label="' + esc(label) + '" style="--h:' + (height || 190) + 'px">' + rows.map(r => '<div class="bar-col"><span class="bv">' + Math.round(r.total).toLocaleString('en-US') + '</span><span class="bar' + (r.month === cur ? ' cur' : '') + '" style="height:' + Math.max(2, Math.round(r.total / max * 82)) + '%"></span></div>').join('') + '</div>' +
     '<div class="bar-labels" aria-hidden="true">' + rows.map(r => '<span' + (r.month === cur ? ' class="cur"' : '') + '>' + esc(fmtMonth(r.month)) + '</span>').join('') + '</div>';
 }
 function salesHistory(m){
   const out = [];
-  m.rows.slice(0, -1).forEach(r => { if (!r.orderCount) return; const [y, mo] = r.month.split('-').map(Number); out.push({ at:new Date(y, mo, 0, 20, 0), label:t('sales.hMonth', { m:fmtMonth(r.month), n:r.orderCount }), amount:r.netIncome, status:'completed' }); });
-  S.sorders.filter(o => o.status === 'done' && monthOf(o.doneAt || o.date) === monthKey(0)).forEach(o => out.push({ at:o.doneAt || o.date, label:t('sales.hIncome', { id:o.id }), amount:sNet(o), status:'completed', lid:o.lid }));
-  S.payouts.forEach(x => out.push({ at:x.at, label:t(x.kind === 'withdraw' ? 'sales.hWithdraw' : 'sales.hExchange'), amount:-x.amount, status:x.status }));
+  m.rows.slice(0, -1).forEach(r => { if (!r.orderCount) return; const [y, mo] = r.month.split('-').map(Number); out.push({ at:new Date(y, mo, 0, 20, 0), label:t('sales.hMonth', { m:fmtMonth(r.month), n:r.orderCount }), amount:r.total }); });
+  S.sorders.filter(o => o.status === 'done' && monthOf(o.doneAt || o.date) === monthKey(0)).forEach(o => { const p = findL(o.lid); out.push({ at:o.doneAt || o.date, label:t('sales.hIncome', { id:o.id }) + (p ? ' · ' + L(p.t) : ''), amount:o.price }); });
   return out.sort((a, b) => b.at - a.at);
 }
 function cSales(){
-  const m = money4Seller();
+  const m = money4Seller(), cur = m.rows[m.rows.length - 1];
+  const stat = (icon, label, val, foot) => '<div class="card stat"><div class="s-l">' + ic(icon) + label + '</div><div class="s-v num">' + val + '</div><div class="s-f">' + foot + '</div></div>';
   let h = '<div class="row wrap" style="justify-content:space-between;align-items:flex-end;margin-bottom:14px"><div><h2 style="font-size:18px">' + t('sales.title') + '</h2><p class="muted" style="font-size:14px">' + t('sales.sub') + '</p></div><span class="subtle row" style="gap:6px;font-size:12.5px">' + ic('lock', 'i-xs') + t('sales.buyerOnly') + '</span></div>';
-  h += '<div class="money-grid"><section class="card money-main" aria-labelledby="av-l"><div class="b-l" id="av-l">' + ic('landmark', 'i-sm') + t('sales.avail') + '</div><div class="b-v num">' + money2(m.avail) + '</div><div class="b-s">' + t('sales.availD') + '</div><div class="b-act"><button class="btn btn-primary" data-act="dialog" data-v="withdraw">' + ic('landmark', 'i-sm') + t('sales.withdraw') + '</button><button class="btn btn-secondary" data-act="dialog" data-v="exchange">' + ic('repeat', 'i-sm') + t('sales.convert') + '</button></div></section>' +
-    '<div class="money-side"><div class="card mstat"><div class="s-l">' + ic('hourglass', 'i-sm') + t('sales.pending') + '</div><div class="s-v num">' + money2(m.pending) + '</div><div class="s-f">' + t('sales.pendingD', { n:m.pendingN }) + '</div></div>' +
-    '<div class="card mstat"><div class="s-l">' + ic('arrow-up-right', 'i-sm') + t('sales.withdrawn') + '</div><div class="s-v num">' + money2(m.withdrawn) + '</div><div class="s-f">' + (m.transit ? t('sales.withdrawnD', { amt:money(m.transit) }) : t('sales.withdrawnNone')) + '</div></div>' +
-    '<div class="card mstat"><div class="s-l">' + ic('chart-column', 'i-sm') + t('sales.total') + '</div><div class="s-v num">' + money2(m.total) + '</div><div class="s-f">' + t('sales.totalD') + '</div></div></div></div>';
-  h += '<div class="formula-box"><p class="formula">' + ic('info', 'i-sm') + '<code>' + t('sales.identity') + '</code></p><p class="formula"><span class="subtle">' + t('sales.perOrder') + '</span></p></div>';
+  h += '<div class="stats three">' + stat('chart-column', t('sales.month'), money(cur.total), t('sales.monthD', { n:cur.orderCount })) + stat('hourglass', t('sales.pending'), money(m.pending), t('sales.pendingD', { n:m.pendingN })) + stat('circle-check', t('sales.total'), money(m.total), t('sales.totalD', { n:m.orders })) + '</div>';
+  h += '<p class="note note-info">' + ic('info') + '<span>' + t('sales.noFee') + '</span></p>';
   h += '<section class="card card-pad" style="margin:16px 0" aria-labelledby="rc-h"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h3 id="rc-h" style="font-size:15px">' + t('rev.chart') + '</h3><span class="subtle" style="font-size:12.5px">' + t('rev.last6') + '</span></div>' + revChart(m.rows) + '</section>';
-  const tot = m.rows.reduce((a, r) => ({ n:a.n + r.orderCount, p:a.p + r.totalPrice, c:a.c + r.totalCouponDiscount, k:a.k + r.totalCommission, net:a.net + r.netIncome }), { n:0, p:0, c:0, k:0, net:0 });
-  h += '<section class="card" aria-labelledby="rb-h"><div class="card-h"><h3 id="rb-h">' + t('rev.breakdown') + '</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th scope="col">' + t('rev.month') + '</th><th scope="col" class="r">' + t('rev.orders') + '</th><th scope="col" class="r">' + t('rev.base') + '</th><th scope="col" class="r">' + t('rev.coupon') + '</th><th scope="col" class="r">' + t('rev.commission') + '</th><th scope="col" class="r">' + t('rev.net') + '</th></tr></thead><tbody>' +
-    m.rows.slice().reverse().map(r => '<tr><td><b>' + esc(fmtMonth(r.month)) + '</b></td><td class="r">' + r.orderCount + '</td><td class="r">' + money(r.totalPrice) + '</td><td class="r">+' + money(r.totalCouponDiscount) + '</td><td class="r">−' + money(r.totalCommission) + '</td><td class="r"><b>' + money(r.netIncome) + '</b></td></tr>').join('') +
-    '</tbody><tfoot><tr><td>' + t('rev.total') + '</td><td class="r">' + tot.n + '</td><td class="r">' + money(tot.p) + '</td><td class="r">+' + money(tot.c) + '</td><td class="r">−' + money(tot.k) + '</td><td class="r">' + money(tot.net) + '</td></tr></tfoot></table></div></section>';
-  h += '<section class="card" style="margin-top:16px" aria-labelledby="sh-h"><div class="card-h"><h3 id="sh-h">' + t('sales.history') + '</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th scope="col">' + t('ledger.date') + '</th><th scope="col">' + t('ledger.note') + '</th><th scope="col">' + t('ledger.status') + '</th><th scope="col" class="r">' + t('ledger.amount') + '</th></tr></thead><tbody>' +
-    salesHistory(m).map(x => '<tr><td style="white-space:nowrap">' + esc(fmtDate(x.at)) + '</td><td>' + esc(x.label) + '</td><td>' + (x.status === 'completed' ? '<span class="st st-success">' + ic('circle-check') + statusLabel(x.status) + '</span>' : '<span class="st st-warning">' + ic('hourglass') + statusLabel(x.status) + '</span>') + '</td><td class="r" style="white-space:nowrap;font-weight:700;color:' + (x.amount >= 0 ? 'var(--success)' : 'var(--text)') + '">' + (x.amount >= 0 ? '+' : '−') + money2(Math.abs(x.amount)) + '</td></tr>').join('') + '</tbody></table></div></section>';
+  h += '<section class="card" aria-labelledby="rb-h"><div class="card-h"><h3 id="rb-h">' + t('rev.breakdown') + '</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th scope="col">' + t('rev.month') + '</th><th scope="col" class="r">' + t('rev.orders') + '</th><th scope="col" class="r">' + t('rev.net') + '</th></tr></thead><tbody>' +
+    m.rows.slice().reverse().map(r => '<tr><td><b>' + esc(fmtMonth(r.month)) + '</b></td><td class="r">' + r.orderCount + '</td><td class="r"><b>' + money(r.total) + '</b></td></tr>').join('') +
+    '</tbody><tfoot><tr><td>' + t('rev.total') + '</td><td class="r">' + m.orders + '</td><td class="r">' + money(m.total) + '</td></tr></tfoot></table></div></section>';
+  h += '<section class="card" style="margin-top:16px" aria-labelledby="sh-h"><div class="card-h"><h3 id="sh-h">' + t('sales.history') + '</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th scope="col">' + t('ledger.date') + '</th><th scope="col">' + t('ledger.note') + '</th><th scope="col" class="r">' + t('ledger.amount') + '</th></tr></thead><tbody>' +
+    salesHistory(m).map(x => '<tr><td style="white-space:nowrap">' + esc(fmtDate(x.at)) + '</td><td>' + esc(x.label) + '</td><td class="r" style="white-space:nowrap;font-weight:700;color:var(--success)">+' + money(x.amount) + '</td></tr>').join('') + '</tbody></table></div></section>';
   return h;
 }
 
@@ -3711,8 +3774,7 @@ function vProfile(){
   h += '<div class="prof-grid">';
   h += '<section class="card card-pad prof-sec" aria-labelledby="pb-h"><h2 id="pb-h">' + t('profile.buying') + '</h2>' +
     '<a class="prow" href="#saved" data-go="saved">' + ic('heart') + '<span class="pr-t">' + t('nav.saved') + '</span><span class="pr-v">' + t('profile.savedN', { n:saved.length }) + '</span>' + ic('chevron-right', 'i-sm') + '</a>' +
-    '<a class="prow" href="#orders" data-go="orders">' + ic('shopping-bag') + '<span class="pr-t">' + t('nav.myOrders') + '</span><span class="pr-v">' + t('profile.ordersActive', { n:active }) + '</span>' + ic('chevron-right', 'i-sm') + '</a>' +
-    '<a class="prow" href="#wallet" data-go="wallet">' + ic('wallet') + '<span class="pr-t">' + t('nav.wallet') + '</span><span class="pr-v num">' + t('profile.walletLine', { b:money2(S.coins) }) + '</span>' + ic('chevron-right', 'i-sm') + '</a></section>';
+    '<a class="prow" href="#orders" data-go="orders">' + ic('shopping-bag') + '<span class="pr-t">' + t('nav.myOrders') + '</span><span class="pr-v">' + t('profile.ordersActive', { n:active }) + '</span>' + ic('chevron-right', 'i-sm') + '</a></section>';
   h += '<section class="card card-pad prof-sec" aria-labelledby="ps-h"><h2 id="ps-h">' + t('profile.selling') + '</h2>';
   if (sel) h += '<a class="prow" href="#mycloset" data-go="mycloset">' + glyph('hanger') + '<span class="pr-t">' + t('nav.myCloset') + '</span><span class="pr-v">' + t('profile.closetStats', { n:myListings().filter(available).length, r:me.rating.toFixed(1) }) + '</span>' + ic('chevron-right', 'i-sm') + '</a>' +
     '<a class="prow" href="#closet.me" data-go="closet.me">' + ic('eye') + '<span class="pr-t">' + t('nav.publicCloset') + '</span>' + ic('chevron-right', 'i-sm') + '</a>' +
@@ -3741,7 +3803,7 @@ function vSettings(arg){
     '<div class="set-row"><div class="sr-txt"><div class="sr-t">' + t('settings.chatT') + '</div><div class="sr-d">' + t('settings.chatD') + '</div></div>' + sw('nChat', S.nChat, t('settings.chatT')) + '</div></section>';
   h += '<section class="card" id="set-appearance" aria-labelledby="sa-h"><div class="card-h"><h2 id="sa-h">' + t('settings.appearance') + '</h2></div><div class="set-row"><div class="sr-txt"><div class="sr-t" id="lang-l">' + t('settings.language') + '</div></div><div class="seg" role="group" aria-labelledby="lang-l"><button aria-pressed="' + (S.lang === 'th') + '" data-act="setLang" data-v="th">ไทย</button><button aria-pressed="' + (S.lang === 'en') + '" data-act="setLang" data-v="en">English</button></div></div>' +
     '<div class="set-row"><div class="sr-txt"><div class="sr-t" id="theme-l">' + t('settings.theme') + '</div></div><div class="seg" role="group" aria-labelledby="theme-l">' + [['system','monitor'],['light','sun'],['dark','moon']].map(([k, i]) => '<button aria-pressed="' + (S.themePref === k) + '" data-act="setTheme" data-v="' + k + '">' + ic(i, 'i-sm') + t('settings.' + k) + '</button>').join('') + '</div></div></section>';
-  if (isSeller()) h += '<section class="card" id="set-payout" aria-labelledby="so-h"><div class="card-h"><h2 id="so-h">' + t('settings.payout') + '</h2></div><div class="set-row">' + ic('landmark') + '<div class="sr-txt"><div class="sr-t">' + t('sales.wdAcct') + '</div><div class="sr-d">' + t('settings.payoutD') + '</div></div><span class="subtle" style="font-size:12.5px">' + t('profile.editSoon') + '</span></div></section>';
+  if (isSeller()) h += '<section class="card" id="set-payout" aria-labelledby="so-h"><div class="card-h"><h2 id="so-h">' + t('settings.payout') + '</h2></div><div class="set-row">' + ic('landmark') + '<div class="sr-txt"><div class="sr-t">PromptPay ' + payee('me').fmt + ' · ' + esc(payee('me').name) + '</div><div class="sr-d">' + t('pay.sellerSees') + '</div></div><span class="subtle" style="font-size:12.5px">' + t('profile.editSoon') + '</span></div></section>';
   return h + '</div></div>';
 }
 
@@ -3758,12 +3820,15 @@ const HELP = GEN.help;
   const G = DICT.guide, pair = k => G[k];
   HELP.a.pickup = { title: pair('pickupT'), steps: ['p1','p2','p3','p4'].map((k, i) => ({ t:pair(k + 't'), d:pair(k + 'd'), img:[], ok: i === 3 })) };
   HELP.a.condition = { title: pair('condT'), steps: CONDS.map((c, i) => ({ t:pair('c' + (i + 1) + 't'), d:DICT.cond[c + 'D'], img:[] })).concat([{ t:pair('c5t'), d:pair('c5d'), img:[], ok:true }]) };
+  HELP.a.pay_seller = { title: pair('payT'), steps: ['y1','y2','y3','y4'].map((k, i) => ({ t:pair(k + 't'), d:pair(k + 'd'), img:[], ok: i === 3 })) };
+  HELP.a.promote_product = { title: pair('bT'), steps: ['b1','b2','b3'].map((k, i) => ({ t:pair(k + 't'), d:pair(k + 'd'), img:[], ok: i === 2 })) };
+  delete HELP.a.deposit; delete HELP.a.withdraw; delete HELP.a.redeem_code;
   HELP.a.measure = { title: pair('measT'), steps: [{ t:pair('m1t'), d:pair('m1d'), img:[] }, { t:pair('m2t'), d:pair('m2d'), img:[], fig:'top' }, { t:pair('m3t'), d:pair('m3d'), img:[], fig:'bottom' }, { t:pair('m4t'), d:pair('m4d'), img:[], fig:'shoe', ok:true }] };
 })();
 const HCATS = [
   ['buying', 'shopping-bag', 'help.cBuying', 'help.cBuyingD', ['buy_howto','search_howto','track','pickup','condition','cancel_order','overdue_order']],
   ['selling', 'hanger', 'help.cSelling', 'help.cSellingD', ['register_seller','create_product','measure','process_order','promote_product','edit_product']],
-  ['payments', 'wallet', 'help.cPayments', 'help.cPaymentsD', ['deposit','redeem_code','withdraw']],
+  ['payments', 'landmark', 'help.cPayments', 'help.cPaymentsD', ['pay_seller','cancel_order','overdue_order']],
   ['account', 'shield-check', 'help.cAccount', 'help.cAccountD', ['notifications','safety','terms']],
 ];
 const artTitle = id => LP(HELP.a[id].title);
@@ -3779,7 +3844,7 @@ function vHelpBody(){
     const m = helpMatches(q);
     return '<p class="muted" role="status" style="margin-bottom:12px">' + (m.length ? t('help.results', { n:m.length, q:esc(q) }) : t('help.noResults')) + '</p>' + (m.length ? '<div class="card card-pad">' + m.map(id => '<a class="hlink" href="#help.' + id + '" data-go="help.' + id + '">' + esc(artTitle(id)) + ic('chevron-right') + '</a>').join('') + '</div>' : '');
   }
-  const pops = [['buy_howto','shopping-bag','help.popBuy','help.popBuyD'],['create_product','hanger','help.popSell','help.popSellD'],['deposit','wallet','help.popTop','help.popTopD'],['track','package-search','help.popTrack','help.popTrackD'],['pickup','map-pin','help.popPickup','help.popPickupD']];
+  const pops = [['buy_howto','shopping-bag','help.popBuy','help.popBuyD'],['create_product','hanger','help.popSell','help.popSellD'],['pay_seller','landmark','help.popPay','help.popPayD'],['track','package-search','help.popTrack','help.popTrackD'],['pickup','map-pin','help.popPickup','help.popPickupD']];
   let h = '<section class="sec" aria-labelledby="hp-h"><div class="sec-h"><h2 id="hp-h">' + t('help.popular') + '</h2></div><div class="pop-grid">' + pops.map(([id, i, tt, dd]) => '<a class="card pop-tile" href="#help.' + id + '" data-go="help.' + id + '">' + (i === 'hanger' ? glyph(i) : ic(i)) + '<span class="pt-t">' + t(tt) + '</span><span class="pt-d">' + t(dd) + '</span></a>').join('') + '</div></section>';
   h += '<section class="sec" aria-labelledby="hc-h"><h2 id="hc-h" class="sr-only">' + t('help.title') + '</h2><div class="hcat-grid">' + HCATS.map(c => '<div class="card hcat"><h3>' + hcIcon(c) + t(c[2]) + '</h3><p>' + t(c[3]) + '</p>' + c[4].map(id => '<a class="hlink" href="#help.' + id + '" data-go="help.' + id + '">' + esc(artTitle(id)) + ic('chevron-right') + '</a>').join('') + '</div>').join('') + '</div></section>';
   return h + vContact();
@@ -3820,7 +3885,7 @@ function vNotes(){
   return h;
 }
 
-const VIEWS = { home:vHome, browse:vBrowse, item:vItem, closet:vCloset, saved:vSaved, cart:vCart, checkout:vCheckout, orders:vOrders, receipt:vReceipt, scan:vScan, wallet:vWallet, mycloset:vMyCloset, sell:vSell, apply:vApply, profile:vProfile, settings:vSettings, help:vHelp, login:() => vLogin(false), notes:vNotes };
+const VIEWS = { home:vHome, browse:vBrowse, item:vItem, closet:vCloset, saved:vSaved, cart:vCart, checkout:vCheckout, orders:vOrders, receipt:vReceipt, scan:vScan, mycloset:vMyCloset, sell:vSell, apply:vApply, profile:vProfile, settings:vSettings, help:vHelp, login:() => vLogin(false), notes:vNotes };
 
 /* ---- 12-overlays.js ---- */
 /* ============================== overlays ============================== */
@@ -3836,9 +3901,8 @@ function dlgHead(title){ return '<div class="dialog-h"><h2 id="dlg-h">' + esc(ti
 function vDialog(d){
   const o = d.id ? (S.orders.find(x => x.id === d.id) || S.sorders.find(x => x.id === d.id)) : null;
   const p = d.id ? findL(d.id) : null;
-  const m = isSeller() ? money4Seller() : null;
   switch (d.type) {
-    case 'cancel': return dlgHead(t('orders.cancelTitle')) + '<p>' + t('orders.cancelMsg') + '</p><p class="note note-info" style="margin-top:12px">' + ic('undo-2') + '<span>' + t('orders.refundNote', { amt:money(o.price) }) + '</span></p><div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay" data-autofocus>' + t('orders.keep') + '</button><button class="btn btn-danger-solid" data-act="doCancel" data-v="' + o.id + '">' + t('orders.cancelBtn') + '</button></div>';
+    case 'cancel': return dlgHead(t('orders.cancelTitle')) + '<p>' + t('orders.cancelMsg') + '</p><p class="note note-info" style="margin-top:12px">' + ic('info') + '<span>' + t('orders.cancelNote') + '</span></p><div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay" data-autofocus>' + t('orders.keep') + '</button><button class="btn btn-danger-solid" data-act="doCancel" data-v="' + o.id + '">' + t('orders.cancelBtn') + '</button></div>';
     case 'notReceived': return dlgHead(t('orders.nrTitle')) + '<p>' + t('orders.nrMsg') + '</p><div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay" data-autofocus>' + t('common.cancel') + '</button><button class="btn btn-danger-solid" data-act="doNotReceived" data-v="' + o.id + '">' + t('orders.nrBtn') + '</button></div>';
     case 'rate': return dlgHead(t('orders.rateTitle')) + '<p class="muted" style="margin-bottom:10px">' + esc(closetName(o.sellerId)) + '</p><div class="stack" style="align-items:center"><div class="row" role="radiogroup" aria-label="' + t('orders.rateTitle') + '" style="gap:4px">' + [1,2,3,4,5].map(n => '<button class="icon-btn star-btn" role="radio" aria-checked="' + (d.stars === n) + '" data-act="rateStar" data-v="' + n + '" aria-label="' + t('orders.starN', { n }) + '" data-on="' + (n <= (d.stars || 0)) + '">' + ic('star', 'i-fill i-lg') + '</button>').join('') + '</div><span class="muted" aria-live="polite">' + (d.stars ? t('orders.starN', { n:d.stars }) : t('orders.rateTap')) + '</span></div>' +
       '<div class="field" style="margin-top:14px"><label class="sr-only" for="rate-txt">' + t('orders.ratePh') + '</label><textarea class="textarea" id="rate-txt" data-keep="always" maxlength="500" placeholder="' + esc(t('orders.ratePh')) + '"></textarea></div>' + (d.err ? '<p class="err" role="alert" style="margin-top:8px">' + ic('circle-alert') + t('orders.rateNeed') + '</p>' : '') + '<div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay">' + t('common.cancel') + '</button><button class="btn btn-primary" data-act="doRate" data-v="' + o.id + '">' + t('orders.rateSubmit') + '</button></div>';
@@ -3853,23 +3917,14 @@ function vDialog(d){
         '<div class="field" style="margin-top:12px"><label for="ch-note">' + t('pickup.note') + '</label><input class="input" id="ch-note" data-keep="always"></div>' + (d.err ? '<p class="err" role="alert" style="margin-top:8px">' + ic('circle-alert') + t('pickup.same') + '</p>' : '') +
         '<div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay">' + t('common.cancel') + '</button><button class="btn btn-primary" data-act="doChange" data-v="' + o.id + '">' + ic('send-horizontal', 'i-sm') + t('pickup.send') + '</button></div>';
     }
-    case 'withdraw': {
-      const amt = +(d.amt || 0);
-      return dlgHead(t('sales.wdTitle')) + '<div class="kv"><span>' + t('sales.wdBal') + '</span><b class="num">' + money2(m.avail) + '</b></div><div class="field" style="margin-top:12px"><label for="wd-amt">' + t('sales.wdInput') + '</label><div class="input-affix"><input class="input" id="wd-amt" type="number" inputmode="decimal" min="0" data-live="wd" data-keep="always" value="' + esc(d.amt || '') + '"' + (d.err ? ' aria-invalid="true" aria-describedby="wd-err"' : '') + '><span class="affix">฿</span></div>' + (d.err ? '<span class="err" id="wd-err" role="alert">' + ic('circle-alert') + esc(d.err) + '</span>' : '') + '</div>' +
-        '<div class="card card-pad" style="margin-top:12px;background:var(--surface-2)"><div class="kv"><span>' + t('sales.wdTo') + '</span><span>' + t('sales.wdAcct') + '</span></div><div class="kv"><span>' + t('sales.wdInput') + '</span><span class="num" id="wd-a">' + money2(amt) + '</span></div><div class="kv"><span>' + t('sales.wd2') + '</span><span class="num">−฿10.00</span></div><div class="kv total"><span>' + t('sales.wdGet') + '</span><span class="num" id="wd-net">' + money2(Math.max(0, amt - 10)) + '</span></div></div>' +
-        '<p class="subtle" style="font-size:12.5px;margin-top:10px">' + t('sales.wdInfo') + ' ' + [t('sales.wd1'), t('sales.wd3')].join(' · ') + '</p><div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay">' + t('common.cancel') + '</button><button class="btn btn-primary" data-act="doWithdraw">' + t('sales.wdBtn') + '</button></div>';
-    }
-    case 'exchange': return dlgHead(t('sales.exTitle')) + '<div class="kv"><span>' + t('sales.wdBal') + '</span><b class="num">' + money2(m.avail) + '</b></div><div class="field" style="margin-top:12px"><label for="ex-amt">' + t('sales.exInput') + '</label><div class="input-affix"><input class="input" id="ex-amt" type="number" inputmode="decimal" min="10" data-live="ex" data-keep="always" placeholder="' + esc(t('sales.exPh')) + '" value="' + esc(d.amt || '') + '"' + (d.err ? ' aria-invalid="true" aria-describedby="ex-err"' : '') + '><span class="affix">฿</span></div><span class="hint">' + t('sales.exRate') + '</span>' + (d.err ? '<span class="err" id="ex-err" role="alert">' + ic('circle-alert') + esc(d.err) + '</span>' : '') + '</div>' +
-      '<div class="kv total" style="margin-top:12px"><span>' + t('sales.exGet') + '</span><span class="num" id="ex-get">' + Math.floor(+(d.amt || 0)).toLocaleString('en-US') + ' ' + t('common.coins') + '</span></div><p class="subtle" style="font-size:12.5px;margin-top:8px">' + t('sales.exInfo') + ' ' + [t('sales.ex1'), t('sales.ex2'), t('sales.ex3')].join(' · ') + '</p><div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay">' + t('common.cancel') + '</button><button class="btn btn-primary" data-act="doExchange">' + t('sales.exBtn') + '</button></div>';
-    case 'qr': return dlgHead(t('closet.qrTitle')) + '<p class="muted">' + t('closet.qrSub') + '</p><div style="display:grid;place-items:center;gap:10px;margin:16px 0"><div class="fake-qr" style="width:220px;height:220px">' + fakeQR(d.uid) + '</div><div class="uid">' + d.uid + '</div><span class="st st-info" id="qr-exp">' + ic('clock') + t('closet.qrExp', { t:'5:00' }) + '</span><p class="muted" aria-live="polite" style="font-size:13.5px">' + t('closet.qrWait') + '</p></div>' +
+    case 'qr': return dlgHead(t('closet.qrTitle')) + '<p class="muted">' + t('closet.qrSub') + '</p><p class="note note-warn" style="margin-top:10px">' + ic('landmark') + '<span>' + t('pay.checkFirst', { amt:money(o.price) }) + '</span></p><div style="display:grid;place-items:center;gap:10px;margin:16px 0"><div class="fake-qr" style="width:220px;height:220px">' + fakeQR(d.uid) + '</div><div class="uid">' + d.uid + '</div><span class="st st-info" id="qr-exp">' + ic('clock') + t('closet.qrExp', { t:'5:00' }) + '</span><p class="muted" aria-live="polite" style="font-size:13.5px">' + t('closet.qrWait') + '</p></div>' +
       '<div class="dialog-f"><button class="btn btn-secondary" data-act="qrNew">' + ic('rotate-ccw', 'i-sm') + t('closet.qrNew') + '</button><button class="btn btn-primary" data-act="qrSim" data-v="' + o.id + '">' + t('closet.qrSim') + '</button></div>';
     case 'promote': {
       const opts = myListings().filter(x => available(x) && !myAd(x.id));
-      const pid = d.pid || d.id || (opts[0] && opts[0].id), days = d.days || 7, cost = days * 10, pp = pid && findL(pid);
+      const pid = d.pid || d.id || (opts[0] && opts[0].id), pp = pid && findL(pid), full = myBoosts().length >= BOOST_MAX, already = pp && myAd(pp.id);
       return dlgHead(t('closet.pmTitle')) + '<div class="stack">' + (d.id ? '<div class="row">' + thumb(pp) + '<b>' + esc(L(pp.t)) + '</b></div>' : '<div class="field"><label for="pm-p">' + t('closet.colListing') + '</label><select class="select" id="pm-p" data-act="pmListing">' + opts.map(x => '<option value="' + x.id + '"' + (x.id === pid ? ' selected' : '') + '>' + esc(L(x.t)) + '</option>').join('') + '</select></div>') +
-        '<div class="field"><span class="lbl" id="pm-d">' + t('closet.pmDur') + '</span><div class="chips" role="radiogroup" aria-labelledby="pm-d">' + [1,3,7,14].map(n => '<button class="chip" role="radio" aria-checked="' + (days === n) + '" data-act="pmDays" data-v="' + n + '">' + t('closet.pmDays', { n }) + '</button>').join('') + '</div><span class="hint">' + t('closet.pmPer', { n:10 }) + '</span></div>' +
-        '<div class="card card-pad" style="background:var(--surface-2)"><div class="kv"><span>' + t('closet.pmCost') + '</span><b class="num">' + cost + ' ' + t('common.coins') + '</b></div><div class="kv"><span>' + t('closet.pmBal') + '</span><span class="num">' + money2(S.coins) + '</span></div></div>' + (S.coins < cost ? '<p class="err" role="alert">' + ic('circle-alert') + t('closet.pmShort') + '</p>' : '') + '</div>' +
-        '<div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay">' + t('common.cancel') + '</button><button class="btn btn-primary" data-act="doPromote" data-v="' + (pid || '') + '"' + (S.coins < cost || !pid ? ' disabled' : '') + '>' + t('closet.pmBtn') + '</button></div>';
+        '<p class="note note-info">' + ic('megaphone') + '<span>' + (already ? t('closet.promoted', { n:already.left }) : t('closet.pmInfo', { d:BOOST_DAYS })) + '</span></p>' + (full && !already ? '<p class="err" role="alert">' + ic('circle-alert') + t('closet.pmFull', { max:BOOST_MAX }) + '</p>' : '') + '</div>' +
+        '<div class="dialog-f"><button class="btn btn-secondary" data-act="closeOverlay">' + t('common.cancel') + '</button><button class="btn btn-primary" data-act="doPromote" data-v="' + (pid || '') + '"' + (full || already || !pid ? ' disabled' : '') + '>' + t('closet.pmBtn') + '</button></div>';
     }
     case 'discount': {
       const pct = d.pct != null ? d.pct : (p.promo || 10);
@@ -3889,10 +3944,10 @@ function vSheet(s){
     const g = isGuest(), sel = isSeller();
     const li = (key, icon, label, count, isGlyph) => '<a class="menu-item" href="#' + key + '" data-go="' + key + '" style="min-height:48px">' + (isGlyph ? glyph(icon) : ic(icon)) + '<span style="flex:1">' + esc(label) + '</span>' + (count ? '<span class="count attn">' + count + '</span>' : '') + '</a>';
     let h = head(t('nav.menu'));
-    if (!g) h += '<a class="row menu-me" href="#profile" data-go="profile"><span class="avatar lg">' + initial(L(ME.name)) + '</span><div style="flex:1"><div style="font-weight:600">' + esc(L(ME.name)) + '</div><div class="muted" style="font-size:13px">' + t('nav.balance') + ' <b class="num">' + money2(S.coins) + '</b></div></div>' + ic('chevron-right', 'i-sm') + '</a>';
+    if (!g) h += '<a class="row menu-me" href="#profile" data-go="profile"><span class="avatar lg">' + initial(L(ME.name)) + '</span><div style="flex:1"><div style="font-weight:600">' + esc(L(ME.name)) + '</div><div class="muted" style="font-size:13px">@' + ME.username + '</div></div>' + ic('chevron-right', 'i-sm') + '</a>';
     else h += '<a class="btn btn-primary btn-block" style="margin-bottom:12px" href="#login" data-go="login">' + t('common.signIn') + '</a>';
     if (!g) {
-      h += '<div class="menu-h">' + t('nav.buy') + '</div>' + li('saved', 'heart', t('nav.saved')) + li('wallet', 'wallet', t('nav.wallet'));
+      h += '<div class="menu-h">' + t('nav.buy') + '</div>' + li('saved', 'heart', t('nav.saved'));
       h += '<div class="menu-h">' + t('nav.sell') + '</div>';
       if (sel) h += li('mycloset', 'hanger', t('nav.myCloset'), 0, true) + li('sell', 'circle-plus', t('nav.sellClothes')) + li('mycloset.orders', 'clipboard-list', t('nav.sellerOrders'), sellerNew());
       else h += li('apply', S.sellerReq ? 'hourglass' : 'circle-plus', S.sellerReq ? t('nav.requestPending') : t('nav.startSelling'));
@@ -3968,16 +4023,15 @@ function selOf(el){ return el && el.dataset ? (el.dataset.act ? '[data-act="' + 
 function refocusEl(el){ const s = selOf(el); const n = s && document.querySelector(s); if (n) n.focus({ preventScroll:true }); }
 function closeDialog(){ const ret = S.ui.retEl; S.ui.dialog = null; S.ui.sheet = null; render(); if (ret) refocusEl(ret); }
 function addNotif(n){ S.notifs.unshift(Object.assign({ id:'n' + Date.now() + Math.random().toString(36).slice(2, 5), at:new Date(), read:false }, n)); }
-function addTx(type, note, amount, extra){ S.txs.push(Object.assign({ id:'TX-' + (88300 + S.txs.length), type, note, amount, status:'completed', at:new Date() }, extra || {})); }
 function restock(o){ const p = findL(o.lid); if (!p) return; if (p.sizes) { const z = sizeOpt(p, o.sizeId); if (z) z.stock += o.qty; p.stock = p.sizes.reduce((n, x) => n + x.stock, 0); } else p.stock = 1; }
-function refund(o){ S.coins = r2(S.coins + o.price); addTx('refund', 'Refund for canceled Order ID ' + o.id, o.price); o.refunded = true; }
 function completeSellerOrder(o){ o.status = 'done'; o.doneAt = new Date(); }
 function fmtBoth(date, time, loc){ const one = (lc, lang) => new Intl.DateTimeFormat(lc, { weekday:'short', day:'numeric', month:'short' }).format(date) + ' ' + time + (lang === 'th' ? ' น.' : ''); return { th: DICT.pickup.chatReq[0].replace('{d}', one('th-TH', 'th')).replace('{t}', '').replace('{p}', GEN.loc[loc].th).replace(/\s+/g, ' '), en: DICT.pickup.chatReq[1].replace('{d}', one('en-GB', 'en')).replace('{t}', '').replace('{p}', GEN.loc[loc].en).replace(/\s+/g, ' ') }; }
 const readNum = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
 
 const A = {
   skip(){ const m = document.getElementById('main'); if (m) m.focus(); },
-  sb(){ S.nav = !S.nav; S.navAnim = S.nav; if (isWide()) LS.set('navDock', S.nav); S.ui.menu = null; S.ui.focus = S.nav ? '#sidebar .sb-link' : '.nav-btn'; render(); },
+  sb(){ if (S.navStyle !== 'drawer') return; S.nav = !S.nav; S.navAnim = S.nav; if (isWide()) LS.set('navDock', S.nav); S.ui.menu = null; S.ui.focus = S.nav ? '#sidebar .sb-link' : '.nav-btn'; render(); },
+  navStyle(el){ S.navStyle = el.dataset.v === 'drawer' ? 'drawer' : 'top'; LS.set('navStyle', S.navStyle); S.nav = S.navStyle === 'drawer' && isWide() && !isMobile() && LS.get('navDock', false); S.ui.menu = null; toast(t('demo.navSet')); render(); },
   lang(){ S.lang = S.lang === 'th' ? 'en' : 'th'; LS.set('lang', S.lang); render(); },
   setLang(el){ S.lang = el.dataset.v; LS.set('lang', S.lang); render(); refocusEl(el); },
   theme(){ S.themePref = isDark() ? 'light' : 'dark'; LS.set('theme', S.themePref); applyTheme(); render(); },
@@ -4047,17 +4101,14 @@ const A = {
   // cart & checkout
   cartQty(el){ const c = S.cart.find(x => x.key === el.dataset.k); if (!c) return; const p = findL(c.lid); const z = sizeOpt(p, c.sizeId); c.qty = Math.min(z ? z.stock : 1, Math.max(1, c.qty + +el.dataset.v)); render(); refocusEl(el); },
   cartRemove(el){ S.cart = S.cart.filter(x => x.key !== el.dataset.v); toast(t('cart.removed')); render(); const f = document.querySelector('.citem .icon-btn, #page-title'); if (f) f.focus(); },
-  topupFor(el){ S.returnTo = 'checkout'; S.topNeed = +el.dataset.v; go('wallet.topup'); },
   placeOrder(){
     const lines = S.cart.map(cartLine).filter(l => l.p && l.ok), tot = cartTotals(lines);
-    if (!lines.length || tot.total > S.coins) return;
+    if (!lines.length) return;
     const ids = [];
     lines.forEach(l => {
       const id = String(S.nextOrder++); ids.push(id);
-      S.orders.push({ id, public_uid:id, lid:l.p.id, sizeId:l.c.sizeId, qty:l.c.qty, unit:unitPrice(l.p), discountPct:l.p.promo || 0, coupon:l.pb.cDisc, price:l.pb.total, date:l.c.slot.date, time:l.c.slot.time, loc:l.c.loc, status:'pending', sellerId:l.p.seller, buyer:null, reviewed:false, refunded:false, change:null, createdAt:new Date(), doneAt:null });
+      S.orders.push({ id, public_uid:id, lid:l.p.id, sizeId:l.c.sizeId, qty:l.c.qty, unit:unitPrice(l.p), discountPct:l.p.promo || 0, coupon:0, price:l.pb.total, date:l.c.slot.date, time:l.c.slot.time, loc:l.c.loc, status:'pending', sellerId:l.p.seller, buyer:null, reviewed:false, refunded:false, change:null, createdAt:new Date(), doneAt:null });
       if (l.p.sizes) { l.sz.stock -= l.c.qty; l.p.stock = l.p.sizes.reduce((n, x) => n + x.stock, 0); } else l.p.stock = 0;
-      if (l.cp) S.coupons = S.coupons.filter(c => c.id !== l.cp.id);
-      S.coins = r2(S.coins - l.pb.total); addTx('transfer', 'Purchase of ' + l.p.t.en, -l.pb.total);
       UIDS[id] = newUid();
     });
     S.cart = []; S.returnTo = null; S.ordersTab = 'wait';
@@ -4070,12 +4121,12 @@ const A = {
     const type = el.dataset.v, id = el.dataset.id, d = { type, id };
     if (type === 'qr') { d.uid = UIDS[id] || (UIDS[id] = newUid()); d.exp = Date.now() + 300000; }
     if (type === 'rate') d.stars = 0;
-    if (type === 'promote') { d.days = 7; d.id = id || null; }
+    if (type === 'promote') d.id = id || null;
     if (type === 'change') { const o = S.orders.find(x => x.id === id); d.day = Math.round((sod(o.date) - TODAY) / DAY); d.time = o.time; d.loc = o.loc; }
     openDialog(d, el);
   },
-  doCancel(el){ const o = S.orders.find(x => x.id === el.dataset.v); refund(o); o.status = 'canceled'; restock(o); S.ui.dialog = null; toast(t('orders.cancelled')); S.ordersTab = 'cancel'; render(); },
-  doNotReceived(el){ const o = S.orders.find(x => x.id === el.dataset.v); refund(o); o.status = 'canceled'; restock(o); S.ui.dialog = null; toast(t('orders.nrDone')); render(); },
+  doCancel(el){ const o = S.orders.find(x => x.id === el.dataset.v); o.status = 'canceled'; restock(o); S.ui.dialog = null; toast(t('orders.cancelled')); S.ordersTab = 'cancel'; render(); },
+  doNotReceived(el){ const o = S.orders.find(x => x.id === el.dataset.v); o.status = 'canceled'; restock(o); S.ui.dialog = null; toast(t('orders.nrDone')); render(); },
   rateStar(el){ S.ui.dialog.stars = +el.dataset.v; S.ui.dialog.err = false; render(); refocusEl(el); },
   doRate(el){ if (!S.ui.dialog.stars) { S.ui.dialog.err = true; render(); return; } const o = S.orders.find(x => x.id === el.dataset.v); o.reviewed = true; const s = S.sellers[o.sellerId]; s.rating = r2((s.rating * s.reviews + S.ui.dialog.stars) / (s.reviews + 1)); s.reviews++; S.ui.dialog = null; toast(t('orders.rateDone')); render(); },
   doReport(el){ const p = findL(el.dataset.v); S.ui.dialog = null; toast(t('item.rSent', { title:L(p.t) })); render(); },
@@ -4107,13 +4158,6 @@ const A = {
   scanManual(){ S.scan.manual = true; S.scan.err = null; render(); const i = document.getElementById('uid'); if (i) i.focus(); },
   scanCam(){ S.scan.manual = false; render(); },
   scanSim(el){ finishScan(el.dataset.v); },
-  // wallet
-  txF(el){ S.txF = el.dataset.v; S.txOpen = null; render(); refocusEl(el); },
-  txToggle(el){ S.txOpen = S.txOpen === el.dataset.v ? null : el.dataset.v; patch('tx-list', vTxList()); refocusEl(el); },
-  csv(){ const rows = [['id','type','amount','balance_before','balance_after','status','note','date']].concat(txList().map(x => [x.id, x.type, x.amount, x._before, x._after, x.status, x.note, x.at.toISOString()])); const csv = rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n'); try { navigator.clipboard.writeText(csv).then(() => toast(t('wallet.csvCopied')), () => toast(t('common.copyFail'), 'err')); } catch(e){ toast(t('common.copyFail'), 'err'); } },
-  slip(el){ const f = el.files && el.files[0]; if (!f) return; if (!/^image\/(png|jpe?g|webp)$/.test(f.type)) { toast(t('wallet.types'), 'err'); return; } startTopup(URL.createObjectURL(f)); },
-  slipSample(){ startTopup(null); },
-  topAgain(){ S.top = { stage:'idle', preview:null }; render(); },
   // seller
   sAccept(el){ const o = S.sorders.find(x => x.id === el.dataset.v); if (!o) return; o.status = 'accept'; toast(t('closet.acceptedT')); render(); },
   sReject(el){ const o = S.sorders.find(x => x.id === el.dataset.v); o.status = 'rejected'; restock(o); S.ui.dialog = null; toast(t('closet.rejectedT')); render(); },
@@ -4121,12 +4165,9 @@ const A = {
   qrSim(el){ const o = S.sorders.find(x => x.id === el.dataset.v); completeSellerOrder(o); addNotif({ kind:'completed', order:o.id, seller:true }); S.ui.dialog = null; toast(t('closet.qrDone', { id:o.id })); render(); },
   clf(el){ S.closetLF = el.dataset.v; render(); refocusEl(el); },
   cof(el){ S.closetOF = el.dataset.v; render(); refocusEl(el); },
-  pmDays(el){ S.ui.dialog.days = +el.dataset.v; render(); refocusEl(el); },
-  doPromote(el){ const p = findL(el.dataset.v), d = S.ui.dialog, cost = d.days * 10; if (!p || S.coins < cost) return; S.coins = r2(S.coins - cost); S.ads.unshift({ id:p.id, days:d.days, left:d.days, cost }); addTx('transfer', 'Promotion fee: ' + p.t.en + ', ' + d.days + ' days', -cost, { seller:true }); S.ui.dialog = null; toast(t('closet.pmOk', { title:L(p.t) })); render(); },
+  doPromote(el){ const p = findL(el.dataset.v); if (!p || myAd(p.id) || myBoosts().length >= BOOST_MAX) return; S.ads.unshift({ id:p.id, days:BOOST_DAYS, left:BOOST_DAYS }); S.ui.dialog = null; toast(t('closet.pmOk', { title:L(p.t) })); render(); },
   doDiscount(el){ const p = findL(el.dataset.v); if (el.dataset.k === 'remove') { p.promo = null; S.ui.dialog = null; toast(t('closet.dcOk')); render(); return; } const v = +readNum('dc-pct'); if (!(v >= 1 && v <= 90)) { S.ui.dialog.err = true; S.ui.dialog.pct = readNum('dc-pct'); render(); return; } p.promo = Math.round(v); S.ui.dialog = null; toast(t('closet.dcOk')); render(); },
   doEdit(el){ const p = findL(el.dataset.v); const pr = +readNum('ed-price'), c = readNum('ed-cond'); if (pr > 0) p.price = pr; if (CONDS.includes(c)) p.cond = c; S.ui.dialog = null; toast(t('closet.edOk')); render(); },
-  doWithdraw(){ const d = S.ui.dialog, raw = readNum('wd-amt'), v = +raw, av = money4Seller().avail; d.amt = raw; d.err = raw === '' ? t('sales.wdEmpty') : !(v > 0) ? t('sales.wdZero') : v > av ? t('sales.wdOver', { balance:money2(av).slice(1) }) : v <= 10 ? t('sales.wdMinFee') : null; if (d.err) { render(); document.getElementById('wd-amt').focus(); return; } S.payouts.push({ id:'W-' + (60 + S.payouts.length), kind:'withdraw', amount:r2(v), status:'pending', at:new Date() }); S.ui.dialog = null; toast(t('sales.wdOk')); render(); },
-  doExchange(){ const d = S.ui.dialog, raw = readNum('ex-amt'), v = +raw, av = money4Seller().avail; d.amt = raw; d.err = raw === '' ? t('sales.wdEmpty') : !(v > 0) ? t('sales.wdZero') : v < 10 ? t('sales.exMin') : v > av ? t('sales.wdOver', { balance:money2(av).slice(1) }) : null; if (d.err) { render(); document.getElementById('ex-amt').focus(); return; } const c = Math.floor(v); S.payouts.push({ id:'X-' + (20 + S.payouts.length), kind:'exchange', amount:c, status:'completed', at:new Date() }); S.coins = r2(S.coins + c); addTx('withdraw', 'Exchanged ' + c + ' to coins', c, { seller:true }); S.ui.dialog = null; toast(t('sales.exOk', { amount:c.toLocaleString('en-US'), coins:c.toLocaleString('en-US') })); render(); },
   // sell
   samplePhotos(){ const sf = S.sellForm; if (sf.cat === 'shoes') { sf.photos = { front:{ s:'r18' }, label:{ s:'r18-d' } }; if (sf.defect === 'has') sf.photos.defect = { s:'r18-x' }; } else { const base = Object.assign({}, SAMPLE_ART[sf.cat]); if (sf.colors[0] && sf.colors[0] !== 'multi') base.c = COLORS[sf.colors[0]]; sf.art = base; sf.photos = { front:{ a:'front' }, back:{ a:'back' }, tag:{ a:'tag' } }; if (sf.defect === 'has' || sf.cond === 'fair') sf.photos.defect = { a:'defect' }; } sf.err.photo && delete sf.err.photo; render(); },
   sellPhotoDel(el){ delete S.sellForm.photos[el.dataset.k]; render(); const n = document.querySelector('[data-act="sellPhoto"][data-k="' + el.dataset.k + '"]'); if (n) n.focus(); },
@@ -4145,16 +4186,6 @@ const A = {
   nChat(el){ S.nChat = !S.nChat; toast(t(S.nChat ? 'settings.on' : 'settings.off')); render(); refocusEl(el); },
   showFac(el){ S.sellers.me.showFac = !S.sellers.me.showFac; toast(t('settings.saved')); render(); refocusEl(el); },
 };
-function startTopup(preview){
-  S.top = { stage:'verifying', preview };
-  render();
-  setTimeout(() => {
-    const amt = S.topNeed && S.returnTo === 'checkout' ? Math.max(100, Math.ceil(S.topNeed / 50) * 50) : 300;
-    S.coins = r2(S.coins + amt); addTx('deposit', 'Top Up with SlipVerify. Transaction ID: 0162' + Math.floor(Math.random() * 1e8), amt); addNotif({ kind:'topup', amount:amt });
-    S.top = { stage:'done', preview, amount:amt }; S.topNeed = 0;
-    if (S.route.name === 'wallet') { render(); toast(t('wallet.topDone')); }
-  }, 1300);
-}
 function finishScan(id){
   const o = S.orders.find(x => x.id === id); if (!o) return;
   o.status = 'done'; o.doneAt = new Date(); addNotif({ kind:'completed', order:o.id });
@@ -4166,14 +4197,6 @@ const FORMS = {
   search(f){ const q = f.querySelector('input[name="q"]').value.trim(); S.f = Object.assign(defaultFilters(), { q }); go('browse.search', { top:true }); const i = document.getElementById('q'); if (i && isMobile()) i.blur(); },
   helpq(){},
   uid(f){ const id = f.dataset.id, v = f.querySelector('#uid').value.trim().toUpperCase(); if (v && v === (UIDS[id] || '4F9K27')) { S.ui.clearKeep = true; finishScan(id); } else { S.scan.err = true; render(); const i = document.getElementById('uid'); if (i) i.focus(); } },
-  redeem(f){
-    const code = f.querySelector('#rcode').value.trim().toUpperCase();
-    if (!code) S.red = { msg:t('wallet.redEmpty'), ok:false };
-    else if (S.usedCodes.includes(code)) S.red = { msg:t('wallet.redUsed'), ok:false };
-    else if (REDEEMABLE[code]) { const c = REDEEMABLE[code]; S.coupons.push({ id:'cp' + Date.now(), code, name:c.name, type:c.type, value:c.value, exp:c.exp }); S.usedCodes.push(code); S.red = { msg:t('wallet.redOk', { name:L(c.name) }), ok:true }; S.ui.clearKeep = true; }
-    else S.red = { msg:t('wallet.redBad'), ok:false };
-    render(); if (!S.red.ok) { const i = document.getElementById('rcode'); if (i) i.focus(); }
-  },
   chat(f){
     const i = f.querySelector('#chat-input'), v = i.value.trim(); if (!v) return;
     const r = S.rooms.find(x => x.id === S.chat.room); r.msgs.push({ me:true, t:{ th:v, en:v }, at:new Date() });
@@ -4232,21 +4255,16 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('change', e => {
   const el = e.target, act = el.dataset.act;
-  if (act === 'slip') { A.slip(el); return; }
   if (act === 'sellPhoto') { const f = el.files && el.files[0]; if (!f || !/^image\//.test(f.type)) return; S.sellForm.photos[el.dataset.k] = { u:URL.createObjectURL(f) }; delete S.sellForm.err.photo; render(); const n = document.querySelector('.pslot [data-act="sellPhotoDel"][data-k="' + el.dataset.k + '"]'); if (n) n.focus(); return; }
   if (act === 'sfSub') { S.sellForm.sub = el.value; render(); const s = document.getElementById('s-sub'); if (s) s.focus(); return; }
-  if (act === 'cartCoupon') { const c = S.cart.find(x => x.key === el.dataset.k); if (c) c.couponId = el.value || null; render(); const s = document.getElementById(el.id); if (s) s.focus(); return; }
   if (act === 'pmListing') { S.ui.dialog.pid = el.value; render(); const s = document.getElementById('pm-p'); if (s) s.focus(); }
 });
 document.addEventListener('input', e => {
   const el = e.target;
-  if (el.id === 'txq') { S.txQ = el.value; patch('tx-list', vTxList()); }
-  else if (el.id === 'helpq') { S.helpQ = el.value; patch('help-body', vHelpBody()); }
+  if (el.id === 'helpq') { S.helpQ = el.value; patch('help-body', vHelpBody()); }
   else if (el.id === 'clq') { S.closetLQ = el.value; const sec = document.getElementById('cl-list'); if (sec) { const tmp = document.createElement('div'); tmp.innerHTML = cListings(); const n = tmp.querySelector('#cl-list'); if (n) sec.innerHTML = n.innerHTML; } }
   else if (el.dataset.act === 'sfQty') { S.sellForm.qty[el.dataset.k] = el.value; patch('sell-preview', vSellPreview()); }
-  else if (el.dataset.live === 'preview') { patch('sell-preview', vSellPreview()); if (el.id === 's-price') { const n = document.getElementById('s-net'); const v = +el.value || 0; if (n) n.textContent = money(r2(v - v * COMMISSION)); } }
-  else if (el.dataset.live === 'wd') { const v = +el.value || 0; const a = document.getElementById('wd-a'), n = document.getElementById('wd-net'); if (a) a.textContent = money2(v); if (n) n.textContent = money2(Math.max(0, v - 10)); }
-  else if (el.dataset.live === 'ex') { const g = document.getElementById('ex-get'); if (g) g.textContent = Math.floor(+el.value || 0).toLocaleString('en-US') + ' ' + t('common.coins'); }
+  else if (el.dataset.live === 'preview') { patch('sell-preview', vSellPreview()); if (el.id === 's-price') { const n = document.getElementById('s-net'); const v = +el.value || 0; if (n) n.textContent = money(r2(v)); } }
   else if (el.dataset.live === 'dc') { const p = findL(S.ui.dialog.id); const a = document.getElementById('dc-after'); if (a && p) a.textContent = money(r2(p.price * (1 - (+el.value || 0) / 100))); }
 });
 document.addEventListener('submit', e => { const f = e.target.closest('form[data-form]'); if (!f) return; e.preventDefault(); FORMS[f.dataset.form](f); });
@@ -4281,8 +4299,8 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => rend
 
 /* ============================== boot ============================== */
 applyTheme();
-S.nav = isWide() && !isMobile() && LS.get('navDock', false);
-matchMedia('(min-width: 1280px)').addEventListener('change', e => { S.nav = e.matches && LS.get('navDock', false); render(); });
+S.nav = S.navStyle === 'drawer' && isWide() && !isMobile() && LS.get('navDock', false);
+matchMedia('(min-width: 1280px)').addEventListener('change', e => { S.nav = S.navStyle === 'drawer' && e.matches && LS.get('navDock', false); render(); });
 S.route = parse(location.hash);
 enter(S.route);
 render();
