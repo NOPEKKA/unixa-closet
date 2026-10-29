@@ -1,4 +1,4 @@
-<title>UNIXA Closet</title>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0056A9"></head><body><title>UNIXA Closet</title>
 <meta name="description" content="Clickable prototype of UNIXA as a student-to-student clothing marketplace.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap">
@@ -851,9 +851,9 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 .navrow{display:none}
 .nav-top .navrow{display:block;background:var(--surface);border-bottom:1px solid var(--border)}
 .navrow-in{max-width:1360px;margin:0 auto;padding:0 24px;display:flex;align-items:stretch;gap:12px;height:46px}
-.nr-main{display:flex;align-items:stretch;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1;padding-right:28px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+.nr-main{display:flex;align-items:stretch;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1;}
 .nr-main::-webkit-scrollbar{display:none}
-.nr-link{display:inline-flex;align-items:center;gap:6px;padding:0 10px;font-size:14px;font-weight:500;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent;flex:none}
+.nr-link{display:inline-flex;align-items:center;gap:7px;padding:0 12px;font-size:14.5px;font-weight:500;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent;flex:none}
 .nr-link:hover{color:var(--text)}
 .nr-link[aria-current="page"]{color:var(--primary-ink);border-bottom-color:var(--primary);font-weight:600}
 .nr-link .count{margin-left:2px}
@@ -866,7 +866,7 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 .nav-top .chat-fab{display:none}
 .rel{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;color:var(--success)}
 .rel.warn{color:var(--warning)}
-@media (min-width:768px){.nav-top .cats{display:none}.nav-top .hero{margin-bottom:28px}}
+.cats-h{font-size:15px;font-weight:600;color:var(--muted);margin:0 0 10px}
 @media (min-width:768px){.nav-top .chat{bottom:20px}}
 .me-menu{width:300px;max-height:calc(100vh - 84px);overflow:auto}
 .menu-me-h{display:flex;gap:10px;align-items:center;padding:8px 10px 10px;border-radius:var(--r-sm)}
@@ -2559,7 +2559,8 @@ const COPY_DIRECT = {
 };
 for (const ns in COPY_DIRECT) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_DIRECT[ns]);
 const COPY_MOBILE = {
-  nav: { closetShort:['ตู้ของฉัน','My closet'] },
+  nav: { closetShort:['ตู้ของฉัน','My closet'], helpShort:['ช่วยเหลือ','Help'], savedNav:['บันทึกไว้','Saved'] },
+  home: { catsT:['เลือกตามหมวด','Shop by category'] },
   closet: { sOverview:['ภาพรวม','Overview'], sListings:['รายการ','Listings'], sOrders:['ออเดอร์','Orders'], sPromos:['ดัน','Boosts'], sSales:['ยอดขาย','Sales'], viewShort:['ดูหน้าตู้','View closet'] },
 };
 for (const ns in COPY_MOBILE) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_MOBILE[ns]);
@@ -2633,8 +2634,8 @@ const NOTES = {
     ['g','ทุกหน้า','Every page'], ['x','สวิตช์เปิด/ปิดแจ้งเตือน','Notification ON/OFF switch'], ['x','ประกาศกติกาด้านล่าง','Rules banner at the bottom'], ['x','ปุ่มแชทลากได้','Draggable chat button'],
   ],
   after: [
-    ['g','แถบบน แถวที่ 1','Top bar, row 1'], ['in','โลโก้ · ค้นหา · ลงขายเสื้อผ้า · แชท · แจ้งเตือน · รายการที่บันทึก · เมนูบัญชี','Logo · search · Sell clothes · chat · notifications · saved · account menu'],
-    ['g','แถบบน แถวที่ 2','Top bar, row 2'], ['in','หน้าแรก · เลือกดูเสื้อผ้า · 9 หมวด','Home · Browse clothes · the 9 categories'], ['in','คำสั่งซื้อของฉัน · ตู้เสื้อผ้าของฉัน (มีตัวเลขเมื่อมีเรื่องต้องทำ)','My orders · My closet (with a count when something needs you)'],
+    ['g','แถบบน แถวที่ 1','Top bar, row 1'], ['in','โลโก้ · ค้นหา · ลงขายเสื้อผ้า · แชท · แจ้งเตือน · เมนูบัญชี','Logo · search · Sell clothes · chat · notifications · account menu'],
+    ['g','แถบบน แถวที่ 2','Top bar, row 2'], ['in','หน้าแรก · เลือกดูเสื้อผ้า · บันทึกไว้ · คำสั่งซื้อ · ตู้ของฉัน · ช่วยเหลือ (ทุกปุ่มมีไอคอนกับคำ)','Home · Browse clothes · Saved · Orders · My closet · Help (every button has an icon and a word)'], ['g','หน้าแรก','Home'], ['in','9 หมวดเสื้อผ้าอยู่ใต้ Hero (“เลือกตามหมวด”)','The 9 clothing categories sit under the hero (“Shop by category”)'],
     ['g','เมนูบัญชี (รูปโปรไฟล์)','Account menu (avatar)'], ['in','ซื้อ: คำสั่งซื้อ · รายการที่บันทึก','Buy: orders · saved'], ['in','ขาย: ตู้เสื้อผ้า · ออเดอร์ที่ขาย · ลงขาย','Sell: closet · seller orders · sell'], ['in','ตั้งค่า · ช่วยเหลือ · ภาษา · ธีม · ออกจากระบบ','Settings · help · language · theme · sign out'],
     ['g','มือถือ','Mobile'], ['in','แถบล่าง: หน้าแรก · เลือกดู · คำสั่งซื้อ · บันทึก · เมนู','Bottom bar: Home · Browse · Orders · Saved · Menu'], ['in','แถบบน: ค้นหา · แชท · แจ้งเตือน','Top: search · chat · notifications'],
     ['g','ไม่มีแล้ว','Gone'], ['x','กระเป๋าเงิน · เติมเหรียญ · แลกโค้ด · ถอนเงิน','Wallet · top up · redeem · withdraw'], ['x','ตะกร้า · หน้ายืนยัน · ใบเสร็จ (แทนด้วยปุ่ม “จองนัดรับ”)','Cart · checkout · receipt (replaced by one “Book pickup” button)'],
@@ -3034,7 +3035,6 @@ function vDemoFab(){
 function vTopbar(){ return S.navStyle === 'drawer' ? vTopbarDrawer() : vTopbarTop(); }
 function vTopbarTop(){
   const g = isGuest(), un = unreadN(), dark = isDark();
-  const icoLink = (key, icon, label, count) => '<a class="icon-btn desk" href="#' + key + '" data-go="' + key + '" aria-label="' + esc(label) + '"' + (curOf(key) ? ' aria-current="page"' : '') + '>' + ic(icon) + (count ? '<span class="count" aria-hidden="true">' + count + '</span>' : '') + '</a>';
   let h = '<header class="topbar tb-top' + (S.route.name === 'home' ? ' on-home' : '') + '"><div class="topbar-in">' +
     '<a class="tb-logo" href="#home" data-go="home" aria-label="UNIXA"><img src="a/logo.png" alt="" width="49" height="26"></a>' +
     '<form class="search" role="search" data-form="search"><label for="q" class="sr-only">' + t('common.searchLabel') + '</label>' + ic('search', 'i-sm') +
@@ -3049,24 +3049,21 @@ function vTopbarTop(){
     h += '<button class="icon-btn mob-chat" data-act="chatOpen" aria-label="' + esc(cu ? t('chat.openN', { n:cu }) : t('chat.open')) + '">' + ic('message-circle') + (cu ? '<span class="count attn" aria-hidden="true">' + cu + '</span>' : '') + '</button>';
     h += '<div class="fb-wrap" data-menu-root="notif"><button class="icon-btn" data-act="notif" aria-haspopup="true" aria-expanded="' + (S.ui.menu === 'notif') + '" aria-label="' + esc(un ? t('nav.notifN', { n:un }) : t('nav.notifications')) + '">' + ic('bell') + (un ? '<span class="count attn" aria-hidden="true">' + un + '</span>' : '') + '</button>' +
       (S.ui.menu === 'notif' ? '<div class="menu right top notif">' + vNotifPanel() + '</div>' : '') + '</div>';
-    h += icoLink('saved', 'heart', t('nav.saved'), S.saved.length);
   }
   if (g) h += '<a class="btn btn-secondary btn-sm desk" href="#login" data-go="login">' + t('common.signIn') + '</a>';
   else h += '<div class="fb-wrap desk" data-menu-root="me"><button class="me-btn" data-act="menu" data-menu="me" aria-haspopup="true" aria-expanded="' + (S.ui.menu === 'me') + '" aria-label="' + t('nav.accountMenu') + '"><span class="avatar">' + initial(L(ME.name)) + '</span>' + ic('chevron-down', 'i-sm') + '</button>' + (S.ui.menu === 'me' ? vMeMenuFull() : '') + '</div>';
   return h + '</div></div></header>';
 }
 function vNavRow(){
-  const r = S.route, cur = on => on ? ' aria-current="page"' : '';
-  const link = (go, label, on, extra) => '<a class="nr-link" href="#' + go + '" data-go="' + go + '"' + cur(on) + '>' + (extra || '') + esc(label) + '</a>';
+  const r = S.route, g = isGuest(), cur = on => on ? ' aria-current="page"' : '';
+  const link = (go, icon, label, on, n, attn, isGlyph) => '<a class="nr-link" href="#' + go + '" data-go="' + go + '"' + cur(on) + '>' + (isGlyph ? glyph(icon, 'i-sm') : ic(icon, 'i-sm')) + esc(label) + (n ? '<span class="count' + (attn ? ' attn' : '') + '">' + n + '</span>' : '') + '</a>';
   let h = '<nav class="navrow" aria-label="' + t('nav.main') + '"><div class="navrow-in"><div class="nr-main">' +
-    link('home', t('nav.home'), r.name === 'home') + link('browse', t('nav.browse'), r.name === 'browse' && !/^c-/.test(r.arg)) + '<span class="nr-sep" aria-hidden="true"></span>' +
-    CATS.map(c => link('browse.c-' + c.id, catLabel(c.id), r.name === 'browse' && r.arg === 'c-' + c.id)).join('') + '</div>';
-  if (!isGuest()) {
-    const bn = buyerNeeds(), nn = sellerNew();
-    h += '<div class="nr-me">' + '<a class="nr-link" href="#orders" data-go="orders"' + cur(curOf('orders')) + '>' + ic('shopping-bag', 'i-sm') + esc(t('nav.myOrders')) + (bn ? '<span class="count" aria-label="' + esc(t('nav.needAction', { n:bn })) + '">' + bn + '</span>' : '') + '</a>' +
-      (isSeller() ? '<a class="nr-link" href="#mycloset" data-go="mycloset"' + cur(r.name === 'mycloset') + '>' + glyph('hanger', 'i-sm') + esc(t('nav.myCloset')) + (nn ? '<span class="count attn" aria-label="' + esc(t('nav.newOrders', { n:nn })) + '">' + nn + '</span>' : '') + '</a>' : '') + '</div>';
+    link('home', 'house', t('nav.home'), r.name === 'home') + link('browse', 'tee', t('nav.browse'), r.name === 'browse', 0, false, true);
+  if (!g) {
+    h += link('saved', 'heart', t('nav.savedNav'), r.name === 'saved') + link('orders', 'shopping-bag', t('nav.ordersShort'), curOf('orders'), buyerNeeds());
+    if (isSeller()) h += link('mycloset', 'hanger', t('nav.closetShort'), r.name === 'mycloset' || r.name === 'sell', sellerNew(), true, true);
   }
-  return h + '</div></nav>';
+  return h + '</div><div class="nr-me">' + link('help', 'life-buoy', t('nav.helpShort'), r.name === 'help') + '</div></div></nav>';
 }
 function vMeMenuFull(){
   const sel = isSeller(), bn = buyerNeeds(), nn = sellerNew();
@@ -3225,7 +3222,7 @@ function vHome(){
     '<input id="hq" name="q" type="search" data-keep="focus" enterkeyhint="search" autocomplete="off" placeholder="' + esc(t('common.searchPh')) + '"><button class="btn btn-primary" type="submit">' + t('common.search') + '</button></form>' +
     '<div class="hero-cta"><a class="btn btn-secondary" href="#browse" data-go="browse">' + glyph('tee', 'i-sm') + t('home.ctaBrowse') + '</a><a class="btn btn-ghost" href="#' + sellTarget() + '" data-go="' + sellTarget() + '">' + ic('circle-plus', 'i-sm') + t('home.ctaSell') + '</a></div></div>' +
     '<div class="hero-pics" role="group" aria-label="' + esc(t('home.heroPhotos')) + '">' + heroPics.map((p, i) => '<a class="hp hp' + i + '" href="#item.' + p.id + '" data-go="item.' + p.id + '" aria-label="' + esc(L(p.t) + ', ' + money(unitPrice(p))) + '">' + photoHtml(p, 0, true) + '<span class="hp-price" aria-hidden="true">' + money(unitPrice(p)) + '</span></a>').join('') + '</div></section>';
-  h += '<nav class="cats" aria-label="' + t('home.cats') + '">' + CATS.map(c => '<a class="cat-pill" href="#browse.c-' + c.id + '" data-go="browse.c-' + c.id + '">' + glyph(c.glyph) + catLabel(c.id) + '</a>').join('') + '</nav>';
+  h += '<h2 class="cats-h">' + t('home.catsT') + '</h2><nav class="cats" aria-label="' + t('home.cats') + '">' + CATS.map(c => '<a class="cat-pill" href="#browse.c-' + c.id + '" data-go="browse.c-' + c.id + '">' + glyph(c.glyph) + catLabel(c.id) + '</a>').join('') + '</nav>';
   h += '<section class="sec" aria-labelledby="new-h"><div class="sec-h"><h2 id="new-h">' + t('home.newT') + '</h2><a class="sec-link" href="#browse.new" data-go="browse.new">' + t('common.viewAll') + ic('chevron-right', 'i-sm') + '</a></div><p class="sec-sub">' + t('home.newSub') + '</p>' +
     '<div class="rail">' + fresh.map(p => lcard(p)).join('') + '</div></section>';
   if (ads.length) h += '<section class="sec" aria-labelledby="feat-h"><div class="sec-h"><h2 id="feat-h">' + t('home.featured') + '</h2><span class="ad-tag">' + t('home.sponsored') + '</span>' +
@@ -4481,3 +4478,4 @@ render();
 
 })();
 </script>
+</body></html>
