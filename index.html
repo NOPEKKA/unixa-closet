@@ -753,6 +753,7 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 .set-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
 @container content (min-width:720px){.set-grid{grid-template-columns:200px minmax(0,1fr)}.set-nav{position:sticky;top:calc(var(--top-h) + 20px)}}
 .set-nav{display:flex;flex-direction:column;gap:2px}
+.only-mob-i{display:none}
 .set-nav a{padding:9px 12px;border-radius:var(--r-sm);font-weight:500;color:var(--muted);font-size:14.5px}
 .set-nav a:hover{background:var(--surface-2);color:var(--text)}
 .set-nav a[aria-current="true"]{background:var(--primary-soft);color:var(--primary-ink);font-weight:600}
@@ -895,6 +896,19 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 @media (max-width:767px){
   :root{--top-h:56px}
   .sidebar,.nav-btn,.nav-scrim,.demo-fab,.nav-top .navrow{display:none}
+  .only-desk-i{display:none}
+  .only-mob-i{display:inline}
+  .ctabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;overflow:visible;margin-bottom:16px}
+  .ctabs .tab{flex-direction:column;gap:3px;padding:8px 2px 9px;font-size:12px;justify-content:center;position:relative}
+  .ctabs .tab .i{width:20px;height:20px}
+  .ctabs .tab .count{position:absolute;top:2px;left:calc(50% + 6px)}
+  .ch-actions{display:grid;grid-template-columns:1fr 1.4fr;width:100%;gap:8px}
+  .ch-actions .btn{padding:0 10px}
+  .set-grid{gap:12px}
+  .set-nav{flex-direction:row;overflow-x:auto;scrollbar-width:none;gap:6px;margin:0 -16px;padding:0 16px 2px;position:sticky;top:var(--top-h);z-index:5;background:var(--bg)}
+  .set-nav::-webkit-scrollbar{display:none}
+  .set-nav a{flex:none;border:1px solid var(--border-strong);border-radius:var(--r-pill);padding:6px 14px;font-size:13.5px;background:var(--surface)}
+  .set-nav a[aria-current="true"]{border-color:var(--primary)}
   .topbar-in{padding:0 12px;gap:8px}
   .tb-logo{display:flex}
   .search input{height:40px;font-size:15px;padding-right:12px}
@@ -2544,6 +2558,11 @@ const COPY_DIRECT = {
   },
 };
 for (const ns in COPY_DIRECT) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_DIRECT[ns]);
+const COPY_MOBILE = {
+  nav: { closetShort:['ตู้ของฉัน','My closet'] },
+  closet: { sOverview:['ภาพรวม','Overview'], sListings:['รายการ','Listings'], sOrders:['ออเดอร์','Orders'], sPromos:['ดัน','Boosts'], sSales:['ยอดขาย','Sales'], viewShort:['ดูหน้าตู้','View closet'] },
+};
+for (const ns in COPY_MOBILE) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_MOBILE[ns]);
 const COPY_SELL = {
   sell: {
     legend:['ช่องที่มี * ต้องกรอก ช่องอื่นไม่บังคับ','Fields marked * are required; everything else is optional'],
@@ -3125,8 +3144,12 @@ function vFooter(){
 function vBottomNav(){
   const bn = isGuest() ? 0 : buyerNeeds();
   const b = (key, icon, label, count, attn, isGlyph) => '<a class="bn" href="#' + key + '" data-go="' + key + '"' + (curOf(key) ? ' aria-current="page"' : '') + '>' + (isGlyph ? glyph(icon) : ic(icon)) + '<span>' + esc(label) + '</span>' + (count ? '<span class="count' + (attn ? ' attn' : '') + '" aria-hidden="true">' + count + '</span>' : '') + '</a>';
-  return '<nav class="bottomnav" aria-label="' + t('nav.main') + '">' + b('home', 'house', t('nav.home')) + b('browse', 'tee', t('nav.browseShort'), 0, false, true) + b('orders', 'shopping-bag', t('nav.ordersShort'), bn) + b('saved', 'heart', t('nav.savedShort'), 0) +
-    '<button class="bn" data-act="sheet" data-v="menu" aria-haspopup="dialog"' + (S.ui.sheet === 'menu' ? ' aria-expanded="true"' : '') + '>' + ic('menu') + '<span>' + t('nav.menu') + '</span>' + (sellerNew() ? '<span class="count attn" aria-hidden="true">' + sellerNew() + '</span>' : '') + '</button></nav>';
+  return '<nav class="bottomnav" aria-label="' + t('nav.main') + '">' + b('home', 'house', t('nav.home')) + b('browse', 'tee', t('nav.browseShort'), 0, false, true) + (isSeller() ? b('orders', 'shopping-bag', t('nav.ordersShort'), bn) + closetTab() : b('orders', 'shopping-bag', t('nav.ordersShort'), bn) + b('saved', 'heart', t('nav.savedShort'), 0)) +
+    '<button class="bn" data-act="sheet" data-v="menu" aria-haspopup="dialog"' + (S.ui.sheet === 'menu' ? ' aria-expanded="true"' : '') + '>' + ic('menu') + '<span>' + t('nav.menu') + '</span></button></nav>';
+}
+function closetTab(){
+  const nn = sellerNew(), on = S.route.name === 'mycloset' || S.route.name === 'sell';
+  return '<a class="bn" href="#mycloset" data-go="mycloset"' + (on ? ' aria-current="page"' : '') + (nn ? ' aria-label="' + esc(t('nav.closetShort') + ' · ' + t('nav.newOrders', { n:nn })) + '"' : '') + '>' + glyph('hanger') + '<span>' + t('nav.closetShort') + '</span>' + (nn ? '<span class="count attn" aria-hidden="true">' + nn + '</span>' : '') + '</a>';
 }
 
 /* ---- 03-cards.js ---- */
@@ -3609,8 +3632,8 @@ function vMyCloset(arg){
   if (!isSeller()) return vEmpty('hanger', t('closet.noClosetT'), t('closet.noClosetD'), '<a class="btn btn-primary" href="#apply" data-go="apply">' + t('nav.startSelling') + '</a>', true);
   const tab = CTABS.find(x => x[0] === arg) ? arg : 'overview';
   const nn = sellerNew();
-  let h = '<div class="page-h"><div><h1 id="page-title" tabindex="-1">' + t('closet.title') + '</h1><p class="row wrap" style="gap:8px">' + esc(closetName('me')) + ' ' + verifiedBadge() + '</p></div><div class="row wrap"><a class="btn btn-secondary" href="#closet.me" data-go="closet.me">' + ic('eye', 'i-sm') + t('closet.viewPublic') + '</a><a class="btn btn-primary" href="#sell" data-go="sell">' + ic('circle-plus', 'i-sm') + t('nav.sellClothes') + '</a></div></div>' +
-    '<nav class="tabs" aria-label="' + t('closet.sections') + '">' + CTABS.map(([k, l, i]) => '<a class="tab" href="#mycloset.' + k + '" data-go="mycloset.' + k + '"' + (k === tab ? ' aria-current="page"' : '') + '>' + ic(i, 'i-sm') + t(l) + (k === 'orders' && nn ? '<span class="count attn">' + nn + '</span>' : '') + '</a>').join('') + '</nav>';
+  let h = '<div class="page-h"><div><h1 id="page-title" tabindex="-1">' + t('closet.title') + '</h1><p class="row wrap" style="gap:8px">' + esc(closetName('me')) + ' ' + verifiedBadge() + '</p></div><div class="row wrap ch-actions"><a class="btn btn-secondary" href="#closet.me" data-go="closet.me">' + ic('eye', 'i-sm') + '<span class="only-desk-i">' + t('closet.viewPublic') + '</span><span class="only-mob-i">' + t('closet.viewShort') + '</span></a><a class="btn btn-primary" href="#sell" data-go="sell">' + ic('circle-plus', 'i-sm') + t('nav.sellClothes') + '</a></div></div>' +
+    '<nav class="tabs ctabs" aria-label="' + t('closet.sections') + '">' + CTABS.map(([k, l, i]) => '<a class="tab" href="#mycloset.' + k + '" data-go="mycloset.' + k + '"' + (k === tab ? ' aria-current="page"' : '') + '>' + ic(i, 'i-sm') + '<span class="only-desk-i">' + t(l) + '</span><span class="only-mob-i">' + t('closet.s' + { overview:'Overview', listings:'Listings', orders:'Orders', promotions:'Promos', sales:'Sales' }[k]) + '</span>' + (k === 'orders' && nn ? '<span class="count attn">' + nn + '</span>' : '') + '</a>').join('') + '</nav>';
   return h + ({ overview:cOverview, listings:cListings, orders:cOrders, promotions:cPromos, sales:cSales })[tab]();
 }
 const buyerName = o => L(BUYERS[o.buyer]);
