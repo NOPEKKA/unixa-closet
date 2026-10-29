@@ -797,6 +797,11 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 .astep figure{margin:0;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--surface-2)}
 .astep figure img{width:100%;height:auto}
 .astep figcaption{font-size:12px;color:var(--subtle);padding:6px 10px;border-top:1px solid var(--border);background:var(--surface)}
+.astep .shots.phone{grid-template-columns:repeat(auto-fill,minmax(180px,240px))}
+.req{color:var(--danger);font-weight:700}
+.ps-req,.ps-opt{font-size:11px;font-weight:600;line-height:1}
+.ps-req{color:var(--danger)}
+.ps-opt{color:var(--subtle);font-weight:500}
 .afig{width:150px;height:150px;margin-top:10px}
 .contact{display:flex;align-items:center;gap:16px;padding:20px;flex-wrap:wrap}
 .notes{max-width:1000px}
@@ -2539,6 +2544,14 @@ const COPY_DIRECT = {
   },
 };
 for (const ns in COPY_DIRECT) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_DIRECT[ns]);
+const COPY_SELL = {
+  sell: {
+    legend:['ช่องที่มี * ต้องกรอก ช่องอื่นไม่บังคับ','Fields marked * are required; everything else is optional'],
+    photosReq:['ต้องมีรูปด้านหน้า 1 รูป รูปอื่นไม่บังคับ แต่ช่วยให้ขายง่ายขึ้น','A front photo is required. The others are optional but help it sell.'],
+    required:['จำเป็น','Required'],
+  },
+};
+for (const ns in COPY_SELL) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_SELL[ns]);
 const COPY_BOOK = {
   nav: { savedShort:['บันทึก','Saved'] },
   item: {
@@ -2689,7 +2702,7 @@ const NOTES = {
     ['รูป 18 รูปเป็นรูปที่ได้รับมา ราคา ขนาด และคำบรรยายเป็นข้อมูลสมมติ ส่วนรายการในหมวดชุดนักศึกษา เดรส กระโปรง ชุดกีฬา ใช้ภาพวาดแทนจนกว่าจะมีรูปจริง','The 18 photos are the supplied ones; prices, sizes and descriptions are made up. Uniforms, dresses, skirts and sportswear use drawn stand-ins until real photos arrive.'],
     ['ผู้ขายตัวอย่างยอมรับออเดอร์และตกลงเปลี่ยนนัดรับเองหลังไม่กี่วินาที เพื่อให้เห็นขั้นตอนต่อไป','Sample sellers accept orders and agree to pickup changes after a few seconds so you can see the next step.'],
     ['กล้องสแกน QR และ QR PromptPay ถูกจำลอง เบอร์ PromptPay ของผู้ขายเป็นเลขสมมติ','The QR camera and PromptPay QR codes are simulated; sellers’ PromptPay numbers are made up.'],
-    ['ภาพหน้าจอในคู่มือเป็นของแอปเวอร์ชันเดิม ต้องถ่ายใหม่หลังเปลี่ยนหน้าจอ','Guide screenshots are from the current app and need re-shooting after the redesign.'],
+    ['ภาพในหน้าช่วยเหลือถ่ายจากต้นแบบนี้ (มือถือ ไทย/อังกฤษ) ของจริงต้องถ่ายใหม่จากแอปที่สร้างเสร็จ','Help-centre screenshots are taken from this prototype (phone, Thai/English); re-shoot them from the finished app.'],
   ],
 };
 
@@ -3712,41 +3725,42 @@ function vSell(){
   const err = k => e[k] ? '<span class="err" id="e-' + k + '" role="alert">' + ic('circle-alert') + t('sell.' + e[k]) + '</span>' : '';
   const inv = k => e[k] ? ' aria-invalid="true" aria-describedby="e-' + k + '"' : '';
   const cat = CATS.find(c => c.id === sf.cat);
+  const req = '<span class="req" aria-hidden="true"> *</span>', opt = ' <span class="subtle" style="font-weight:400">(' + t('common.optional') + ')</span>';
   let h = '<nav class="crumbs"><a href="#mycloset" data-go="mycloset">' + t('closet.title') + '</a>' + ic('chevron-right', 'i-xs') + '<span aria-current="page">' + t('nav.sellClothes') + '</span></nav><div class="page-h"><div><h1 id="page-title" tabindex="-1">' + t('sell.title') + '</h1><p>' + t('sell.sub') + '</p></div></div>' +
-    '<div class="sell-grid"><form data-form="sell" data-persist novalidate class="stack-lg">';
+    '<div class="sell-grid"><form data-form="sell" data-persist novalidate class="stack-lg"><p class="subtle" style="font-size:13px;margin:0"><span class="req" aria-hidden="true">*</span> ' + t('sell.legend') + '</p>';
   if (Object.keys(e).length) h += '<div class="note note-err" role="alert">' + ic('circle-alert') + '<span>' + t('sell.fixErrors') + '</span></div>';
   // photos
   const needDefect = sf.defect === 'has' || sf.cond === 'fair';
-  h += '<section class="card form-sec" aria-labelledby="sp-h"' + (e.photo ? ' data-need="1"' : '') + '><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2 id="sp-h">' + t('sell.photos') + '</h2><p class="subtle" style="font-size:12.5px;margin-top:-8px">' + t('sell.photosHint') + '</p></div><button type="button" class="btn btn-ghost btn-sm" data-act="samplePhotos">' + ic('wand-sparkles', 'i-sm') + t('sell.samplePhotos') + '</button></div>' +
+  h += '<section class="card form-sec" aria-labelledby="sp-h"' + (e.photo ? ' data-need="1"' : '') + '><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2 id="sp-h">' + t('sell.photos') + req + '</h2><p class="subtle" style="font-size:12.5px;margin-top:-8px">' + t('sell.photosHint') + '</p></div><button type="button" class="btn btn-ghost btn-sm" data-act="samplePhotos">' + ic('wand-sparkles', 'i-sm') + t('sell.samplePhotos') + '</button></div>' +
     '<div class="slot-grid">' + PHOTO_SLOTS.map(k => {
       const ph = sf.photos[k], name = t('sell.' + SLOT_KEY[k]), hot = k === 'defect' && needDefect && !ph;
       if (ph) return '<div class="pslot filled"><div class="ps-img">' + (ph.u ? '<img src="' + ph.u + '" alt="">' : ph.s ? '<img src="a/p/' + ph.s + '.webp" alt="">' : ART.photo(sf.art || SAMPLE_ART[sf.cat], ph.a, { size: sf.size || 'M' })) + '</div><span class="ps-l">' + esc(name) + (k === 'front' ? ' ★' : '') + '</span><button type="button" class="ps-x" data-act="sellPhotoDel" data-k="' + k + '" aria-label="' + esc(t('sell.removePhoto', { slot:name })) + '">' + ic('x', 'i-sm') + '</button></div>';
-      return '<label class="pslot' + (hot ? ' hot' : '') + '"><span class="ps-plus">' + ic(k === 'defect' ? 'triangle-alert' : k === 'measure' ? 'ruler' : k === 'tag' || k === 'label' ? 'tag' : 'image-plus') + '</span><span class="ps-l">' + esc(name) + '</span><input type="file" accept="image/*" class="sr-only" data-act="sellPhoto" data-k="' + k + '" aria-label="' + esc(t('sell.addPhoto', { slot:name })) + '"></label>';
+      return '<label class="pslot' + (hot ? ' hot' : '') + '"><span class="ps-plus">' + ic(k === 'defect' ? 'triangle-alert' : k === 'measure' ? 'ruler' : k === 'tag' || k === 'label' ? 'tag' : 'image-plus') + '</span><span class="ps-l">' + esc(name) + '</span><span class="' + (k === 'front' ? 'ps-req">' + t('sell.required') : 'ps-opt">' + t('common.optional')) + '</span><input type="file" accept="image/*" class="sr-only" data-act="sellPhoto" data-k="' + k + '" aria-label="' + esc(t('sell.addPhoto', { slot:name })) + '"></label>';
     }).join('') + '</div>' + (needDefect && !sf.photos.defect ? '<p class="note note-warn" style="margin-top:12px">' + ic('triangle-alert') + '<span>' + t('sell.defectPhotoNudge') + '</span></p>' : '') + err('photo') +
-    '<p class="subtle" style="font-size:12px;margin-top:10px">' + t('sell.localNote') + '</p></section>';
+    '<p class="muted" style="font-size:13px;margin-top:10px">' + t('sell.photosReq') + '</p><p class="subtle" style="font-size:12px;margin-top:4px">' + t('sell.localNote') + '</p></section>';
   // basics
   h += '<section class="card form-sec stack" aria-labelledby="sb-h"><h2 id="sb-h" style="margin:0">' + t('sell.basics') + '</h2>' +
-    '<div class="field"><label for="s-title">' + t('sell.name') + '</label><input class="input" id="s-title" name="title" data-keep="always" data-live="preview" placeholder="' + esc(t('sell.namePh')) + '"' + inv('title') + '>' + err('title') + '</div>' +
+    '<div class="field"><label for="s-title">' + t('sell.name') + req + '</label><input class="input" id="s-title" name="title" data-keep="always" data-live="preview" placeholder="' + esc(t('sell.namePh')) + '"' + inv('title') + '>' + err('title') + '</div>' +
     '<div class="field"><span class="lbl" id="s-cat-l">' + t('sell.category') + '</span><div class="chips" role="radiogroup" aria-labelledby="s-cat-l">' + CATS.map(c => '<button type="button" class="chip" role="radio" aria-checked="' + (sf.cat === c.id) + '" data-act="sfCat" data-v="' + c.id + '">' + glyph(c.glyph, 'i-sm') + catLabel(c.id) + '</button>').join('') + '</div></div>' +
     '<div class="grid-2"><div class="field"><label for="s-sub">' + t('sell.type') + '</label><select class="select" id="s-sub" data-act="sfSub">' + cat.subs.map(sb => '<option value="' + esc(sb) + '"' + (sf.sub === sb ? ' selected' : '') + '>' + esc(subName(sb)) + '</option>').join('') + '</select></div>' +
-    '<div class="field"><label for="s-brand">' + t('sell.brand') + '</label><input class="input" id="s-brand" name="brand" list="brands" data-keep="always" data-live="preview" placeholder="' + esc(t('sell.brandPh')) + '"><datalist id="brands">' + BRAND_SUGGEST.map(b => '<option value="' + esc(b) + '">').join('') + '</datalist></div></div>' +
-    '<div class="field"' + (e.size ? ' data-need="1"' : '') + '><span class="lbl" id="s-size-l">' + t('sell.size') + '</span>' + (sf.multi && !shoe ? '<div class="qty-grid">' + SIZES.map(s => '<label class="qty-cell"><span>' + esc(sizeLabel(s)) + '</span><input class="input sm" type="number" min="0" inputmode="numeric" name="q-' + s + '" id="q-' + s + '" value="' + esc(sf.qty[s] || '') + '" data-act="sfQty" data-k="' + s + '" aria-label="' + esc(t('sell.stockPer', { s:sizeLabel(s) })) + '"></label>').join('') + '</div>'
+    '<div class="field"><label for="s-brand">' + t('sell.brand') + opt + '</label><input class="input" id="s-brand" name="brand" list="brands" data-keep="always" data-live="preview" placeholder="' + esc(t('sell.brandPh')) + '"><datalist id="brands">' + BRAND_SUGGEST.map(b => '<option value="' + esc(b) + '">').join('') + '</datalist></div></div>' +
+    '<div class="field"' + (e.size ? ' data-need="1"' : '') + '><span class="lbl" id="s-size-l">' + t('sell.size') + req + '</span>' + (sf.multi && !shoe ? '<div class="qty-grid">' + SIZES.map(s => '<label class="qty-cell"><span>' + esc(sizeLabel(s)) + '</span><input class="input sm" type="number" min="0" inputmode="numeric" name="q-' + s + '" id="q-' + s + '" value="' + esc(sf.qty[s] || '') + '" data-act="sfQty" data-k="' + s + '" aria-label="' + esc(t('sell.stockPer', { s:sizeLabel(s) })) + '"></label>').join('') + '</div>'
       : '<div class="chips" role="radiogroup" aria-labelledby="s-size-l">' + (shoe ? SHOE_SIZES : SIZES).map(s => '<button type="button" class="chip" role="radio" aria-checked="' + (sf.size === s) + '" data-act="sfSize" data-v="' + s + '">' + esc(shoe ? 'EU ' + s : sizeLabel(s)) + '</button>').join('') + '</div>') +
       (shoe ? '' : '<label class="check" style="margin-top:6px"><input type="checkbox" data-act="sfMulti"' + (sf.multi ? ' checked' : '') + '>' + t('sell.multiSize') + '</label>') + err('size') + '</div>' +
-    '<div class="field"><span class="lbl" id="s-col-l">' + t('sell.color') + ' <span class="subtle" style="font-weight:400">· ' + t('sell.colorHint') + '</span></span><div class="swatches" role="group" aria-labelledby="s-col-l">' + Object.keys(COLORS).map(c => '<button type="button" class="sw" role="checkbox" aria-checked="' + sf.colors.includes(c) + '" data-act="sfColor" data-v="' + c + '"><span class="sw-dot" style="' + ART.swatch(COLORS[c]) + '"></span><span class="sw-l">' + t('color.' + c) + '</span></button>').join('') + '</div></div>' +
-    '<div class="field"' + (e.cond ? ' data-need="1"' : '') + '><span class="lbl" id="s-cond-l">' + t('sell.condition') + '</span><div class="cond-grid" role="radiogroup" aria-labelledby="s-cond-l">' + CONDS.map(c => '<button type="button" class="cond-card" role="radio" aria-checked="' + (sf.cond === c) + '" data-act="sfCond" data-v="' + c + '"><span class="cc-t">' + condLabel(c) + '</span><span class="cc-d">' + t('cond.' + c + 'D') + '</span></button>').join('') + '</div>' + err('cond') + '</div>' +
+    '<div class="field"><span class="lbl" id="s-col-l">' + t('sell.color') + opt + ' <span class="subtle" style="font-weight:400">· ' + t('sell.colorHint') + '</span></span><div class="swatches" role="group" aria-labelledby="s-col-l">' + Object.keys(COLORS).map(c => '<button type="button" class="sw" role="checkbox" aria-checked="' + sf.colors.includes(c) + '" data-act="sfColor" data-v="' + c + '"><span class="sw-dot" style="' + ART.swatch(COLORS[c]) + '"></span><span class="sw-l">' + t('color.' + c) + '</span></button>').join('') + '</div></div>' +
+    '<div class="field"' + (e.cond ? ' data-need="1"' : '') + '><span class="lbl" id="s-cond-l">' + t('sell.condition') + req + '</span><div class="cond-grid" role="radiogroup" aria-labelledby="s-cond-l">' + CONDS.map(c => '<button type="button" class="cond-card" role="radio" aria-checked="' + (sf.cond === c) + '" data-act="sfCond" data-v="' + c + '"><span class="cc-t">' + condLabel(c) + '</span><span class="cc-d">' + t('cond.' + c + 'D') + '</span></button>').join('') + '</div>' + err('cond') + '</div>' +
     '<div class="field"><span class="lbl" id="s-sty-l">' + t('sell.style') + ' <span class="subtle" style="font-weight:400">(' + t('common.optional') + ')</span></span><div class="chips" role="radiogroup" aria-labelledby="s-sty-l">' + STYLES.map(s => '<button type="button" class="chip" role="radio" aria-checked="' + (sf.style === s) + '" data-act="sfStyle" data-v="' + s + '">' + t('style.' + s) + '</button>').join('') + '</div></div></section>';
   // measurements
-  h += '<section class="card form-sec" aria-labelledby="sm-h"><div class="meas-edit"><div><h2 id="sm-h">' + t('sell.measure') + '</h2><p class="subtle" style="font-size:12.5px;margin:-8px 0 12px">' + t(shoe ? 'sell.measureShoe' : 'sell.measureHint') + ' <a class="btn-link" href="#help.measure" data-go="help.measure">' + t('meas.howTo') + '</a></p>' +
+  h += '<section class="card form-sec" aria-labelledby="sm-h"><div class="meas-edit"><div><h2 id="sm-h">' + t('sell.measure') + opt + '</h2><p class="subtle" style="font-size:12.5px;margin:-8px 0 12px">' + t(shoe ? 'sell.measureShoe' : 'sell.measureHint') + ' <a class="btn-link" href="#help.measure" data-go="help.measure">' + t('meas.howTo') + '</a></p>' +
     '<div class="grid-2">' + MEAS[kind].map((k, i) => '<div class="field"><label for="m-' + k + '"><span class="ml">' + 'ABCD'[i] + '</span> ' + t('meas.' + k) + '</label><div class="input-affix"><input class="input" id="m-' + k + '" name="m-' + k + '" type="number" min="0" step="0.5" inputmode="decimal" data-keep="always"><span class="affix">' + (k === 'insole' ? t('meas.cm') : t('meas.inch')) + '</span></div></div>').join('') + '</div></div><div class="meas-fig sm">' + ART.measure(kind === 'free' ? 'top' : kind) + '</div></div></section>';
   // defects
   h += '<section class="card form-sec" aria-labelledby="sd-h"' + (e.defect ? ' data-need="1"' : '') + '><h2 id="sd-h">' + t('sell.defects') + '</h2><div class="seg" role="radiogroup" aria-labelledby="sd-h"><button type="button" role="radio" aria-checked="' + (sf.defect === 'none') + '" aria-pressed="' + (sf.defect === 'none') + '" data-act="sfDefect" data-v="none">' + ic('check', 'i-sm') + t('sell.defectNone') + '</button><button type="button" role="radio" aria-checked="' + (sf.defect === 'has') + '" aria-pressed="' + (sf.defect === 'has') + '" data-act="sfDefect" data-v="has">' + ic('triangle-alert', 'i-sm') + t('sell.defectHas') + '</button></div>' +
     (sf.defect === 'has' ? '<div class="field" style="margin-top:12px"><label for="s-defect" class="sr-only">' + t('sell.defects') + '</label><input class="input" id="s-defect" name="defect" data-keep="always" placeholder="' + esc(t('sell.defectPh')) + '"' + inv('defect') + '>' + err('defect') + '</div>' : '') + '</section>';
   // description + price
   h += '<section class="card form-sec stack"><div class="field"><label for="s-desc">' + t('sell.desc') + ' <span class="subtle" style="font-weight:400">(' + t('common.optional') + ')</span></label><textarea class="textarea" id="s-desc" name="desc" rows="3" data-keep="always" placeholder="' + esc(t('sell.descPh')) + '"></textarea></div>' +
-    '<div class="field" style="max-width:320px"><label for="s-price">' + t('sell.price') + '</label><div class="input-affix"><input class="input" id="s-price" name="price" type="number" inputmode="decimal" min="1" step="1" data-keep="always" data-live="preview"' + inv('price') + ' aria-describedby="s-price-h"><span class="affix">฿</span></div><span class="hint" id="s-price-h">' + t('sell.priceHint', { net:'<b id="s-net">' + money(0) + '</b>' }) + '</span>' + err('price') + '</div></section>';
+    '<div class="field" style="max-width:320px"><label for="s-price">' + t('sell.price') + req + '</label><div class="input-affix"><input class="input" id="s-price" name="price" type="number" inputmode="decimal" min="1" step="1" data-keep="always" data-live="preview"' + inv('price') + ' aria-describedby="s-price-h"><span class="affix">฿</span></div><span class="hint" id="s-price-h">' + t('sell.priceHint', { net:'<b id="s-net">' + money(0) + '</b>' }) + '</span>' + err('price') + '</div></section>';
   // pickup
-  h += '<section class="card form-sec stack"' + (e.slots ? ' aria-describedby="e-slots"' : '') + '><div><h2 style="margin-bottom:2px">' + t('sell.pickup') + '</h2><p class="subtle" style="font-size:12.5px">' + t('sell.pickupHint') + '</p></div>' +
+  h += '<section class="card form-sec stack"' + (e.slots ? ' aria-describedby="e-slots"' : '') + '><div><h2 style="margin-bottom:2px">' + t('sell.pickup') + req + '</h2><p class="subtle" style="font-size:12.5px">' + t('sell.pickupHint') + '</p></div>' +
     '<fieldset class="fs"><legend class="lbl">' + t('sell.times') + '</legend><div class="chips">' + TIME_WINDOWS.map((w, i) => '<label class="chip ck"><input type="checkbox" name="times" value="' + w + '" data-keep="always"' + (S.sellers.me.times.includes(w) ? ' checked' : '') + '>' + ic('clock', 'i-sm') + w + '</label>').join('') + '</div></fieldset>' +
     '<fieldset class="fs"><legend class="lbl">' + t('sell.places') + '</legend><div class="chips">' + ALL_LOCS.map(l => '<label class="chip ck"><input type="checkbox" name="locs" value="' + l + '"' + (S.sellers.me.locs.includes(l) ? ' checked' : '') + '>' + esc(locName(l)) + '</label>').join('') + '</div></fieldset>' + err('slots') + '</section>' +
     '<div class="row" style="justify-content:flex-end"><a class="btn btn-ghost" href="#mycloset.listings" data-go="mycloset.listings">' + t('common.cancel') + '</a><button class="btn btn-primary btn-lg" type="submit">' + t('sell.publish') + '</button></div></form>';
@@ -3822,6 +3836,76 @@ function vLogin(locked){
 /* ---- 11-help-notes.js ---- */
 /* ============================== HELP ============================== */
 const HELP = GEN.help;
+/* Help guides for the current app. Images live in a/h/<key>-th.webp and a/h/<key>-en.webp (phone screenshots of this prototype). */
+const GUIDES = {
+  buy_howto: [['วิธีซื้อเสื้อผ้า (จองนัดรับ)','How to buy clothes (book a pickup)'], [
+    ['เลือกเสื้อผ้า','Pick a piece','เปิดหน้าเสื้อผ้า ดูรูปทุกมุม ไซซ์ สภาพ ตำหนิ และขนาดจริง สงสัยอะไรกด “แชทกับผู้ขาย”','Open the listing and check every photo, the size, condition, flaws and measurements. Questions? Press “Chat with seller”.',['buy1']],
+    ['เลือกวัน เวลา และจุดนัดรับ','Choose a day, time and place','เลือกจากช่วงที่ผู้ขายว่าง ถ้าเป็นชุดหลายไซซ์ให้เลือกไซซ์ก่อน','Pick from the times the seller offers. For multi-size pieces, pick your size first.',['buy2']],
+    ['กด “จองนัดรับ” แล้วยืนยัน','Press “Book pickup” and confirm','หน้าต่างยืนยันสรุปวัน เวลา จุดนัดรับ และราคา ยังไม่ต้องจ่ายเงิน และผู้ขายจะเห็นความน่าเชื่อถือของคุณ','The confirm window sums up the time, place and price. You pay nothing yet, and the seller sees your reliability.',['buy3']],
+    ['รอผู้ขายยืนยัน','Wait for the seller','คำสั่งซื้ออยู่ในแท็บ “รอผู้ขายยืนยัน” เมื่อผู้ขายยืนยันจะย้ายไป “รอนัดรับ” และมีการแจ้งเตือน','The order sits under “Waiting”. Once the seller confirms it moves to “To pick up” and you get a notification.',['buy4']],
+    ['เจอกัน ตรวจของ โอนเงิน แล้วสแกน','Meet, check, pay, scan','เปิดคำสั่งซื้อเพื่อดู PromptPay ของผู้ขาย ตรวจเสื้อผ้าก่อนโอน แล้วกด “สแกนรับของ” เพื่อสแกน QR จากเครื่องผู้ขาย','Open the order to see the seller’s PromptPay. Check the clothes before you pay, then press “Scan to receive” and scan the seller’s QR.',['buy5','buy6']],
+    ['ให้คะแนนผู้ขาย','Rate the seller','ผู้ขายก็ให้คะแนนคุณด้วย คะแนนนี้คือความน่าเชื่อถือของคุณ','The seller rates you too — that is your reliability score.',['buy7']],
+  ]],
+  search_howto: [['วิธีค้นหาเสื้อผ้า','How to find clothes'], [
+    ['ค้นหาหรือเลือกหมวด','Search or pick a category','พิมพ์ชื่อ แบรนด์ หรือสไตล์ในช่องค้นหา หรือกดหมวดจากหน้าแรก','Type a name, brand or style in the search box, or tap a category on Home.',['srch1']],
+    ['กรองตามไซซ์ สภาพ ราคา สี แบรนด์','Filter by size, condition, price, colour or brand','บนมือถือกด “ตัวกรอง” ที่ปุ่มลอยด้านล่าง บนคอมใช้แถบตัวกรองเหนือรายการ','On a phone press “Filter” on the floating button; on a computer use the filter bar above the results.',['srch2']],
+    ['เรียงลำดับและบันทึก','Sort and save','กด “เรียงตาม” เพื่อเรียงตามล่าสุดหรือราคา กดรูปหัวใจเพื่อบันทึกไว้ดูทีหลัง','Use “Sort by” for newest or price, and tap the heart to save a piece for later.',['srch3']],
+  ]],
+  track: [['ติดตามคำสั่งซื้อ','Track an order'], [
+    ['เปิด “คำสั่งซื้อของฉัน”','Open “My orders”','แท็บแบ่งตามสถานะ: รอผู้ขายยืนยัน · รอนัดรับ · เกินกำหนด · สำเร็จ · ยกเลิก','Tabs follow the status: Waiting · To pick up · Overdue · Completed · Cancelled.',['trk1']],
+    ['ดูรายละเอียด','See the details','หน้าคำสั่งซื้อแสดงขั้นตอน สิ่งที่ต้องทำต่อ วัน เวลา จุดนัดรับ และการชำระเงิน','The order page shows the progress, what to do next, the time and place, and payment.',['trk2']],
+    ['ต้องการเลื่อนนัด','Need to move the pickup','กด “ขอเปลี่ยน” แล้วเลือกเวลาใหม่ คำขอจะส่งไปในแชท นัดจะเปลี่ยนเมื่อผู้ขายตกลง','Press “Change” and pick a new time. The request goes to chat and the pickup changes once the seller agrees.',['trk3']],
+  ]],
+  pickup: [['การนัดรับ','Pickup'], [
+    ['ดูวัน เวลา และจุดนัดรับ','Check the time and place','อยู่ในหน้าคำสั่งซื้อ ส่วน “นัดรับ”','It’s in the order, under “Pickup”.',['pk1']],
+    ['นัดในที่ปลอดภัย','Meet somewhere safe','เลือกจุดในมหาวิทยาลัยที่มีคนผ่าน ตอนกลางวัน ชวนเพื่อนไปด้วยได้ และคุยผ่านแชทในแอปเพื่อเก็บหลักฐาน','Pick a busy spot on campus in daylight, bring a friend if you like, and keep the conversation in the app chat.',[]],
+    ['เปลี่ยนนัด','Change the pickup','กด “ขอเปลี่ยน” เลือกจากเวลาที่ผู้ขายว่าง แล้วรอผู้ขายตกลงในแชท','Press “Change”, pick from the seller’s free times, and wait for them to agree in chat.',['trk3']],
+    ['สแกนรับของ','Scan to receive','ตรวจเสื้อผ้า โอนเงิน ติ๊กยืนยัน แล้วสแกน QR ของผู้ขาย ถ้ากล้องใช้ไม่ได้ กด “กรอกรหัส”','Check the clothes, pay, tick the box, then scan the seller’s QR. If the camera won’t work, press “Enter manually”.',['pk3']],
+  ]],
+  cancel_order: [['วิธียกเลิกคำสั่งซื้อ','How to cancel an order'], [
+    ['เปิดคำสั่งซื้อที่ยังรอผู้ขายยืนยัน','Open an order that is still waiting','กด “ยกเลิกคำสั่งซื้อ” ถ้าผู้ขายยืนยันแล้ว ให้คุยกับผู้ขายในแชทก่อน','Press “Cancel order”. If the seller already confirmed, talk to them in chat first.',['cxl1']],
+    ['ยืนยันการยกเลิก','Confirm','คุณยังไม่ได้จ่ายเงิน จึงไม่มีอะไรต้องคืน และเสื้อผ้าจะกลับมาเปิดขาย','You haven’t paid, so there is nothing to refund, and the piece goes back on sale.',['cxl2']],
+  ]],
+  overdue_order: [['ผู้ขายไม่มาตามนัด','The seller didn’t show up'], [
+    ['ดูแท็บ “เกินกำหนด”','Open the “Overdue” tab','คำสั่งซื้อที่เลยเวลานัดเกิน 12 ชั่วโมงจะย้ายมาที่นี่','Orders more than 12 hours past the pickup time land here.',['ovd1']],
+    ['แจ้งไม่ได้รับสินค้า','Report it','กด “ไม่ได้รับสินค้า” ระบบจะยกเลิกคำสั่งซื้อ และทีมงานจะตรวจสอบผู้ขาย คุณยังไม่ได้จ่ายเงิน','Press “Not received”. We cancel the order and follow up with the seller. You haven’t paid anything.',['ovd2']],
+  ]],
+  register_seller: [['วิธีสมัครเป็นผู้ขาย','How to become a seller'], [
+    ['กด “เริ่มขายเสื้อผ้า”','Press “Start selling”','อยู่ในเมนูบัญชี (บนมือถือคือปุ่ม “เมนู” ด้านล่าง) หรือกดปุ่ม “ลงขายเสื้อผ้า” บนแถบด้านบน','It’s in the account menu (on a phone, the “Menu” button at the bottom), or press “Sell clothes” in the top bar.',['reg1']],
+    ['กรอกข้อมูลและบัญชีรับโอน','Fill in your details and payment account','ชื่อ รหัสนักศึกษา คณะ เบอร์โทร และบัญชีที่ผู้ซื้อจะโอนให้ ข้อมูลเหล่านี้ไม่แสดงต่อสาธารณะ','Name, student ID, faculty, phone and the account buyers pay into. None of this is shown publicly.',['reg2']],
+    ['แนบรูปบัตรนักศึกษาแล้วส่งคำขอ','Attach your student ID and submit','แอดมินตรวจบัตรก่อนอนุมัติ ตู้เสื้อผ้าของคุณจะได้ป้าย “ยืนยันนักศึกษาแล้ว”','An admin checks the card before approving, and your closet gets the “Verified student” badge.',['reg3']],
+    ['รอแอดมินอนุมัติ','Wait for approval','เมื่ออนุมัติแล้ว จะเห็น “ตู้เสื้อผ้าของฉัน” และเริ่มลงขายได้','Once approved, “My closet” appears and you can start listing.',['reg4']],
+  ]],
+  create_product: [['วิธีลงขายเสื้อผ้า','How to list clothes'], [
+    ['เปิด “ลงขายเสื้อผ้า”','Open “Sell clothes”','ช่องที่มี * ต้องกรอก ช่องที่เขียนว่า “ไม่บังคับ” ข้ามได้','Fields with * are required; anything marked “optional” can be skipped.',['cr1']],
+    ['ใส่รูป','Add photos','ต้องมีรูปด้านหน้า 1 รูป รูปด้านหลัง ป้ายไซซ์ ป้ายผ้า ตำหนิ และตอนวัดไม่บังคับ แต่ช่วยให้ขายง่ายขึ้น','A front photo is required. Back, size label, fabric label, flaw and measuring photos are optional but help it sell.',['cr2']],
+    ['กรอกข้อมูลเสื้อผ้า','Describe the piece','ชื่อ ไซซ์บนป้าย และสภาพต้องกรอก แบรนด์ สี และสไตล์ไม่บังคับ','Title, label size and condition are required; brand, colour and style are optional.',['cr3']],
+    ['ขนาดจริงและตำหนิ','Measurements and flaws','ขนาดจริงไม่บังคับแต่ช่วยลดการถามซ้ำ ถ้าเลือก “มีตำหนิ” ต้องเขียนว่าตำหนิอะไร','Measurements are optional but save questions. If you pick “Has a flaw”, describe it.',['cr4']],
+    ['ราคาและนัดรับ','Price and pickup','ใส่ราคา แล้วเลือกช่วงเวลากับจุดนัดรับอย่างน้อยอย่างละ 1 ไม่มีค่าคอมมิชชัน','Set the price and pick at least one time window and one meeting point. There is no commission.',['cr5']],
+    ['กด “ลงขาย”','Press “Publish listing”','รายการขึ้นทันที และอยู่ใน “ตู้เสื้อผ้าของฉัน → รายการของฉัน”','It goes live right away and appears under “My closet → My listings”.',['cr6']],
+  ]],
+  process_order: [['วิธีจัดการออเดอร์ (ผู้ขาย)','How to handle orders (sellers)'], [
+    ['ดูคำขอใหม่','Check new requests','ใน “ออเดอร์ที่ขาย → ใหม่” แต่ละคำขอแสดงความน่าเชื่อถือของผู้ซื้อ เช่น ★4.8 · มาตามนัด 12/12 แล้วกด “ยอมรับ” หรือ “ปฏิเสธ”','Under “Seller orders → New”, each request shows the buyer’s reliability, e.g. ★4.8 · on time 12/12. Press “Accept” or “Reject”.',['pr1']],
+    ['ส่งมอบตามนัด','Hand over at the pickup','ใน “รอส่งมอบ” กด “แสดง QR ส่งมอบ” เช็กในแอปธนาคารว่าเงินเข้าแล้ว จึงให้ผู้ซื้อสแกน','Under “Upcoming”, press “Show handoff QR”. Check your bank app that the money arrived, then let the buyer scan.',['pr2']],
+    ['ผู้ซื้อขอยกเลิกหรือไม่มา','The buyer cancels or doesn’t show','กด “ยกเลิกการจอง” แล้วเลือกเหตุผล ถ้าเลือก “ผู้ซื้อไม่มาตามนัด” จะนับในความน่าเชื่อถือของผู้ซื้อ','Press “Cancel the reservation” and pick a reason. “The buyer didn’t show up” counts against the buyer’s reliability.',['pr3']],
+    ['ให้คะแนนผู้ซื้อ','Rate the buyer','ใน “สำเร็จ” กด “ให้คะแนนผู้ซื้อ” เพื่อช่วยผู้ขายคนอื่น','Under “Completed”, press “Rate buyer” to help other sellers.',['pr4']],
+  ]],
+  promote_product: [['วิธีดันรายการขึ้นหน้าแรก','How to boost a listing'], [
+    ['เปิด “ตู้เสื้อผ้าของฉัน → ดันรายการ”','Open “My closet → Boosts”','ดันได้ฟรีครั้งละ 2 ชิ้น ชิ้นละ 3 วัน หรือกด “จัดการ → ดันขึ้นหน้าแรก” ที่รายการก็ได้','Boosting is free: 2 at a time, 3 days each. You can also use “Manage → Boost to Home” on a listing.',['bo1']],
+    ['เลือกรายการแล้วกด “เริ่มดัน”','Pick a listing and press “Boost”','รายการจะขึ้นใน “เสื้อผ้าแนะนำ” บนหน้าแรกพร้อมป้าย “ดัน”','It shows in “Featured clothes” on Home with a “Boosted” tag.',['bo2']],
+  ]],
+  edit_product: [['วิธีจัดการรายการ (แก้ไข ขายแล้ว พัก ลบ)','How to manage a listing (edit, sold, pause, delete)'], [
+    ['กด “จัดการ” ที่รายการ','Press “Manage” on the listing','อยู่ใน “ตู้เสื้อผ้าของฉัน → รายการของฉัน”','Under “My closet → My listings”.',['ed1']],
+    ['เลือกสิ่งที่ต้องการทำ','Pick what to do','แก้ไขราคา/สภาพ · ลดราคา · ดันขึ้นหน้าแรก · ขายแล้ว (ขายนอกแอป) · พักรายการ · ลบรายการ ถ้ามีคนจองอยู่จะมี “ยกเลิกการจอง” แทน','Edit price & condition · Discount · Boost · Mark as sold · Pause · Delete. If someone has booked it, you get “Cancel the reservation” instead.',['ed2']],
+    ['แก้ไขราคาหรือสภาพ','Edit the price or condition','เปลี่ยนแล้วกดบันทึก','Change it and press Save.',['ed3']],
+    ['ขายนอกแอป หรืออยากหยุดขายชั่วคราว','Sold elsewhere, or taking a break','“ขายแล้ว” ปิดรายการ “พักรายการ” ซ่อนจากผู้ซื้อ ทั้งสองอย่างเปิดขายอีกครั้งได้ ส่วน “ลบ” กู้คืนไม่ได้','“Mark as sold” closes it and “Pause” hides it — both can be put back on sale. “Delete” can’t be undone.',['ed4']],
+  ]],
+  notifications: [['การแจ้งเตือน','Notifications'], [
+    ['เปิดกระดิ่ง','Open the bell','ดูการแจ้งเตือนทั้งหมด เช่น ผู้ขายยืนยัน เปลี่ยนนัด หรือมีออเดอร์ใหม่ กดรายการเพื่อไปยังหน้านั้น','See everything — confirmations, pickup changes, new orders. Tap one to open it.',['ntf1']],
+    ['เลือกช่องทาง','Choose channels','ใน “ตั้งค่าการแจ้งเตือน” เชื่อม LINE เปิดแจ้งเตือนบนเบราว์เซอร์ หรือข้อความแชทใหม่','Under “Notification settings”, connect LINE or turn on browser and chat notifications.',['ntf2']],
+  ]],
+};
+const guideImg = (k, t) => ['a/h/' + k + '-th.webp', 'a/h/' + k + '-en.webp', t[0], t[1]];
 (function addClothingGuides(){
   const G = DICT.guide, pair = k => G[k];
   HELP.a.pickup = { title: pair('pickupT'), steps: ['p1','p2','p3','p4'].map((k, i) => ({ t:pair(k + 't'), d:pair(k + 'd'), img:[], ok: i === 3 })) };
@@ -3830,7 +3914,12 @@ const HELP = GEN.help;
   HELP.a.promote_product = { title: pair('bT'), steps: ['b1','b2','b3'].map((k, i) => ({ t:pair(k + 't'), d:pair(k + 'd'), img:[], ok: i === 2 })) };
   delete HELP.a.deposit; delete HELP.a.withdraw; delete HELP.a.redeem_code;
   HELP.a.buy_howto = { title: pair('buyT'), steps: ['k1','k2','k3','k4','k5'].map((k, i) => ({ t:pair(k + 't'), d:pair(k + 'd'), img:[], ok: i === 4 })) };
+  for (const id in GUIDES) { const [title, steps] = GUIDES[id]; HELP.a[id] = { title, steps: steps.map((x, i) => ({ t:[x[0], x[1]], d:[x[2], x[3]], img:x[4].map(k => guideImg(k, [x[0], x[1]])), phone:true, ok: i === steps.length - 1 })) }; }
+  const addImg = (id, i, keys) => { const st = HELP.a[id].steps[i]; st.img = keys.map(k => guideImg(k, st.t)); st.phone = true; };
   HELP.a.measure = { title: pair('measT'), steps: [{ t:pair('m1t'), d:pair('m1d'), img:[] }, { t:pair('m2t'), d:pair('m2d'), img:[], fig:'top' }, { t:pair('m3t'), d:pair('m3d'), img:[], fig:'bottom' }, { t:pair('m4t'), d:pair('m4d'), img:[], fig:'shoe', ok:true }] };
+  addImg('condition', 0, ['cond2']); addImg('condition', HELP.a.condition.steps.length - 1, ['cond1']);
+  addImg('measure', 0, ['meas1', 'meas2']);
+  addImg('pay_seller', 0, ['buy3']); addImg('pay_seller', 1, ['buy5']); addImg('pay_seller', 3, ['buy6']);
 })();
 const HCATS = [
   ['buying', 'shopping-bag', 'help.cBuying', 'help.cBuyingD', ['buy_howto','search_howto','track','pickup','condition','cancel_order','overdue_order']],
@@ -3860,7 +3949,7 @@ function vContact(){ return isGuest() ? '' : '<section class="card contact" aria
 function vSteps(steps, start){
   return steps.map((s, i) => '<div class="astep"><span class="a-n" aria-hidden="true">' + (s.ok ? ic('check', 'i-sm') : (start + i)) + '</span><div><h3>' + esc(LP(s.t)) + '</h3>' + (s.d && s.d[0] ? '<p>' + LP(s.d) + '</p>' : '') +
     (s.fig ? '<div class="afig">' + ART.measure(s.fig) + '</div>' : '') +
-    (s.img && s.img.length ? '<div class="shots">' + s.img.map(im => '<figure><img src="' + (S.lang === 'th' ? im[0] : im[1]) + '" alt="' + esc(S.lang === 'th' ? im[2] : im[3]) + '" loading="lazy">' + (s.old ? '<figcaption>' + ic('info', 'i-xs') + ' ' + t('help.oldShot') + '</figcaption>' : '') + '</figure>').join('') + '</div>' : '') + '</div></div>').join('');
+    (s.img && s.img.length ? '<div class="shots' + (s.phone ? ' phone' : '') + '">' + s.img.map(im => '<figure><img src="' + (S.lang === 'th' ? im[0] : im[1]) + '" alt="' + esc(S.lang === 'th' ? im[2] : im[3]) + '" loading="lazy">' + (s.old ? '<figcaption>' + ic('info', 'i-xs') + ' ' + t('help.oldShot') + '</figcaption>' : '') + '</figure>').join('') + '</div>' : '') + '</div></div>').join('');
 }
 function vHelp(arg){
   if (arg && HELP.a[arg]) {
