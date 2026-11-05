@@ -1,7 +1,7 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#CF3F79"></head><body><title>UNIXA Closet</title>
 <meta name="description" content="Clickable prototype of UNIXA as a student-to-student clothing marketplace.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Anuphan:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap">
 <style>
 :root{
   --bg:#F7F1E8;--surface:#FFFCF8;--surface-2:#F4EDE3;--surface-3:#EAE1D4;
@@ -22,9 +22,10 @@
   --shadow-soft:0 1px 3px rgba(22,35,58,.14);
   --inverse:#1E2433;--on-inverse:#FBF6EF;
   --logo-filter:none;
-  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-pill:999px;--r-btn:12px;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-pill:999px;--r-btn:14px;
+  --paper:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .09 0 0 0 0 .13 0 0 0 0 .22 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --sb-w:248px;--sb-w-c:80px;--top-h:64px;--bn-h:64px;
-  --font-display:"Anuphan","Noto Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-display:"Kanit","Anuphan","Noto Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-body:"Noto Sans Thai",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
@@ -862,6 +863,45 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 .chat-in input:focus{outline:none;border-color:var(--primary);background:var(--surface)}
 .icon-btn.send{background:var(--primary);color:var(--on-primary);border-radius:50%}
 
+/* ---------- home "rich menu" (matches the UNIXA LINE OA) ---------- */
+.rm{position:relative;border-radius:22px;padding:22px;margin-bottom:22px;background:linear-gradient(135deg,#45434F 0%,#565F7A 100%);color:#FBF6EF;overflow:hidden;isolation:isolate}
+.rm::before{content:"";position:absolute;inset:0;z-index:-1;background-image:var(--paper);opacity:.6}
+.rm-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.rm h1{font-size:28px;line-height:1.2;color:#FBF6EF}
+.rm-top p{color:#D9DCE8;font-size:15px;margin-top:4px}
+.rm .hero-search{flex:1;min-width:280px;max-width:520px;margin:0}
+.rm .hero-search input{background:#FFF9F4;border-color:transparent;color:#16233A}
+.rm .hero-search input::placeholder{color:#6B7083}
+.rm .hero-search .i{color:#6B7083}
+.rm-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:16px}
+.rm-t{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;min-height:190px;padding:14px 12px 16px;background:#FFF7F0 var(--paper);color:#16233A;border:0;border-radius:6px;box-shadow:0 8px 18px rgba(0,0,0,.24);transition:transform .15s;font:inherit;cursor:pointer;text-align:center;width:100%}
+.rm-t:nth-child(1){transform:rotate(-.8deg)}.rm-t:nth-child(2){transform:rotate(1deg)}.rm-t:nth-child(3){transform:rotate(-.6deg)}.rm-t:nth-child(4){transform:rotate(.9deg)}
+.rm-t:hover{transform:rotate(0) translateY(-2px)}
+.rm-t:focus-visible{outline:3px solid #8ED3E0;outline-offset:3px}
+.rm-art{width:100%;max-width:150px;height:auto;flex:1;min-height:0}
+.rm-txt{display:flex;flex-direction:column;align-items:center}
+.rm-main{flex-direction:row;align-items:center;gap:16px;padding:16px 22px}
+.rm-main .rm-art{max-width:220px;flex:none;width:48%}
+.rm-main .rm-txt{flex:1;align-items:flex-end;text-align:right}
+.rm-en{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:.02em;line-height:1.05;color:#16233A}
+.rm-main .rm-en{font-size:42px;border-bottom:4px solid #E0538C;padding-bottom:4px}
+.rm-th{font-size:13.5px;color:#4F566B;font-weight:600;margin-top:3px}
+.rm-d{font-size:13px;color:#4F566B;margin-top:8px;line-height:1.45;max-width:30ch}
+.rm-arrow{color:#CF3F79;margin-top:6px}
+.rm-status{font-size:12px;color:#A82A61;font-weight:600;margin-top:2px}
+.rm-t .count{position:absolute;top:10px;right:10px}
+@media (max-width:899px){.rm-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.rm-main{grid-column:1/-1}}
+.sec-h h2{background:linear-gradient(transparent 62%,var(--primary-soft) 62%);padding:0 4px;margin-left:-4px}
+.action-card{background:#FFF9F4;color:#16233A;border:0;border-radius:20px;box-shadow:var(--shadow-soft)}
+.action-card.tone-danger{background:#FFF1EE}.action-card.tone-success{background:#EEF8F1}
+.action-card .ac-d{color:#4F566B}
+.action-card .ac-ic{background:#FCE6EF;color:#A82A61}
+.action-card .ac-btns{width:100%;margin-left:0}
+.action-card .ac-btns .btn{flex:1}
+.action-card .btn-primary{background:#CF3F79;color:#fff}
+.action-card .btn-secondary,.action-card .btn-danger{background:#fff;border-color:#E4D8C8}
+.action-card .btn-secondary{color:#16233A}
+
 /* ---------- top navigation ---------- */
 .navrow{display:none}
 .nav-top .navrow{display:block;background:var(--surface);border-bottom:1px solid var(--border)}
@@ -911,6 +951,22 @@ a.s-link{font-size:13px;font-weight:600;color:var(--primary);margin-top:auto}
 @media (max-width:767px){
   :root{--top-h:56px}
   .sidebar,.nav-btn,.nav-scrim,.demo-fab,.nav-top .navrow{display:none}
+  .rm{padding:14px;border-radius:16px;margin:0 -4px 16px}
+  .rm h1{font-size:20px}
+  .rm-top{margin-bottom:12px;gap:10px;flex-direction:column;align-items:stretch}
+  .rm-top p{font-size:13px}
+  .rm .hero-search{min-width:0;max-width:none;width:100%}
+  .rm-grid{gap:10px}
+  .rm-t{min-height:118px;padding:8px 6px 10px}
+  .rm-en{font-size:17px}
+  .rm-th{font-size:11.5px}
+  .rm-status{font-size:10.5px}
+  .rm-main{min-height:136px;padding:12px 14px}
+  .rm-main .rm-en{font-size:28px}
+  .rm-main .rm-art{width:44%}
+  .rm-d{display:none}
+  .rm-art{max-width:96px}
+  .bn[aria-current="page"]>svg{background:var(--primary-soft);border-radius:999px;padding:2px 14px;box-sizing:content-box}
   .only-desk-i{display:none}
   .only-mob-i{display:inline}
   .ctabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;overflow:visible;margin-bottom:16px}
@@ -2573,6 +2629,14 @@ const COPY_DIRECT = {
   },
 };
 for (const ns in COPY_DIRECT) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_DIRECT[ns]);
+const COPY_RM = {
+  rm: {
+    buyT:['ซื้อเสื้อผ้า','Buy clothes'], buyD:['เสื้อผ้ามือสองจากเพื่อนในมหาวิทยาลัย ราคานักศึกษา','Second-hand clothes from students on campus, at student prices'],
+    sellT:['ลงขาย','Sell'], sellSeller:['ตู้ของฉัน','My closet'], chatT:['แชท','Chat'], dealT:['ดีลของฉัน','My deals'],
+    dealToday:['วันนี้มีนัดรับ {n}','{n} pickup today'], dealNone:['วันนี้ยังไม่มีดีล','No deals today'], menu:['เมนูหลัก','Main menu'],
+  },
+};
+for (const ns in COPY_RM) DICT[ns] = Object.assign(DICT[ns] || {}, COPY_RM[ns]);
 const COPY_MOBILE = {
   nav: { closetShort:['ตู้ของฉัน','My closet'], helpShort:['ช่วยเหลือ','Help'], savedNav:['บันทึกไว้','Saved'] },
   home: { catsT:['เลือกตามหมวด','Shop by category'] },
@@ -3226,17 +3290,34 @@ function colorDots(p){ return '<span class="cdots">' + p.colors.map(c => '<span 
 /* ============================== HOME ============================== */
 function sellTarget(){ return isSeller() ? 'sell' : isGuest() ? 'login' : 'apply'; }
 const byNewest = (a, b) => b.listed - a.listed;
+/* Home "rich menu" drawings — flat riso inks (pink, aqua, lavender, slate) overlapping with multiply, like the UNIXA LINE OA menu */
+const RM_ART = {
+  buy: '<svg class="rm-art" viewBox="0 0 200 140" aria-hidden="true"><ellipse cx="100" cy="122" rx="86" ry="15" fill="#8ED3E0" opacity=".75"/><path d="M16 108c12-8 26-8 36 0" stroke="#A8ADC9" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M70 18l18-8c4 6 16 6 22 0l18 8 12 22-14 7-6-10v40H78V37l-6 10-14-7z" fill="#7F879B" transform="rotate(-8 100 50)"/><path d="M62 92c10-10 24-12 36-6l26 10c8 3 8 13-2 14H60c-7-2-7-12 2-18z" fill="#565F7A" style="mix-blend-mode:multiply"/><path d="M34 62l132-8-14 66-104 4z" fill="#E0538C" opacity=".88" style="mix-blend-mode:multiply"/><path d="M34 62l132-8-14 66-104 4z" fill="none" stroke="#CF3F79" stroke-width="2" transform="translate(4 -3)" opacity=".7"/><path d="M58 60l38 62M98 58l38 62M134 56l-30 66M88 60l-34 60" stroke="#fff" stroke-width="2.5" opacity=".5"/><path d="M14 30l16-6-4 14z" fill="#E0538C"/><path d="M168 18l18 4-12 10z" fill="#8ED3E0"/><path d="M176 84l14-2-6 12z" fill="#E0538C" opacity=".8"/></svg>',
+  sell: '<svg class="rm-art" viewBox="0 0 160 120" aria-hidden="true"><path d="M20 30q52-28 104 0" stroke="#8ED3E0" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="130" cy="34" r="13" fill="#A8ADC9"/><text x="130" y="39" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">฿</text><circle cx="144" cy="60" r="10" fill="#7F879B"/><text x="144" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">฿</text><rect x="26" y="38" width="96" height="14" fill="#E0538C"/><path d="M26 52h16l-8 10zM50 52h16l-8 10zM74 52h16l-8 10zM98 52h16l-8 10z" fill="#E0538C"/><rect x="32" y="62" width="84" height="34" fill="#8ED3E0" opacity=".9"/><circle cx="63" cy="70" r="6" fill="#565F7A"/><rect x="56" y="76" width="14" height="20" rx="3" fill="#565F7A"/><rect x="22" y="96" width="106" height="8" fill="#7F879B"/><rect x="102" y="64" width="22" height="40" rx="5" fill="#F4A9C6" stroke="#E0538C" stroke-width="2" transform="rotate(26 113 84)" style="mix-blend-mode:multiply"/></svg>',
+  chat: '<svg class="rm-art" viewBox="0 0 160 120" aria-hidden="true"><path d="M110 12l20 8-16 8z" fill="#A8ADC9"/><path d="M130 30l14 4-10 6z" fill="#8ED3E0"/><path d="M28 30h64a14 14 0 0 1 14 14v26a14 14 0 0 1-14 14H46l-18 14 4-14h-4a14 14 0 0 1-14-14V44a14 14 0 0 1 14-14z" fill="#8ED3E0"/><path d="M70 52h62a14 14 0 0 1 14 14v22a14 14 0 0 1-14 14h-4l4 12-16-12H70a14 14 0 0 1-14-14V66a14 14 0 0 1 14-14z" fill="#E0538C" opacity=".85" style="mix-blend-mode:multiply"/><circle cx="40" cy="57" r="5" fill="#E0538C"/><circle cx="56" cy="57" r="5" fill="#E0538C"/><circle cx="72" cy="57" r="5" fill="#E0538C"/><circle cx="92" cy="77" r="5" fill="#565F7A"/><circle cx="108" cy="77" r="5" fill="#565F7A"/><circle cx="124" cy="77" r="5" fill="#565F7A"/><path d="M60 110h44" stroke="#E0538C" stroke-width="3" stroke-linecap="round"/></svg>',
+  deal: '<svg class="rm-art" viewBox="0 0 160 120" aria-hidden="true"><circle cx="90" cy="54" r="40" fill="#A8ADC9" opacity=".85"/><path d="M38 20l24 8-4 12-24-8z" fill="#8ED3E0"/><rect x="16" y="66" width="42" height="26" rx="3" fill="#E0538C" opacity=".8" transform="rotate(-12 37 79)"/><path d="M58 50h64l10 52H48z" fill="#E0538C" style="mix-blend-mode:multiply"/><path d="M74 52v-10a16 16 0 0 1 32 0v10" stroke="#CF3F79" stroke-width="4" fill="none"/><circle cx="74" cy="58" r="3" fill="#16233A"/><circle cx="106" cy="58" r="3" fill="#16233A"/><rect x="112" y="72" width="28" height="20" fill="#8ED3E0" opacity=".9" style="mix-blend-mode:multiply"/></svg>',
+};
+function vRichMenu(){
+  const g = isGuest(), sel = isSeller();
+  const today = g ? 0 : S.orders.concat(sel ? S.sorders : []).filter(o => o.status === 'accept' && sod(o.date).getTime() === TODAY.getTime()).length;
+  const badge = n => n ? '<span class="count attn" aria-hidden="true">' + n + '</span>' : '';
+  const tile = (attrs, art, en, th, extra, n, label) => '<' + (attrs.startsWith('button') ? attrs : 'a ' + attrs) + ' class="rm-t" aria-label="' + esc(label) + '">' + art + '<span class="rm-txt"><span class="rm-en">' + en + '</span><span class="rm-th">' + esc(th) + '</span>' + (extra || '') + '</span>' + badge(n) + '</' + (attrs.startsWith('button') ? 'button' : 'a') + '>';
+  const sellGo = sel ? 'mycloset' : sellTarget(), dealGo = g ? 'login' : 'orders';
+  const main = '<a class="rm-t rm-main" href="#browse" data-go="browse">' + RM_ART.buy + '<span class="rm-txt"><span class="rm-en">PURCHASE</span><span class="rm-th">' + t('rm.buyT') + '</span><span class="rm-d">' + t('rm.buyD') + '</span><span class="rm-arrow">' + ic('arrow-right') + '</span></span></a>';
+  return '<nav class="rm-grid" aria-label="' + t('rm.menu') + '">' + main +
+    tile('href="#' + sellGo + '" data-go="' + sellGo + '"', RM_ART.sell, 'SELLING', sel ? t('rm.sellSeller') : t('rm.sellT'), '', sel ? sellerNew() : 0, 'SELLING · ' + (sel ? t('rm.sellSeller') : t('rm.sellT'))) +
+    tile(g ? 'href="#login" data-go="login"' : 'button type="button" data-act="chatOpen"', RM_ART.chat, 'CHAT', t('rm.chatT'), '', g ? 0 : chatUnread(), 'CHAT · ' + t('rm.chatT')) +
+    tile('href="#' + dealGo + '" data-go="' + dealGo + '"', RM_ART.deal, 'MY DEAL', t('rm.dealT'), g ? '' : '<span class="rm-status">' + (today ? t('rm.dealToday', { n:today }) : t('rm.dealNone')) + '</span>', g ? 0 : buyerNeeds(), 'MY DEAL · ' + t('rm.dealT')) +
+    '</nav>';
+}
 function vHome(){
   const live = liveListings().slice().sort(byNewest);
   const fresh = live.slice(0, 10), freshIds = new Set(fresh.map(p => p.id));
   const ads = liveAds().slice(0, 6);
-  const heroPics = ['r07','r09','r17'].map(findL).filter(Boolean);
-  let h = '<section class="hero" aria-labelledby="page-title"><div class="hero-in">' +
-    '<h1 id="page-title" tabindex="-1">' + t('home.heroTitle') + '</h1><p>' + t('home.heroSub') + '</p>' +
+  let h = '<section class="rm" aria-labelledby="page-title"><div class="rm-top"><div><h1 id="page-title" tabindex="-1">' + t('home.heroTitle') + '</h1><p>' + t('home.heroSub') + '</p></div>' +
     '<form class="hero-search" id="hero-search" role="search" data-form="search"><label for="hq" class="sr-only">' + t('common.searchLabel') + '</label>' + ic('search', 'i-sm') +
     '<input id="hq" name="q" type="search" data-keep="focus" enterkeyhint="search" autocomplete="off" placeholder="' + esc(t('common.searchPh')) + '"><button class="btn btn-primary" type="submit">' + t('common.search') + '</button></form>' +
-    '<div class="hero-cta"><a class="btn btn-secondary" href="#browse" data-go="browse">' + glyph('tee', 'i-sm') + t('home.ctaBrowse') + '</a><a class="btn btn-ghost" href="#' + sellTarget() + '" data-go="' + sellTarget() + '">' + ic('circle-plus', 'i-sm') + t('home.ctaSell') + '</a></div></div>' +
-    '<div class="hero-pics" role="group" aria-label="' + esc(t('home.heroPhotos')) + '">' + heroPics.map((p, i) => '<a class="hp hp' + i + '" href="#item.' + p.id + '" data-go="item.' + p.id + '" aria-label="' + esc(L(p.t) + ', ' + money(unitPrice(p))) + '">' + photoHtml(p, 0, true) + '<span class="hp-price" aria-hidden="true">' + money(unitPrice(p)) + '</span></a>').join('') + '</div></section>';
+    '</div>' + vRichMenu() + '</section>';
   h += '<h2 class="cats-h">' + t('home.catsT') + '</h2><nav class="cats" aria-label="' + t('home.cats') + '">' + CATS.map(c => '<a class="cat-pill" href="#browse.c-' + c.id + '" data-go="browse.c-' + c.id + '">' + glyph(c.glyph) + catLabel(c.id) + '</a>').join('') + '</nav>';
   h += '<section class="sec" aria-labelledby="new-h"><div class="sec-h"><h2 id="new-h">' + t('home.newT') + '</h2><a class="sec-link" href="#browse.new" data-go="browse.new">' + t('common.viewAll') + ic('chevron-right', 'i-sm') + '</a></div><p class="sec-sub">' + t('home.newSub') + '</p>' +
     '<div class="rail">' + fresh.map(p => lcard(p)).join('') + '</div></section>';
